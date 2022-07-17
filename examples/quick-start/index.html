@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quick Start - Anka Report</title>
+    <link rel="stylesheet" href="../../dist/bundle.css" />
+  </head>
+  <body>
+    <div
+      id="designer"
+      style="width: 800px; height: 500px; border: 1px solid black; margin: auto"
+    ></div>
+
+    <script src="../../dist/bundle.js"></script>
+    <script>
+      console.log(`ankareport version: ${AnkaReport.AnkaReport.version()}`);
+      const designerDiv = document.getElementById("designer");
+      AnkaReport.AnkaReport.init(designerDiv);
+    </script>
+  </body>
+</html>

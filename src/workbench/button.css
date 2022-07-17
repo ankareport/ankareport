@@ -1,0 +1,7 @@
+.anka-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  user-select: none;
+}

@@ -1,0 +1,22 @@
+.anka-report-section {
+  border: 1px dotted #cccccc;
+}
+
+.anka-report-section__header {
+  border-bottom: 1px solid #cccccc;
+  background-color: #dddddd;
+  user-select: none;
+  font-size: 13px;
+}
+
+.anka-report-section__content {
+  background: conic-gradient(
+    #eeeeee 0% 25%,
+    #dddddd 0% 50%,
+    #eeeeee 0% 75%,
+    #dddddd 0%
+  );
+  background-size: 20px 20px;
+  position: relative;
+  overflow: hidden;
+}

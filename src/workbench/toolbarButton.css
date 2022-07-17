@@ -1,0 +1,11 @@
+.anka-toolbar-button {
+  cursor: pointer;
+}
+
+.anka-toolbar-horizontal .anka-toolbar-button {
+  margin-left: 3px;
+}
+
+.anka-toolbar-vertical .anka-toolbar-button {
+  margin-top: 3px;
+}

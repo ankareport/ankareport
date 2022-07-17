@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "rollup -c -w",
     "build": "rollup -c",
+    "prettier": "prettier --write .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
