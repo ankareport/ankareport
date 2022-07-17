@@ -1,0 +1,22 @@
+{
+  "name": "@ankareport/designer",
+  "description": "",
+  "version": "0.1.0",
+  "author": "",
+  "scripts": {
+    "dev": "rollup -c -w",
+    "build": "rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^22.0.1",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-typescript": "^8.3.3",
+    "prettier": "^2.7.1",
+    "rollup": "^2.76.0",
+    "rollup-plugin-import-css": "^3.0.3",
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.4"
+  },
+  "license": "MIT"
+}
