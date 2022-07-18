@@ -1,5 +1,5 @@
 .anka-report-item-selector {
-  border: 1px dashed black;
+  border: 1px dashed var(--color-border-selector);
   position: absolute;
   user-select: none;
   cursor: all-scroll;

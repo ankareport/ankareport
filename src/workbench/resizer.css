@@ -5,7 +5,7 @@
 }
 
 .anka-resizer:hover {
-  border: 1px solid blue;
+  border: 1px solid var(--color-border-resizer);
 }
 
 .anka-resizer.vertical {

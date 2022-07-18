@@ -1,4 +1,4 @@
 .anka-sidebar {
-  border-left: 1px solid black;
-  background-color: #e1e1e1;
+  border-left: 1px solid var(--color-border);
+  background-color: var(--color-background);
 }
