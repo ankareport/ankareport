@@ -5,13 +5,15 @@
 }
 
 .anka-toolbar-horizontal {
-  height: 36px;
+  height: 30px;
+  padding-bottom: 1px;
   flex-direction: row;
   border-bottom: 1px solid var(--color-border);
 }
 
 .anka-toolbar-vertical {
-  width: 36px;
+  width: 34px;
+  padding-left: 1px;
   flex-direction: column;
   border-right: 1px solid var(--color-border);
 }

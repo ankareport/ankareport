@@ -13,8 +13,8 @@ export default class ToolbarButton extends Button {
 
     this.element.classList.add("anka-toolbar-button");
 
-    this.size.width = 30;
-    this.size.height = 30;
+    this.size.width = 25;
+    this.size.height = 25;
 
     if (options) {
       this.draggable = options.draggable ?? this.draggable;
