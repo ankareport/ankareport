@@ -1,3 +1,4 @@
+import { ReportLayout } from "../core/layout";
 import ReportContainer from "./reportContainer";
 import Sidebar from "./sidebar";
 import Toolbar, { ToolbarOrientation } from "./toolbar";
@@ -25,11 +26,22 @@ export default class Designer {
     this.content.appendChild(this.reportContainer.element);
     this.content.appendChild(this.sidebar.element);
 
-    this.menu.addButton("S");
+    const saveButton = this.menu.addButton("S");
+    saveButton.onClick(() => {
+      console.log(this.toJSON());
+    });
     this.menu.addButton("<");
     this.menu.addButton(">");
 
     this.toolbar.addButton("T", true);
     this.toolbar.addButton("Q", true);
+  }
+
+  loadJSON(data: ReportLayout) {
+    return this.reportContainer.loadJSON(data);
+  }
+
+  toJSON(): ReportLayout {
+    return this.reportContainer.toJSON();
   }
 }

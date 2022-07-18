@@ -13,7 +13,6 @@ export interface ResizeEventArgs {
 }
 
 export interface ResizerOptions {
-  parent: HTMLElement;
   orientation: ResizerOrientation;
   onResize?: (args: ResizeEventArgs) => void;
 }

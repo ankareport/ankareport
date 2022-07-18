@@ -1,3 +1,4 @@
+import { ReportLayout } from "../core/layout";
 import Report from "./report";
 import "./reportContainer.css";
 
@@ -13,5 +14,13 @@ export default class ReportContainer {
     this.element.classList.add("anka-report-container");
 
     this.element.appendChild(this.report.element);
+  }
+
+  loadJSON(data: ReportLayout) {
+    return this.report.loadJSON(data);
+  }
+
+  toJSON(): ReportLayout {
+    return this.report.toJSON();
   }
 }

@@ -7,4 +7,8 @@ export default class Button extends Control {
 
     this.text = text;
   }
+
+  onClick(callback: Function) {
+    this.element.addEventListener("click", () => callback());
+  }
 }
