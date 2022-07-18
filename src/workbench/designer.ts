@@ -26,15 +26,14 @@ export default class Designer {
     this.content.appendChild(this.reportContainer.element);
     this.content.appendChild(this.sidebar.element);
 
-    const saveButton = this.menu.addButton("S");
+    const saveButton = this.menu.addButton("▒");
     saveButton.onClick(() => {
       console.log(this.toJSON());
     });
-    this.menu.addButton("<");
-    this.menu.addButton(">");
+    this.menu.addButton("↩");
+    this.menu.addButton("↪");
 
-    this.toolbar.addButton("T", true);
-    this.toolbar.addButton("Q", true);
+    this.toolbar.addButton("Ͳ", true);
   }
 
   loadJSON(data: ReportLayout) {
