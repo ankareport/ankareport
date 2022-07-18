@@ -15,7 +15,7 @@ export default class ReportSection {
   public readonly resizer = new Resizer({
     orientation: ResizerOrientation.Horizontal,
     onResize: (e) => {
-      this.height = this.height + e.offset.y;
+      this.height = this.height + e.offsetY;
     },
   });
   public items: ReportItem[] = [];

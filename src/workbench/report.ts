@@ -15,7 +15,7 @@ export default class Report {
   public readonly resizer = new Resizer({
     orientation: ResizerOrientation.Vertical,
     onResize: (e) => {
-      this.width = this.width + e.offset.x;
+      this.width = this.width + e.offsetX;
     },
   });
 

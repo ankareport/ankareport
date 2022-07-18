@@ -1,3 +1,4 @@
+import DragDrop, { MoveEventArgs } from "../core/dragDrop";
 import Point from "../core/point";
 import "./resizer.css";
 
@@ -6,22 +7,14 @@ export enum ResizerOrientation {
   Vertical,
 }
 
-export interface ResizeEventArgs {
-  originalLocation: Point;
-  newLocation: Point;
-  offset: Point;
-}
-
 export interface ResizerOptions {
   orientation: ResizerOrientation;
-  onResize?: (args: ResizeEventArgs) => void;
+  onResize: (args: MoveEventArgs) => void;
 }
 
 export default class Resizer {
   public readonly element = document.createElement("div");
 
-  public readonly originalLocation = new Point();
-  public readonly newLocation = new Point();
   public readonly offset = new Point();
 
   constructor(private readonly options: ResizerOptions) {
@@ -40,10 +33,12 @@ export default class Resizer {
         break;
     }
 
-    this.onMouseMove = this.onMouseMove.bind(this);
-    this.onMouseDown = this.onMouseDown.bind(this);
-
-    this.element.onmousedown = this.onMouseDown;
+    new DragDrop({
+      element: this.element,
+      container: document as any, // TODO: Fix any
+      onMouseMove: (e) => this.onMouseMove(e),
+      onMouseUp: (e) => this.onMouseUp(e),
+    });
   }
 
   refresh() {
@@ -68,38 +63,18 @@ export default class Resizer {
     }
   }
 
-  private onMouseDown(e: MouseEvent) {
-    this.originalLocation.x = e.x;
-    this.originalLocation.y = e.y;
-    this.newLocation.x = e.x;
-    this.newLocation.y = e.y;
-
-    document.addEventListener("mousemove", this.onMouseMove);
-    document.addEventListener("mouseup", this.onMouseUp.bind(this), {
-      once: true,
-    });
-  }
-
-  private onMouseMove(e: MouseEvent) {
-    this.newLocation.x = e.x;
-    this.newLocation.y = e.y;
-    this.offset.x = this.newLocation.x - this.originalLocation.x;
-    this.offset.y = this.newLocation.y - this.originalLocation.y;
+  private onMouseMove(e: MoveEventArgs) {
+    this.offset.x = e.offsetX;
+    this.offset.y = e.offsetY;
 
     this.refresh();
   }
 
-  private onMouseUp() {
+  private onMouseUp(e: MoveEventArgs) {
     this.clear();
 
-    document.removeEventListener("mousemove", this.onMouseMove);
-
     if (this.options.onResize) {
-      this.options.onResize({
-        originalLocation: this.originalLocation,
-        newLocation: this.newLocation,
-        offset: this.offset,
-      });
+      this.options.onResize(e);
     }
   }
 }
