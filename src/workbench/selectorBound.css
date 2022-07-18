@@ -1,0 +1,66 @@
+.anka-selector-bound {
+  width: 5px;
+  height: 5px;
+  border: 1px solid var(--color-border-selector);
+  position: absolute;
+}
+
+.anka-selector-bound.top-left {
+  top: -7px;
+  left: -7px;
+  cursor: nwse-resize;
+}
+
+.anka-selector-bound.top-center {
+  top: -7px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  cursor: ns-resize;
+}
+
+.anka-selector-bound.top-right {
+  top: -7px;
+  right: -7px;
+  cursor: nesw-resize;
+}
+
+.anka-selector-bound.middle-left {
+  top: 0;
+  left: -7px;
+  bottom: 0;
+  margin-top: auto;
+  margin-bottom: auto;
+  cursor: ew-resize;
+}
+
+.anka-selector-bound.middle-right {
+  top: 0;
+  right: -7px;
+  bottom: 0px;
+  margin-top: auto;
+  margin-bottom: auto;
+  cursor: ew-resize;
+}
+
+.anka-selector-bound.bottom-left {
+  left: -7px;
+  bottom: -7px;
+  cursor: nesw-resize;
+}
+
+.anka-selector-bound.bottom-center {
+  left: 0;
+  bottom: -7px;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  cursor: ns-resize;
+}
+
+.anka-selector-bound.bottom-right {
+  right: -7px;
+  bottom: -7px;
+  cursor: nwse-resize;
+}

@@ -1,33 +1,177 @@
+import DragDrop from "../core/dragDrop";
 import Point from "../core/point";
 import Size from "../core/size";
 import ReportItem from "./reportItem";
-import "./reportItemSelector.css";
 import ReportSection from "./reportSection";
+import SelectorBound, { SelectorBoundOrientation } from "./selectorBound";
+import "./reportItemSelector.css";
 
 export default class ReportItemSelector {
   public readonly element = document.createElement("div");
   private attachedTo?: ReportItem;
+
+  private readonly boundTL = new SelectorBound(
+    SelectorBoundOrientation.TopLeft,
+  );
+  private readonly boundTC = new SelectorBound(
+    SelectorBoundOrientation.TopCenter,
+  );
+  private readonly boundTR = new SelectorBound(
+    SelectorBoundOrientation.TopRight,
+  );
+  private readonly boundML = new SelectorBound(
+    SelectorBoundOrientation.MiddleLeft,
+  );
+  private readonly boundMR = new SelectorBound(
+    SelectorBoundOrientation.MiddleRight,
+  );
+  private readonly boundBL = new SelectorBound(
+    SelectorBoundOrientation.BottomLeft,
+  );
+  private readonly boundBC = new SelectorBound(
+    SelectorBoundOrientation.BottomCenter,
+  );
+  private readonly boundBR = new SelectorBound(
+    SelectorBoundOrientation.BottomRight,
+  );
 
   private readonly originalLocation = new Point();
   private readonly originalSize = new Size();
   private readonly newLocation = new Point();
   private readonly newSize = new Size();
 
-  private offsetX = 0;
-  private offsetY = 0;
-
-  constructor(private readonly parent: ReportSection) {
-    this.element.classList.add("anka-report-item-selector");
-
+  constructor(private readonly mouseMoveContainer: ReportSection) {
     this.init();
   }
 
   init() {
-    this.onMouseMove = this.onMouseMove.bind(this);
+    this.element.classList.add("anka-report-item-selector");
+    this.element.appendChild(this.boundTL.element);
+    this.element.appendChild(this.boundTC.element);
+    this.element.appendChild(this.boundTR.element);
+    this.element.appendChild(this.boundML.element);
+    this.element.appendChild(this.boundMR.element);
+    this.element.appendChild(this.boundBL.element);
+    this.element.appendChild(this.boundBC.element);
+    this.element.appendChild(this.boundBR.element);
 
     this.hide();
 
-    this.element.onmousedown = (e) => this.onMouseDown(e);
+    this.initMoveDragDrop();
+    this.initBoundsDragDrop();
+  }
+
+  private initMoveDragDrop() {
+    new DragDrop({
+      element: this.element,
+      container: this.mouseMoveContainer.element,
+      onMouseMove: (e) => {
+        this.newLocation.x = this.originalLocation.x + e.offsetX;
+        this.newLocation.y = this.originalLocation.y + e.offsetY;
+        this.refresh();
+      },
+      onMouseUp: () => this.applyInfoToElement(),
+    });
+  }
+
+  private initBoundsDragDrop() {
+    // Top Left
+    new DragDrop({
+      element: this.boundTL.element,
+      container: this.mouseMoveContainer.element,
+      onMouseMove: (e) => {
+        this.newLocation.x = this.originalLocation.x + e.offsetX;
+        this.newLocation.y = this.originalLocation.y + e.offsetY;
+        this.newSize.width = this.originalSize.width - e.offsetX;
+        this.newSize.height = this.originalSize.height - e.offsetY;
+        this.refresh();
+      },
+      onMouseUp: () => this.applyInfoToElement(),
+    });
+
+    // Top Center
+    new DragDrop({
+      element: this.boundTC.element,
+      container: this.mouseMoveContainer.element,
+      onMouseMove: (e) => {
+        this.newLocation.y = this.originalLocation.y + e.offsetY;
+        this.newSize.height = this.originalSize.height - e.offsetY;
+        this.refresh();
+      },
+      onMouseUp: () => this.applyInfoToElement(),
+    });
+
+    // Top Right
+    new DragDrop({
+      element: this.boundTR.element,
+      container: this.mouseMoveContainer.element,
+      onMouseMove: (e) => {
+        this.newLocation.y = this.originalLocation.y + e.offsetY;
+        this.newSize.width = this.originalSize.width + e.offsetX;
+        this.newSize.height = this.originalSize.height - e.offsetY;
+        this.refresh();
+      },
+      onMouseUp: () => this.applyInfoToElement(),
+    });
+
+    // Middle Left
+    new DragDrop({
+      element: this.boundML.element,
+      container: this.mouseMoveContainer.element,
+      onMouseMove: (e) => {
+        this.newLocation.x = this.originalLocation.x + e.offsetX;
+        this.newSize.width = this.originalSize.width - e.offsetX;
+        this.refresh();
+      },
+      onMouseUp: () => this.applyInfoToElement(),
+    });
+
+    // Middle Right
+    new DragDrop({
+      element: this.boundMR.element,
+      container: this.mouseMoveContainer.element,
+      onMouseMove: (e) => {
+        this.newSize.width = this.originalSize.width + e.offsetX;
+        this.refresh();
+      },
+      onMouseUp: () => this.applyInfoToElement(),
+    });
+
+    // Bottom Left
+    new DragDrop({
+      element: this.boundBL.element,
+      container: this.mouseMoveContainer.element,
+      onMouseMove: (e) => {
+        this.newLocation.x = this.originalLocation.x + e.offsetX;
+        this.newSize.width = this.originalSize.width - e.offsetX;
+        this.newSize.height = this.originalSize.height + e.offsetY;
+        this.refresh();
+      },
+      onMouseUp: () => this.applyInfoToElement(),
+    });
+
+    // Bottom Center
+    new DragDrop({
+      element: this.boundBC.element,
+      container: this.mouseMoveContainer.element,
+      onMouseMove: (e) => {
+        this.newSize.height = this.originalSize.height + e.offsetY;
+        this.refresh();
+      },
+      onMouseUp: () => this.applyInfoToElement(),
+    });
+
+    // Bottom Right
+    new DragDrop({
+      element: this.boundBR.element,
+      container: this.mouseMoveContainer.element,
+      onMouseMove: (e) => {
+        this.newSize.width = this.originalSize.width + e.offsetX;
+        this.newSize.height = this.originalSize.height + e.offsetY;
+        this.refresh();
+      },
+      onMouseUp: () => this.applyInfoToElement(),
+    });
   }
 
   refresh() {
@@ -60,28 +204,12 @@ export default class ReportItemSelector {
     this.element.style.display = "none";
   }
 
-  onMouseDown(e: MouseEvent) {
-    document.addEventListener("mouseup", () => this.onMouseUp(), {
-      once: true,
-    });
-
-    this.offsetX = e.x - this.attachedTo!.location.x;
-    this.offsetY = e.y - this.attachedTo!.location.y;
-    this.parent.element.addEventListener("mousemove", this.onMouseMove);
-  }
-
-  onMouseMove(e: MouseEvent) {
-    this.newLocation.x = e.x - this.offsetX;
-    this.newLocation.y = e.y - this.offsetY;
-    this.refresh();
-  }
-
-  onMouseUp() {
-    this.parent.element.removeEventListener("mousemove", this.onMouseMove);
-
+  private applyInfoToElement() {
     this.attachedTo!.location.x = this.newLocation.x;
     this.attachedTo!.location.y = this.newLocation.y;
     this.attachedTo!.size.width = this.newSize.width;
     this.attachedTo!.size.height = this.newSize.height;
+
+    this.show(this.attachedTo!);
   }
 }
