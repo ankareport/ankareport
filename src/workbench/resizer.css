@@ -1,0 +1,23 @@
+.anka-resizer {
+  border: 1px solid transparent;
+  position: absolute;
+  user-select: none;
+}
+
+.anka-resizer:hover {
+  border: 1px solid blue;
+}
+
+.anka-resizer.vertical {
+  top: 0;
+  right: 0;
+  height: 100%;
+  cursor: col-resize;
+}
+
+.anka-resizer.horizontal {
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  cursor: row-resize;
+}

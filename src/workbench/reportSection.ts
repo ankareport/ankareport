@@ -1,5 +1,6 @@
 import ReportItem from "./reportItem";
 import ReportItemSelector from "./reportItemSelector";
+import Resizer, { ResizerOrientation } from "./resizer";
 import "./reportSection.css";
 
 export default class ReportSection {
@@ -7,9 +8,27 @@ export default class ReportSection {
   public readonly header = document.createElement("div");
   public readonly content = document.createElement("div");
   public readonly reportItemSelector = new ReportItemSelector(this);
+  public readonly resizer = new Resizer({
+    parent: this.element,
+    orientation: ResizerOrientation.Horizontal,
+    onResize: (e) => {
+      this.height = this.height + e.offset.y;
+    },
+  });
   public children: ReportItem[] = [];
 
-  constructor(private readonly text: string, private readonly height: number) {
+  private _height: number = 100;
+
+  get height() {
+    return this._height;
+  }
+
+  set height(value: number) {
+    this._height = Math.max(10, value);
+    this.refresh();
+  }
+
+  constructor(private readonly text: string) {
     this.init();
   }
 
@@ -21,6 +40,7 @@ export default class ReportSection {
     this.element.appendChild(this.header);
     this.element.appendChild(this.content);
     this.content.appendChild(this.reportItemSelector.element);
+    this.content.appendChild(this.resizer.element);
 
     this.refresh();
 
