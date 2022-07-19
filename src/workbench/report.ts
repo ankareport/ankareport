@@ -42,11 +42,38 @@ export default class Report {
     this.element.appendChild(this.reportSectionFooter.element);
     this.element.appendChild(this.resizer.element);
 
+    this.initItemSelectionChangedEvents();
     this.refresh();
+  }
+
+  initItemSelectionChangedEvents() {
+    this.reportSectionHeader.onSelect(() => {
+      this.deselectExcept(this.reportSectionHeader);
+    });
+
+    this.reportSectionContent.onSelect(() => {
+      this.deselectExcept(this.reportSectionContent);
+    });
+
+    this.reportSectionFooter.onSelect(() => {
+      this.deselectExcept(this.reportSectionFooter);
+    });
   }
 
   refresh() {
     this.element.style.width = `${this.width}px`;
+  }
+
+  private deselectExcept(reportSection: ReportSection) {
+    if (reportSection !== this.reportSectionHeader) {
+      this.reportSectionHeader.deselectAll();
+    }
+    if (reportSection !== this.reportSectionContent) {
+      this.reportSectionContent.deselectAll();
+    }
+    if (reportSection !== this.reportSectionFooter) {
+      this.reportSectionFooter.deselectAll();
+    }
   }
 
   loadJSON(data: ReportLayout) {

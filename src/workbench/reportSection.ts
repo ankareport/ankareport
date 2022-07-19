@@ -3,6 +3,7 @@ import ReportItem from "./reportItem";
 import ReportItemSelector from "./reportItemSelector";
 import Resizer, { ResizerOrientation } from "./resizer";
 import "./reportSection.css";
+import EventEmitter from "../core/eventEmitter";
 
 const DEFAULT_SECTION_HEIGHT = 100;
 const MIN_SECTION_HEIGHT = 10;
@@ -19,6 +20,8 @@ export default class ReportSection {
     },
   });
   public items: ReportItem[] = [];
+
+  private readonly eventEmitter = new EventEmitter();
 
   private _height: number = DEFAULT_SECTION_HEIGHT;
 
@@ -46,7 +49,6 @@ export default class ReportSection {
     this.element.appendChild(this.content);
     this.content.appendChild(this.reportItemSelector.element);
     this.content.appendChild(this.resizer.element);
-
     this.refresh();
 
     this.element.onclick = (e) => this.onContentClick(e);
@@ -63,6 +65,10 @@ export default class ReportSection {
     if (e.target === this.content) {
       this.deselectAll();
     }
+  }
+
+  onSelect(callback: (item: ReportItem) => void) {
+    this.eventEmitter.on("select", callback);
   }
 
   onContentDrop(e: DragEvent) {
@@ -94,6 +100,7 @@ export default class ReportSection {
     item.isSelected = true;
     item.refresh();
     this.reportItemSelector.show(item);
+    this.eventEmitter.emit("select", item);
   }
 
   deselectAll() {
