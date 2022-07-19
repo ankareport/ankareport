@@ -6,6 +6,8 @@ import ReportSection from "./reportSection";
 import SelectorBound, { SelectorBoundOrientation } from "./selectorBound";
 import "./reportItemSelector.css";
 
+const LONG_MOVE_DISTANCE = 10;
+const SHORT_MOVE_DISTANCE = 1;
 export default class ReportItemSelector {
   public readonly element = document.createElement("div");
   private attachedTo?: ReportItem;
@@ -45,6 +47,8 @@ export default class ReportItemSelector {
   }
 
   init() {
+    this.onKeyDown = this.onKeyDown.bind(this);
+
     this.element.classList.add("anka-report-item-selector");
     this.element.appendChild(this.boundTL.element);
     this.element.appendChild(this.boundTC.element);
@@ -54,7 +58,6 @@ export default class ReportItemSelector {
     this.element.appendChild(this.boundBL.element);
     this.element.appendChild(this.boundBC.element);
     this.element.appendChild(this.boundBR.element);
-
     this.hide();
 
     this.initMoveDragDrop();
@@ -174,6 +177,29 @@ export default class ReportItemSelector {
     });
   }
 
+  private onKeyDown(e: KeyboardEvent) {
+    const moveDistance = e.shiftKey ? SHORT_MOVE_DISTANCE : LONG_MOVE_DISTANCE;
+
+    switch (e.key) {
+      case "ArrowUp":
+        this.newLocation.y -= moveDistance;
+        this.applyInfoToElement();
+        break;
+      case "ArrowDown":
+        this.newLocation.y += moveDistance;
+        this.applyInfoToElement();
+        break;
+      case "ArrowLeft":
+        this.newLocation.x -= moveDistance;
+        this.applyInfoToElement();
+        break;
+      case "ArrowRight":
+        this.newLocation.x += moveDistance;
+        this.applyInfoToElement();
+        break;
+    }
+  }
+
   refresh() {
     this.element.style.left = this.newLocation.x + "px";
     this.element.style.top = this.newLocation.y + "px";
@@ -193,13 +219,15 @@ export default class ReportItemSelector {
     this.newLocation.y = item.location.y;
     this.newSize.width = item.size.width;
     this.newSize.height = item.size.height;
-
     this.element.style.display = "block";
+
+    document.addEventListener("keydown", this.onKeyDown);
 
     this.refresh();
   }
 
   hide() {
+    document.removeEventListener("keydown", this.onKeyDown);
     this.attachedTo = undefined;
     this.element.style.display = "none";
   }
