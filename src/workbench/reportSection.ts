@@ -68,7 +68,11 @@ export default class ReportSection {
   onContentDrop(e: DragEvent) {
     e.preventDefault();
 
+    const text = e.dataTransfer?.getData("text");
+
     const item = this.addItem();
+    if (text) item.text = text;
+    item.binding = e.dataTransfer?.getData("name");
     item.location.x = e.offsetX;
     item.location.y = e.offsetY;
 

@@ -6,30 +6,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quick Start - Anka Report</title>
     <link rel="stylesheet" href="../../dist/bundle.css" />
+    <style>
+      .renderer-container {
+        display: flex;
+        justify-content: center;
+      }
+      .renderer-col {
+        display: flex;
+        flex-direction: column;
+        margin: 10px 10px 0 10px;
+      }
+
+      #layout-input {
+        width: 250px;
+        height: 100%;
+      }
+
+      #data-input {
+        width: 250px;
+        height: 100%;
+      }
+    </style>
   </head>
   <body>
+    <h2 style="text-align: center">Designer</h2>
+
     <div
       id="designer"
-      style="width: 800px; height: 500px; border: 1px solid black; margin: auto"
+      style="width: 800px; height: 400px; border: 1px solid black; margin: auto"
     ></div>
 
-    <div style="text-align: center">
-      <div style="border: 1px solid; display: inline-block; margin: 20px auto">
-        <div id="renderer"></div>
-      </div>
-    </div>
+    <h2 style="text-align: center">Renderer</h2>
 
-    <div style="text-align: center">
-      <button onclick="exportToPdf()">Export To PDF</button>
+    <div class="renderer-container">
+      <div class="renderer-col">
+        <div>
+          <label>Layout:</label>
+          <button style="float: right" onClick="fillLayoutInputFromDesigner()">
+            Load From Designer
+          </button>
+        </div>
+        <textarea id="layout-input"></textarea>
+      </div>
+      <div class="renderer-col">
+        <div>
+          <label>Report:</label>
+          <button style="float: right" onclick="exportToPdf()">
+            Export To PDF
+          </button>
+          <button style="float: right" onclick="refreshRenderer()">
+            Refresh
+          </button>
+        </div>
+        <div style="border: 1px solid; display: inline-block">
+          <div id="renderer"></div>
+        </div>
+      </div>
+      <div class="renderer-col">
+        <div>
+          <label>Data:</label>
+        </div>
+        <textarea id="data-input"></textarea>
+      </div>
     </div>
 
     <script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
     <script src="../../dist/bundle.js"></script>
     <script>
       console.log(`ankareport version: ${AnkaReport.version}`);
-
-      const designerDiv = document.getElementById("designer");
-      const designer = AnkaReport.init(designerDiv);
 
       const layout = {
         width: 500,
@@ -85,10 +129,6 @@
         },
       };
 
-      designer.loadJSON(layout);
-
-      // ##########
-
       const data = {
         header1: "Header1X",
         header2: "Header2X",
@@ -101,6 +141,11 @@
         footer2: "Footer2X",
       };
 
+      const designerDiv = document.getElementById("designer");
+      const designer = AnkaReport.init(designerDiv);
+
+      designer.loadJSON(layout);
+
       const rendererDiv = document.getElementById("renderer");
       const renderer = AnkaReport.renderer({
         element: rendererDiv,
@@ -108,9 +153,33 @@
         data,
       });
 
+      const layoutInput = document.getElementById("layout-input");
+      const dataInput = document.getElementById("data-input");
+
+      function fillLayoutInputFromDesigner() {
+        const json = designer.toJSON();
+        layoutInput.value = JSON.stringify(json, null, 2);
+      }
+
+      function refreshRenderer() {
+        const layout = JSON.parse(layoutInput.value);
+        const data = JSON.parse(dataInput.value);
+
+        rendererDiv.innerHTML = "";
+
+        const renderer = AnkaReport.renderer({
+          element: rendererDiv,
+          layout,
+          data,
+        });
+      }
+
       function exportToPdf() {
         html2pdf().from(rendererDiv).save("report.pdf");
       }
+
+      layoutInput.value = JSON.stringify(layout, null, 2);
+      dataInput.value = JSON.stringify(data, null, 2);
     </script>
   </body>
 </html>

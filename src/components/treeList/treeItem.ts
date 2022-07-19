@@ -43,6 +43,11 @@ export default class TreeItem<T> {
       this.elementLabel.onclick = () => (this.collapsed = !this.collapsed);
     } else {
       this.elementLabel.draggable = true;
+
+      this.elementLabel.addEventListener("dragstart", (e) => {
+        e.dataTransfer?.setData("name", (this.data.data as any).name); // TODO: Fix any
+        e.dataTransfer?.setData("text", this.data.text); // TODO: Fix any
+      });
     }
 
     this.refresh();

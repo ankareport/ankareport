@@ -6,7 +6,7 @@ export default class ReportItem {
   public readonly element = document.createElement("div");
 
   public isSelected = false;
-  public text = "Foo";
+  public text = "Label";
   public binding?: string;
   public location = new Point(0, 0, () => this.refresh());
   public size = new Size(100, 20, () => this.refresh());

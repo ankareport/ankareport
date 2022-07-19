@@ -2,10 +2,14 @@ import Panel from "../components/panel/panel";
 import TreeList from "../components/treeList/treeList";
 import "./sidebar.css";
 
+interface DataSourceTreeItemData {
+  name: string;
+}
+
 export default class Sidebar {
   public readonly element = document.createElement("div");
   public readonly panel = new Panel({ title: "Data Source" });
-  public readonly treeList = new TreeList<number>();
+  public readonly treeList = new TreeList<DataSourceTreeItemData>();
 
   constructor() {
     this.init();
@@ -20,27 +24,27 @@ export default class Sidebar {
     this.panel.appendChild(this.treeList.element);
 
     this.treeList.setDataSource([
-      { data: 1, text: "Item 1", children: [] },
+      { data: { name: "item1" }, text: "Item 1", children: [] },
       {
-        data: 2,
+        data: { name: "item2" },
         text: "Item 2",
         children: [
           {
-            data: 3,
+            data: { name: "item3" },
             text: "Item 3",
             children: [],
           },
           {
-            data: 4,
+            data: { name: "item4" },
             text: "Item 4",
             children: [
               {
-                data: 5,
+                data: { name: "item5" },
                 text: "Item 5",
                 children: [],
               },
               {
-                data: 6,
+                data: { name: "item6" },
                 text: "Item 6",
                 children: [],
               },
