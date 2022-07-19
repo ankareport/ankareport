@@ -11,7 +11,7 @@ export interface MoveEventArgs {
 
 export interface DragDropOptions {
   element: HTMLElement;
-  container: HTMLElement;
+  container: GlobalEventHandlers;
   onMouseMove: (e: MoveEventArgs) => void;
   onMouseUp: (e: MoveEventArgs) => void;
 }

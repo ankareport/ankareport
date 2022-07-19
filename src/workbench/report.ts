@@ -1,7 +1,7 @@
 import { ReportLayout } from "../core/layout";
 import ReportSection from "./reportSection";
-import "./report.css";
 import Resizer, { ResizerOrientation } from "./resizer";
+import "./report.css";
 
 const DEFAULT_REPORT_WIDTH = 400;
 const MIN_REPORT_WIDTH = 100;

@@ -31,6 +31,8 @@ export default class ReportSection {
     this.refresh();
   }
 
+  public binding = "";
+
   constructor(private readonly text: string) {
     this.init();
   }
@@ -101,6 +103,7 @@ export default class ReportSection {
 
   loadJSON(data: LayoutReportSection) {
     this.height = data.height;
+    this.binding = data.binding;
 
     data.items.forEach((data) => {
       const item = this.addItem();
@@ -113,6 +116,7 @@ export default class ReportSection {
   toJSON(): LayoutReportSection {
     return {
       height: this.height,
+      binding: this.binding,
       items: this.items.map((x) => x.toJSON()),
     };
   }

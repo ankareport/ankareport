@@ -7,6 +7,7 @@ export default class ReportItem {
 
   public isSelected = false;
   public text = "Foo";
+  public binding?: string;
   public location = new Point(0, 0, () => this.refresh());
   public size = new Size(100, 20, () => this.refresh());
 
@@ -42,6 +43,7 @@ export default class ReportItem {
 
   loadJSON(data: LayoutReportItem) {
     this.text = data.text;
+    this.binding = data.binding;
     this.location.x = data.x;
     this.location.y = data.y;
     this.size.width = data.width;
@@ -52,7 +54,8 @@ export default class ReportItem {
 
   toJSON(): LayoutReportItem {
     return {
-      text: "Foo",
+      text: this.text,
+      binding: this.binding,
       x: this.location.x,
       y: this.location.y,
       width: this.size.width,

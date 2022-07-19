@@ -13,9 +13,21 @@
       style="width: 800px; height: 500px; border: 1px solid black; margin: auto"
     ></div>
 
+    <div style="text-align: center">
+      <div style="border: 1px solid; display: inline-block; margin: 20px auto">
+        <div id="renderer"></div>
+      </div>
+    </div>
+
+    <div style="text-align: center">
+      <button onclick="exportToPdf()">Export To PDF</button>
+    </div>
+
+    <script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
     <script src="../../dist/bundle.js"></script>
     <script>
       console.log(`ankareport version: ${AnkaReport.version}`);
+
       const designerDiv = document.getElementById("designer");
       const designer = AnkaReport.init(designerDiv);
 
@@ -24,24 +36,81 @@
         headerSection: {
           height: 52,
           items: [
-            { text: "Header 1", x: 5, y: 4, width: 100, height: 20 },
-            { text: "Header 2", x: 5, y: 28, width: 200, height: 20 },
+            {
+              text: "Header 1",
+              binding: "header1",
+              x: 5,
+              y: 4,
+              width: 100,
+              height: 20,
+            },
+            {
+              text: "Header 2",
+              binding: "header2",
+              x: 5,
+              y: 28,
+              width: 200,
+              height: 20,
+            },
           ],
         },
         contentSection: {
           height: 75,
+          binding: "content",
           items: [
             { text: "Label1", x: 9, y: 6, width: 100, height: 20 },
-            { text: "Label2", x: 9, y: 26, width: 200, height: 40 },
+            {
+              text: "Label2",
+              binding: "name",
+              x: 9,
+              y: 26,
+              width: 200,
+              height: 40,
+            },
           ],
         },
         footerSection: {
           height: 40,
-          items: [{ text: "Copyright", x: 200, y: 8, width: 100, height: 20 }],
+          items: [
+            { text: "Copyright", x: 150, y: 8, width: 100, height: 20 },
+            {
+              text: "Desc",
+              binding: "footer2",
+              x: 250,
+              y: 8,
+              width: 100,
+              height: 20,
+            },
+          ],
         },
       };
 
       designer.loadJSON(layout);
+
+      // ##########
+
+      const data = {
+        header1: "Header1X",
+        header2: "Header2X",
+        content: [
+          { name: "Name1", surname: "Surname1" },
+          { name: "Name2", surname: "Surname2" },
+          { name: "Name3", surname: "Surname3" },
+        ],
+        footer1: "Footer1X",
+        footer2: "Footer2X",
+      };
+
+      const rendererDiv = document.getElementById("renderer");
+      const renderer = AnkaReport.renderer({
+        element: rendererDiv,
+        layout,
+        data,
+      });
+
+      function exportToPdf() {
+        html2pdf().from(rendererDiv).save("report.pdf");
+      }
     </script>
   </body>
 </html>

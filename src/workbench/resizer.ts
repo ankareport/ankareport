@@ -35,7 +35,7 @@ export default class Resizer {
 
     new DragDrop({
       element: this.element,
-      container: document as any, // TODO: Fix any
+      container: document,
       onMouseMove: (e) => this.onMouseMove(e),
       onMouseUp: (e) => this.onMouseUp(e),
     });
