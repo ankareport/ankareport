@@ -14,11 +14,13 @@ interface DataSourceTreeItemData {
 
 export default class Designer {
   public readonly elementContent = document.createElement("div");
+
   public readonly menu = new ToolbarTopMenu();
   public readonly toolbar = new ToolbarLeftMenu();
-  public readonly reportContainer = new ReportContainer();
-  public readonly sidebar = new Sidebar();
 
+  public readonly reportContainer = new ReportContainer();
+
+  public readonly sidebar = new Sidebar();
   private readonly dataSourceTreeList = new TreeList<DataSourceTreeItemData>();
   private readonly propertyGrid = new PropertyGrid<ReportItemProperties>();
 
@@ -37,10 +39,6 @@ export default class Designer {
     this.elementContent.appendChild(this.reportContainer.element);
     this.elementContent.appendChild(this.sidebar.element);
 
-    this.menu.saveButton.addEventListener("click", () => {
-      console.log(this.toJSON());
-    });
-
     // DataSourceTreeList
     // TODO: Remove this
     this.dataSourceTreeList.setDataSource([
@@ -56,8 +54,8 @@ export default class Designer {
     // PropertyGrid
     this.sidebar.addPanel("Properties", this.propertyGrid.element);
 
-    const styles = new ReportItemProperties();
-    this.propertyGrid.properties = styles.getPropertyDefinitions();
+    const properties = new ReportItemProperties();
+    this.propertyGrid.properties = properties.getPropertyDefinitions();
 
     this.reportContainer.addEventListener("select", (e) => {
       this.propertyGrid.dataSource = e.item.properties;

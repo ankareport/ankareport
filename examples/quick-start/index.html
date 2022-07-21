@@ -149,12 +149,12 @@
       };
 
       const designerDiv = document.getElementById("designer");
-      const designer = AnkaReport.init(designerDiv);
+      const designer = AnkaReport.designer(designerDiv);
 
       designer.loadJSON(layout);
 
       const rendererDiv = document.getElementById("renderer");
-      const renderer = AnkaReport.renderer({
+      const renderer = AnkaReport.render({
         element: rendererDiv,
         layout,
         data,

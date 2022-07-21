@@ -56,7 +56,7 @@ export default class ToolbarButton {
 
   refresh() {
     this.element.innerText = this._text;
-    this.element.title = this._title
+    this.element.title = this._title;
     this.element.draggable = this._draggable;
   }
 

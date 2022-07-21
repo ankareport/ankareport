@@ -1,6 +1,7 @@
 .anka-panel {
   display: flex;
   flex-direction: column;
+  border: 1px solid var(--color-border);
 }
 
 .anka-panel__header {
@@ -8,8 +9,13 @@
   border-bottom: 1px solid var(--color-border);
 }
 
-.anka-panel__content {
+.anka-panel__content-container {
   flex: 1;
   position: relative;
   overflow-y: auto;
+}
+
+.anka-panel__content {
+  width: 100%;
+  box-sizing: border-box;
 }

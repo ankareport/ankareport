@@ -18,6 +18,12 @@ export default class TreeList<T> {
   private init() {
     this.element.classList.add("anka-tree-list");
 
+    this.refresh();
+  }
+
+  refresh() {
+    this.element.innerHTML = "";
+
     this.dataSource.forEach((data) => {
       const item = new TreeItem(data);
 
@@ -25,13 +31,11 @@ export default class TreeList<T> {
     });
   }
 
-  setDataSource(data: TreeDataItem<T>[]) {
+  setDataSource(dataSource: TreeDataItem<T>[]) {
     this.dataSource.length = 0;
 
-    data.forEach((x) => this.dataSource.push(x));
+    dataSource.forEach((x) => this.dataSource.push(x));
 
-    this.init();
+    this.refresh();
   }
-
-  refresh() {}
 }

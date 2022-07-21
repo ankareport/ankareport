@@ -7,19 +7,22 @@ export interface PanelOptions {
 export default class Panel {
   public readonly element = document.createElement("div");
   public readonly elementHeader = document.createElement("div");
+  public readonly elementContentContainer = document.createElement("div");
   public readonly elementContent = document.createElement("div");
 
-  constructor(private readonly options: PanelOptions) {
+  constructor(public readonly options: PanelOptions) {
     this.init();
   }
 
   private init() {
     this.element.classList.add("anka-panel");
     this.elementHeader.classList.add("anka-panel__header");
+    this.elementContentContainer.classList.add("anka-panel__content-container");
     this.elementContent.classList.add("anka-panel__content");
 
     this.element.appendChild(this.elementHeader);
-    this.element.appendChild(this.elementContent);
+    this.element.appendChild(this.elementContentContainer);
+    this.elementContentContainer.appendChild(this.elementContent);
 
     this.refresh();
   }

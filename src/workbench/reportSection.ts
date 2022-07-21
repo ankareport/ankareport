@@ -109,7 +109,10 @@ export default class ReportSection {
     item.onClick(() => this.selectItem(item));
     this.items.push(item);
 
-    this.elementContent.insertBefore(item.element, this.reportItemSelector.element);
+    this.elementContent.insertBefore(
+      item.element,
+      this.reportItemSelector.element,
+    );
 
     return item;
   }

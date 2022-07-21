@@ -20,7 +20,7 @@ export default class Sidebar {
     this.init();
   }
 
-  init() {
+  private init() {
     this.element.classList.add("anka-sidebar");
     this.elementContent.classList.add("anka-sidebar__content");
 

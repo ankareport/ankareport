@@ -7,7 +7,7 @@ export enum ToolbarOrientation {
 }
 
 export default class Toolbar {
-  public element = document.createElement("div");
+  public readonly element = document.createElement("div");
   public readonly buttons: ToolbarButton[] = [];
 
   constructor(public orientation = ToolbarOrientation.Vertical) {

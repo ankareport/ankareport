@@ -47,7 +47,7 @@ export default class ReportItemSelector {
     this.init();
   }
 
-  init() {
+  private init() {
     this.onKeyDown = this.onKeyDown.bind(this);
     this.onItemPropertyChange = this.onItemPropertyChange.bind(this);
 

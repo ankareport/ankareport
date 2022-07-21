@@ -1,5 +1,5 @@
 import { Property } from "./property";
-import PropertyGridRow from "./propertyGridRow";
+import PropertyGridRow, { ChangeEventArgs } from "./propertyGridRow";
 import "./propertyGrid.css";
 
 export default class PropertyGrid<TDataSource> {
@@ -34,11 +34,17 @@ export default class PropertyGrid<TDataSource> {
   private init() {
     this.element.classList.add("anka-property-grid");
 
+    this.onChange = this.onChange.bind(this);
+
     this.refresh();
   }
 
   refresh() {
     this.element.innerHTML = "";
+
+    if (!this._dataSource || this._properties.length === 0) {
+      this.element.innerText = "No property!";
+    }
 
     if (!this._dataSource) return;
 
@@ -49,22 +55,26 @@ export default class PropertyGrid<TDataSource> {
       const row = new PropertyGridRow<TDataSource>(property, value.toString());
 
       row.addEventListener("change", (e) => {
-        if (this._dataSource == null) return;
-
-        switch (property.type) {
-          case "string":
-            this._dataSource[property.field] = e.value as any;
-            break;
-          case "number":
-            const intValue = parseInt(e.value);
-
-            if (!isNaN(intValue)) {
-              this._dataSource[property.field] = intValue as any;
-            }
-        }
+        this.onChange(property, e);
       });
 
       this.element.appendChild(row.element);
+    }
+  }
+
+  private onChange(property: Property<TDataSource>, args: ChangeEventArgs) {
+    if (this._dataSource == null) return;
+
+    switch (property.type) {
+      case "string":
+        this._dataSource[property.field] = args.value as any;
+        break;
+      case "number":
+        const intValue = parseInt(args.value);
+
+        if (!isNaN(intValue)) {
+          this._dataSource[property.field] = intValue as any;
+        }
     }
   }
 }
