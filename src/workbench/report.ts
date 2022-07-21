@@ -1,5 +1,6 @@
+import { EventCallback } from "../core/eventEmitter";
 import { ReportLayout } from "../core/layout";
-import ReportSection from "./reportSection";
+import ReportSection, { SelectEventArgs } from "./reportSection";
 import Resizer, { ResizerOrientation } from "./resizer";
 import "./report.css";
 
@@ -47,15 +48,15 @@ export default class Report {
   }
 
   initItemSelectionChangedEvents() {
-    this.reportSectionHeader.onSelect(() => {
+    this.reportSectionHeader.addEventListener("select", () => {
       this.deselectExcept(this.reportSectionHeader);
     });
 
-    this.reportSectionContent.onSelect(() => {
+    this.reportSectionContent.addEventListener("select", () => {
       this.deselectExcept(this.reportSectionContent);
     });
 
-    this.reportSectionFooter.onSelect(() => {
+    this.reportSectionFooter.addEventListener("select", () => {
       this.deselectExcept(this.reportSectionFooter);
     });
   }
@@ -73,6 +74,16 @@ export default class Report {
     }
     if (reportSection !== this.reportSectionFooter) {
       this.reportSectionFooter.deselectAll();
+    }
+  }
+
+  addEventListener(event: "select", callback: EventCallback<SelectEventArgs>) {
+    switch (event) {
+      case "select":
+        this.reportSectionHeader.addEventListener(event, callback);
+        this.reportSectionContent.addEventListener(event, callback);
+        this.reportSectionFooter.addEventListener(event, callback);
+        break;
     }
   }
 

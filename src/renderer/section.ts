@@ -20,15 +20,15 @@ export default class Section {
 
     this.layout.items.forEach((layout) => {
       const item = new ReportItem();
-      item.location.x = layout.x;
-      item.location.y = layout.y;
-      item.size.width = layout.width;
-      item.size.height = layout.height;
+      item.properties.x = layout.x;
+      item.properties.y = layout.y;
+      item.properties.width = layout.width;
+      item.properties.height = layout.height;
 
       if (layout.binding) {
-        item.text = this.data[layout.binding];
+        item.properties.text = this.data[layout.binding];
       } else {
-        item.text = layout.text;
+        item.properties.text = layout.text;
       }
 
       item.refresh();

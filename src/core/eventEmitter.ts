@@ -1,33 +1,21 @@
-export default class EventEmitter {
-  private readonly events = new Map<string, Function[]>();
+export type EventCallback<TEventArgs> = (args: TEventArgs) => void;
 
-  on(event: string, callback: Function) {
-    let callbacks = this.events.get(event);
+export default class EventEmitter<TEventArgs> {
+  private readonly callbacks: EventCallback<TEventArgs>[] = [];
 
-    if (!callbacks) callbacks = [];
-
-    callbacks.push(callback);
-
-    this.events.set(event, callbacks);
+  add(callback: EventCallback<TEventArgs>) {
+    this.callbacks.push(callback);
   }
 
-  off(event: string, callback: Function) {
-    const callbacks = this.events.get(event);
+  remove(callback: EventCallback<TEventArgs>) {
+    const callbackIndex = this.callbacks.findIndex((x) => x === callback);
 
-    if (!callbacks) return;
-
-    const callbackIndex = callbacks.findIndex((x) => x === callback);
-
-    if (callbackIndex < 0) return;
-
-    callbacks.slice(callbackIndex, callbackIndex + 1);
+    if (callbackIndex >= 0) {
+      this.callbacks.splice(callbackIndex, 1);
+    }
   }
 
-  emit(event: string, args: any) {
-    const callbacks = this.events.get(event);
-
-    if (!callbacks) return;
-
-    callbacks.forEach((f) => f(args));
+  emit(args: TEventArgs) {
+    this.callbacks.forEach((f) => f(args));
   }
 }

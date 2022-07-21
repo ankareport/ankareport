@@ -1,12 +1,16 @@
+import EventEmitter, { EventCallback } from "../core/eventEmitter";
 import { ReportSection as LayoutReportSection } from "../core/layout";
 import ReportItem from "./reportItem";
 import ReportItemSelector from "./reportItemSelector";
 import Resizer, { ResizerOrientation } from "./resizer";
 import "./reportSection.css";
-import EventEmitter from "../core/eventEmitter";
 
 const DEFAULT_SECTION_HEIGHT = 100;
 const MIN_SECTION_HEIGHT = 10;
+
+export interface SelectEventArgs {
+  item: ReportItem;
+}
 
 export default class ReportSection {
   public readonly element = document.createElement("div");
@@ -21,7 +25,7 @@ export default class ReportSection {
   });
   public items: ReportItem[] = [];
 
-  private readonly eventEmitter = new EventEmitter();
+  private readonly _onSelectEventEmitter = new EventEmitter<SelectEventArgs>();
 
   private _height: number = DEFAULT_SECTION_HEIGHT;
 
@@ -67,8 +71,12 @@ export default class ReportSection {
     }
   }
 
-  onSelect(callback: (item: ReportItem) => void) {
-    this.eventEmitter.on("select", callback);
+  addEventListener(event: "select", callback: EventCallback<SelectEventArgs>) {
+    switch (event) {
+      case "select":
+        this._onSelectEventEmitter.add(callback);
+        break;
+    }
   }
 
   onContentDrop(e: DragEvent) {
@@ -77,10 +85,10 @@ export default class ReportSection {
     const text = e.dataTransfer?.getData("text");
 
     const item = this.addItem();
-    if (text) item.text = text;
-    item.binding = e.dataTransfer?.getData("name");
-    item.location.x = e.offsetX;
-    item.location.y = e.offsetY;
+    if (text) item.properties.text = text;
+    item.properties.binding = e.dataTransfer?.getData("name") || "";
+    item.properties.x = e.offsetX;
+    item.properties.y = e.offsetY;
 
     this.selectItem(item);
   }
@@ -97,10 +105,13 @@ export default class ReportSection {
 
   selectItem(item: ReportItem) {
     this.deselectAll();
+
     item.isSelected = true;
     item.refresh();
+
     this.reportItemSelector.show(item);
-    this.eventEmitter.emit("select", item);
+
+    this._onSelectEventEmitter.emit({ item });
   }
 
   deselectAll() {

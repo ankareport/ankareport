@@ -1,4 +1,21 @@
 .anka-sidebar {
   border-left: 1px solid var(--color-border);
   background-color: var(--color-background);
+  position: relative;
+}
+
+.anka-sidebar__content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+}
+
+.anka-sidebar__content > .anka-panel {
+  flex: 1;
+}
+
+.anka-sidebar__content .anka-panel__content > div {
+  position: absolute;
 }
