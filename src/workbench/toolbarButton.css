@@ -1,4 +1,9 @@
 .anka-toolbar-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--color-border-button);
+  user-select: none;
   cursor: pointer;
 }
 

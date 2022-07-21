@@ -1,4 +1,4 @@
-import ToolbarButton from "./toolbarButton";
+import ToolbarButton, { ToolbarButtonOptions } from "./toolbarButton";
 import "./toolbar.css";
 
 export enum ToolbarOrientation {
@@ -23,13 +23,10 @@ export default class Toolbar {
     }
   }
 
-  addButton(text: string, draggable: boolean = false) {
-    const button = new ToolbarButton(text, {
-      draggable,
-    });
+  addButton(options: ToolbarButtonOptions) {
+    const button = new ToolbarButton(options);
 
-    button.refresh();
-    button.appendTo(this.element);
+    this.element.appendChild(button.element);
 
     this.buttons.push(button);
 

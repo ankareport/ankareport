@@ -1,29 +1,70 @@
-import Button from "./button";
 import "./toolbarButton.css";
 
 export interface ToolbarButtonOptions {
+  text: string;
+  title: string;
   draggable?: boolean;
 }
 
-export default class ToolbarButton extends Button {
-  public draggable = false;
+export default class ToolbarButton {
+  public readonly element = document.createElement("div");
 
-  constructor(text: string, options?: ToolbarButtonOptions) {
-    super(text);
+  private _text: string = "";
 
+  get text() {
+    return this._text;
+  }
+
+  set text(value: string) {
+    this._text = value;
+  }
+
+  private _title: string = "";
+
+  get title() {
+    return this._title;
+  }
+
+  set title(value: string) {
+    this._title = value;
+  }
+
+  private _draggable = false;
+
+  get draggable() {
+    return this._draggable;
+  }
+
+  set draggable(value: boolean) {
+    this._draggable = value;
+  }
+
+  constructor(options: ToolbarButtonOptions) {
     this.element.classList.add("anka-toolbar-button");
 
-    this.size.width = 25;
-    this.size.height = 25;
+    this._text = options.text;
+    this._title = options.title;
+    this.element.style.width = 25 + "px";
+    this.element.style.height = 25 + "px";
 
-    if (options) {
-      this.draggable = options.draggable ?? this.draggable;
+    if (options.draggable) {
+      this._draggable = options.draggable;
     }
+
+    this.refresh();
   }
 
   refresh() {
-    super.refresh();
+    this.element.innerText = this._text;
+    this.element.title = this._title
+    this.element.draggable = this._draggable;
+  }
 
-    this.element.draggable = this.draggable;
+  addEventListener(event: "click", callback: () => void) {
+    switch (event) {
+      case "click":
+        this.element.addEventListener("click", callback);
+        break;
+    }
   }
 }

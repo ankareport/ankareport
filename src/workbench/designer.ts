@@ -4,7 +4,8 @@ import { ReportLayout } from "../core/layout";
 import ReportContainer from "./reportContainer";
 import ReportItemProperties from "./reportItemProperties";
 import Sidebar from "./sidebar";
-import Toolbar, { ToolbarOrientation } from "./toolbar";
+import ToolbarLeftMenu from "./toolbarLeftMenu";
+import ToolbarTopMenu from "./toolbarTopMenu";
 import "./designer.css";
 
 interface DataSourceTreeItemData {
@@ -12,14 +13,14 @@ interface DataSourceTreeItemData {
 }
 
 export default class Designer {
-  private readonly menu = new Toolbar(ToolbarOrientation.Horizontal);
-  private readonly content = document.createElement("div");
-  private toolbar = new Toolbar();
-  private reportContainer = new ReportContainer();
-  private sidebar = new Sidebar();
+  public readonly elementContent = document.createElement("div");
+  public readonly menu = new ToolbarTopMenu();
+  public readonly toolbar = new ToolbarLeftMenu();
+  public readonly reportContainer = new ReportContainer();
+  public readonly sidebar = new Sidebar();
 
-  public readonly dataSourceTreeList = new TreeList<DataSourceTreeItemData>();
-  public readonly propertyGrid = new PropertyGrid<ReportItemProperties>();
+  private readonly dataSourceTreeList = new TreeList<DataSourceTreeItemData>();
+  private readonly propertyGrid = new PropertyGrid<ReportItemProperties>();
 
   constructor(private readonly element: HTMLDivElement) {
     this.init();
@@ -27,25 +28,21 @@ export default class Designer {
 
   private init() {
     this.element.classList.add("anka-designer");
-    this.content.classList.add("anka-designer__content");
+    this.elementContent.classList.add("anka-designer__content");
 
     this.element.appendChild(this.menu.element);
-    this.element.appendChild(this.content);
+    this.element.appendChild(this.elementContent);
 
-    this.content.appendChild(this.toolbar.element);
-    this.content.appendChild(this.reportContainer.element);
-    this.content.appendChild(this.sidebar.element);
+    this.elementContent.appendChild(this.toolbar.element);
+    this.elementContent.appendChild(this.reportContainer.element);
+    this.elementContent.appendChild(this.sidebar.element);
 
-    const saveButton = this.menu.addButton("▒");
-    saveButton.onClick(() => {
+    this.menu.saveButton.addEventListener("click", () => {
       console.log(this.toJSON());
     });
-    this.menu.addButton("↩");
-    this.menu.addButton("↪");
-
-    this.toolbar.addButton("Ͳ", true);
 
     // DataSourceTreeList
+    // TODO: Remove this
     this.dataSourceTreeList.setDataSource([
       {
         text: "Item 1",
