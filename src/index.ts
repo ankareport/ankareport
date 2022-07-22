@@ -1,8 +1,9 @@
 import Renderer, { RendererOptions } from "./renderer/renderer";
 import Designer from "./workbench/designer";
+import * as pkg from "../package.json";
 import "./index.css";
 
-export const version = "0.1.0-beta";
+export const version = pkg.version as string;
 
 export function designer(element: HTMLDivElement) {
   return new Designer(element);
