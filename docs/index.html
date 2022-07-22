@@ -7,7 +7,7 @@
     <title>Quick Start - Anka Report</title>
     <link
       rel="stylesheet"
-      href="https://unpkg.com/ankareport/dist/bundle.css"
+      href="https://unpkg.com/ankareport/dist/ankareport.css"
     />
     <style>
       html,
@@ -23,12 +23,12 @@
   <body>
     <div id="designer"></div>
 
-    <script src="https://unpkg.com/ankareport/dist/bundle.js"></script>
+    <script src="https://unpkg.com/ankareport/dist/ankareport.js"></script>
     <script>
       console.log(`ankareport version: ${AnkaReport.version}`);
 
       const designerDiv = document.getElementById("designer");
-      const designer = AnkaReport.init(designerDiv);
+      const designer = AnkaReport.designer(designerDiv);
 
       const layout = {
         width: 500,
