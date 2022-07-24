@@ -70,7 +70,7 @@
       </div>
     </div>
 
-    <script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="../../dist/ankareport.js"></script>
     <script>
       console.log(`ankareport version: ${AnkaReport.version}`);
@@ -151,6 +151,10 @@
       const designerDiv = document.getElementById("designer");
       const designer = AnkaReport.designer(designerDiv);
 
+      designer.menu.saveButton.addEventListener("click", () => {
+        console.log(designer.toJSON());
+      });
+
       designer.loadJSON(layout);
 
       const rendererDiv = document.getElementById("renderer");
@@ -174,7 +178,7 @@
 
         rendererDiv.innerHTML = "";
 
-        const renderer = AnkaReport.renderer({
+        const renderer = AnkaReport.render({
           element: rendererDiv,
           layout,
           data,

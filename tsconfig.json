@@ -4,5 +4,8 @@
     "strict": true,
     "moduleResolution": "node",
     "resolveJsonModule": true
-  }
+  },
+  "exclude": [
+    "docs"
+  ]
 }
