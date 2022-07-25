@@ -9,6 +9,11 @@
   </a>
 </p>
 
+<h3 align="center">
+  <a href="https://ankareport.github.io/docs/getting-started" target="_blank" title="Documentation">Docs</a> |
+  <a href="https://ankareport.github.io/examples/playground.html" target="_blank" title="Playground">Playground</a>
+</h3>
+
 <p align="center">
   <img src="https://cdn.jsdelivr.net/gh/ankareport/assets/designer/designer.png" alt="designer">
 </p>
