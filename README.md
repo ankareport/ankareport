@@ -1,4 +1,15 @@
-# Anka Report
+<h1 align="center">Anka Report</h1>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/ankareport" title="npm package">
+    <img src="https://img.shields.io/npm/v/ankareport">
+  </a>
+  <a href="https://opensource.org/licenses/MIT" title="License: MIT">
+    <img src="https://img.shields.io/badge/License-MIT-blue.svg">
+  </a>
+</p>
+
+## Purpose
 
 Free & Open Source Web Reporting Tool
 
@@ -26,9 +37,14 @@ Free & Open Source Web Reporting Tool
 
 <script>
   const designerDiv = document.getElementById("designer");
-  const designer = AnkaReport.designer(designerDiv);
-
-  designer.loadJSON(layout);
+  const designer = AnkaReport.designer({
+    element: designerDiv,
+    dataSource: dataSource,
+    layout: layout,
+    onSaveButtonClick: (layout) => {
+      console.log(layout);
+    },
+  });
 </script>
 ```
 
@@ -46,7 +62,27 @@ Free & Open Source Web Reporting Tool
 ```
 
 <details>
-  <summary>Example Layout Data</summary>
+  <summary>Example Data Source</summary>
+
+  ```js
+    const dataSource = [
+      { label: "Header 1", field: "header1" },
+      { label: "Header 2", field: "header2" },
+      {
+        label: "Content",
+        children: [
+          { label: "Name", field: "name" },
+          { label: "Surname", field: "surname" },
+        ],
+      },
+      { label: "Footer 1", field: "footer1" },
+      { label: "Footer 2", field: "footer2" },
+    ];
+  ```
+</details>
+
+<details>
+  <summary>Example Layout</summary>
 
   ```js
     const layout = {
@@ -119,7 +155,7 @@ Free & Open Source Web Reporting Tool
 </details>
 
 <details>
-  <summary>Example Layout Data</summary>
+  <summary>Example Data</summary>
 
   ```js
     const data = {

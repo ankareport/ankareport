@@ -67,8 +67,9 @@ const config = {
             type: 'doc',
             docId: 'getting-started',
             position: 'left',
-            label: 'Getting Started',
+            label: 'Docs',
           },
+          {to: '/examples/playground.html', label: 'Playground', position: 'left'},
           // {to: '/blog', label: 'Blog', position: 'left'},
           {
             href: 'https://github.com/ankareport/ankareport',

@@ -5,7 +5,7 @@ sidebar_position: 2
 # Layout
 
 ```ts title="ReportLayout"
-export interface ReportLayout {
+interface ReportLayout {
   width: number;
   headerSection: ReportSection;
   contentSection: ReportSection;
@@ -14,7 +14,7 @@ export interface ReportLayout {
 ```
 
 ```ts title="ReportSection"
-export interface ReportSection {
+interface ReportSection {
   height: number;
   binding: string;
   items: ReportItem[];
@@ -22,7 +22,7 @@ export interface ReportSection {
 ```
 
 ```ts title="ReportItem"
-export interface ReportItem {
+interface ReportItem {
   text: string;
   binding?: string;
   x: number;

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Quick Start - Anka Report</title>
-    <link rel="stylesheet" href="../../dist/ankareport.css" />
+    <link rel="stylesheet" href="../../../../dist/ankareport.css" />
     <style>
       .renderer-container {
         display: flex;
@@ -71,9 +71,23 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="../../dist/ankareport.js"></script>
+    <script src="../../../../dist/ankareport.js"></script>
     <script>
       console.log(`ankareport version: ${AnkaReport.version}`);
+
+      const dataSource = [
+        { label: "Header 1", field: "header1" },
+        { label: "Header 2", field: "header2" },
+        {
+          label: "Content",
+          children: [
+            { label: "Name", field: "name" },
+            { label: "Surname", field: "surname" },
+          ],
+        },
+        { label: "Footer 1", field: "footer1" },
+        { label: "Footer 2", field: "footer2" },
+      ];
 
       const layout = {
         width: 500,
@@ -136,6 +150,16 @@
         },
       };
 
+      const designerDiv = document.getElementById("designer");
+      const designer = AnkaReport.designer({
+        element: designerDiv,
+        dataSource,
+        layout,
+        onSaveButtonClick: (layout) => {
+          console.log(layout);
+        },
+      });
+
       const data = {
         header1: "Header1X",
         header2: "Header2X",
@@ -147,15 +171,6 @@
         footer1: "Footer1X",
         footer2: "Footer2X",
       };
-
-      const designerDiv = document.getElementById("designer");
-      const designer = AnkaReport.designer(designerDiv);
-
-      designer.menu.saveButton.addEventListener("click", () => {
-        console.log(designer.toJSON());
-      });
-
-      designer.loadJSON(layout);
 
       const rendererDiv = document.getElementById("renderer");
       const renderer = AnkaReport.render({

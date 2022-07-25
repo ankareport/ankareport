@@ -8,15 +8,15 @@ Get started by **creating a html file**.
 
 ### HTML
 
-```html title="style"
+```html title="Style"
 <link rel="stylesheet" href="https://unpkg.com/ankareport/dist/ankareport.css" />
 ```
 
-```html title="script"
+```html title="Script"
 <script src="https://unpkg.com/ankareport/dist/ankareport.js"></script>
 ```
 
-```html title="example"
+```html title="Example"
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,14 +40,21 @@ Get started by **creating a html file**.
 
 ## Designer
 
+Have a look at [designer](./designer/introduction) page
+
 ```html
 <script>
   const designerDiv = document.getElementById("designer");
-  const designer = AnkaReport.designer(designerDiv);
+  const designer = AnkaReport.designer({
+    element: designerDiv,
+    ...
+  });
 </script>
 ```
 
 ## Renderer
+
+Have a look at [renderer](./renderer/introduction) page
 
 ```html
 <script>

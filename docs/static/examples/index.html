@@ -27,8 +27,19 @@
     <script>
       console.log(`ankareport version: ${AnkaReport.version}`);
 
-      const designerDiv = document.getElementById("designer");
-      const designer = AnkaReport.designer(designerDiv);
+      const dataSource = [
+        { label: "Header 1", field: "header1" },
+        { label: "Header 2", field: "header2" },
+        {
+          label: "Content",
+          children: [
+            { label: "Name", field: "name" },
+            { label: "Surname", field: "surname" },
+          ],
+        },
+        { label: "Footer 1", field: "footer1" },
+        { label: "Footer 2", field: "footer2" },
+      ];
 
       const layout = {
         width: 500,
@@ -91,7 +102,12 @@
         },
       };
 
-      designer.loadJSON(layout);
+      const designerDiv = document.getElementById("designer");
+      const designer = AnkaReport.designer({
+        element: designerDiv,
+        dataSource,
+        layout,
+      });
     </script>
   </body>
 </html>

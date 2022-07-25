@@ -4,13 +4,15 @@ sidebar_position: 1
 
 # Introduction
 
+## Initialization
+
 ```html
 <script>
   const rendererDiv = document.getElementById("renderer");
   const renderer = AnkaReport.renderer({
     element: rendererDiv,
-    layout: ...,
-    data: ...,
+    layout: layout,
+    data: data,
   });
 </script>
 ```
@@ -32,6 +34,8 @@ const data = {
 ```
 
 ## Example Layout
+
+Have a look at [layout api](../api/layout).
 
 ```js
 const layout = {
