@@ -1,17 +1,20 @@
-import TreeItem from "./treeItem";
+import TreeItem, { TreeItemData, TreeItemRenderer } from "./treeItem";
 
-export interface TreeDataItem<T> {
-  text: string;
-  parent?: TreeDataItem<T>;
-  children?: TreeDataItem<T>[];
-  data: T;
+export interface TreeListOptions<TData> {
+  dataSource?: TreeItemData<TData>[];
+  itemRenderer?: TreeItemRenderer<TData>;
 }
 
-export default class TreeList<T> {
+export default class TreeList<TData> {
   public readonly element = document.createElement("div");
-  public readonly dataSource: TreeDataItem<T>[] = [];
 
-  constructor() {
+  public dataSource: TreeItemData<TData>[];
+  public itemRenderer?: TreeItemRenderer<TData>;
+
+  constructor(options?: TreeListOptions<TData>) {
+    this.dataSource = options?.dataSource || [];
+    this.itemRenderer = options?.itemRenderer;
+
     this.init();
   }
 
@@ -25,17 +28,12 @@ export default class TreeList<T> {
     this.element.innerHTML = "";
 
     this.dataSource.forEach((data) => {
-      const item = new TreeItem(data);
+      const item = new TreeItem({
+        data,
+        renderer: this.itemRenderer,
+      });
 
       this.element.appendChild(item.element);
     });
-  }
-
-  setDataSource(dataSource: TreeDataItem<T>[]) {
-    this.dataSource.length = 0;
-
-    dataSource.forEach((x) => this.dataSource.push(x));
-
-    this.refresh();
   }
 }

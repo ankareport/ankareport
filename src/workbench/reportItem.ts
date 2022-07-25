@@ -52,13 +52,13 @@ export default class ReportItem {
     this.element.remove();
   }
 
-  loadJSON(data: LayoutReportItem) {
-    this.properties.text = data.text;
-    this.properties.binding = data.binding || "";
-    this.properties.x = data.x;
-    this.properties.y = data.y;
-    this.properties.width = data.width;
-    this.properties.height = data.height;
+  loadLayout(layout: LayoutReportItem) {
+    this.properties.text = layout.text;
+    this.properties.binding = layout.binding || "";
+    this.properties.x = layout.x;
+    this.properties.y = layout.y;
+    this.properties.width = layout.width;
+    this.properties.height = layout.height;
 
     this.refresh();
   }

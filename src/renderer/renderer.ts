@@ -24,10 +24,6 @@ export default class Renderer {
       this.options.data,
     );
 
-    this.init();
-  }
-
-  private init() {
     this.options.element.style.width = this.options.layout.width + "px";
     this.options.element.style.position = "relative";
 

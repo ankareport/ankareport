@@ -1,7 +1,23 @@
-import { TreeDataItem } from "./treeList";
 import "./treeItem.css";
 
-export default class TreeItem<T> {
+export interface TreeItemData<TData> {
+  label: string;
+  data: TData;
+  parent?: TreeItemData<TData>;
+  children?: TreeItemData<TData>[];
+}
+
+export type TreeItemRenderer<TData> = (
+  item: TreeItem<TData>,
+  itemData: TreeItemData<TData>,
+) => void;
+
+export interface TreeItemOptions<TData> {
+  data: TreeItemData<TData>;
+  renderer?: TreeItemRenderer<TData>;
+}
+
+export default class TreeItem<TData> {
   public readonly element = document.createElement("div");
   private readonly elementIcon = document.createElement("div");
   private readonly elementLabel = document.createElement("div");
@@ -18,7 +34,7 @@ export default class TreeItem<T> {
     this.refresh();
   }
 
-  constructor(public readonly data: TreeDataItem<T>) {
+  constructor(public readonly options: TreeItemOptions<TData>) {
     this.init();
   }
 
@@ -31,22 +47,26 @@ export default class TreeItem<T> {
     this.element.appendChild(this.elementIcon);
     this.element.appendChild(this.elementLabel);
 
+    if (this.options.renderer) {
+      this.options.renderer(this, this.options.data);
+    }
+
     if (this.hasChild) {
       this.element.appendChild(this.elementChildren);
 
-      this.data.children!.forEach((x) => {
-        const item = new TreeItem<T>(x);
+      this.options.data.children!.forEach((x) => {
+        const item = new TreeItem<TData>({
+          data: x,
+          renderer: this.options.renderer,
+        });
         this.elementChildren.appendChild(item.element);
       });
 
-      this.elementIcon.onclick = () => (this.collapsed = !this.collapsed);
-      this.elementLabel.onclick = () => (this.collapsed = !this.collapsed);
-    } else {
-      this.elementLabel.draggable = true;
-
-      this.elementLabel.addEventListener("dragstart", (e) => {
-        e.dataTransfer?.setData("name", (this.data.data as any).name); // TODO: Fix any
-        e.dataTransfer?.setData("text", this.data.text); // TODO: Fix any
+      this.elementIcon.addEventListener("click", () => {
+        this.collapsed = !this.collapsed;
+      });
+      this.elementLabel.addEventListener("click", () => {
+        this.collapsed = !this.collapsed;
       });
     }
 
@@ -54,7 +74,7 @@ export default class TreeItem<T> {
   }
 
   refresh() {
-    this.elementLabel.innerText = this.data.text;
+    this.elementLabel.innerText = this.options.data.label;
 
     if (this.hasChild) {
       if (this.collapsed) {
@@ -70,6 +90,6 @@ export default class TreeItem<T> {
   }
 
   get hasChild() {
-    return this.data.children && this.data.children.length > 0;
+    return this.options.data.children && this.options.data.children.length > 0;
   }
 }

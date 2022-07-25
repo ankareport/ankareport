@@ -87,12 +87,12 @@ export default class Report {
     }
   }
 
-  loadJSON(data: ReportLayout) {
-    this._width = data.width;
+  loadLayout(layout: ReportLayout) {
+    this._width = layout.width;
 
-    this.reportSectionHeader.loadJSON(data.headerSection);
-    this.reportSectionContent.loadJSON(data.contentSection);
-    this.reportSectionFooter.loadJSON(data.footerSection);
+    this.reportSectionHeader.loadLayout(layout.headerSection);
+    this.reportSectionContent.loadLayout(layout.contentSection);
+    this.reportSectionFooter.loadLayout(layout.footerSection);
 
     this.refresh();
   }

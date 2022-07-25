@@ -26,8 +26,8 @@ export default class ReportContainer {
     }
   }
 
-  loadJSON(data: ReportLayout) {
-    return this.report.loadJSON(data);
+  loadLayout(layout: ReportLayout) {
+    return this.report.loadLayout(layout);
   }
 
   toJSON(): ReportLayout {

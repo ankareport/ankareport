@@ -83,11 +83,11 @@ export default class ReportSection {
   private onContentDrop(e: DragEvent) {
     e.preventDefault();
 
-    const text = e.dataTransfer?.getData("text");
+    const text = e.dataTransfer?.getData("label");
 
     const item = this.addItem();
     item.properties.text = text || "Label";
-    item.properties.binding = e.dataTransfer?.getData("name") || "";
+    item.properties.binding = e.dataTransfer?.getData("field") || "";
     item.properties.x = e.offsetX;
     item.properties.y = e.offsetY;
     item.properties.width = 100;
@@ -137,13 +137,13 @@ export default class ReportSection {
     this.reportItemSelector.hide();
   }
 
-  loadJSON(data: LayoutReportSection) {
-    this.height = data.height;
-    this.binding = data.binding;
+  loadLayout(layout: LayoutReportSection) {
+    this.height = layout.height;
+    this.binding = layout.binding;
 
-    data.items.forEach((data) => {
+    layout.items.forEach((data) => {
       const item = this.addItem();
-      item.loadJSON(data);
+      item.loadLayout(data);
     });
 
     this.refresh();

@@ -6,6 +6,7 @@
   width: 15px;
   display: inline-block;
   cursor: pointer;
+  user-select: none;
 }
 
 .anka-tree-list .label {
