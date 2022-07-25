@@ -9,6 +9,10 @@
   </a>
 </p>
 
+<p align="center">
+  <img src="https://cdn.jsdelivr.net/gh/ankareport/assets/designer/designer.png" alt="designer">
+</p>
+
 ## Purpose
 
 Free & Open Source Web Reporting Tool
