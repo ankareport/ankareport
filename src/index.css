@@ -4,4 +4,7 @@
   --color-border-selector: red;
   --color-border-resizer: blue;
   --color-background: #e1e1e1;
+  --color-paper-background: #eeeeee;
+  --color-paper-line-small: #dddddd;
+  --color-paper-line-large: #cccccc;
 }
