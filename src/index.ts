@@ -1,5 +1,5 @@
+import Designer, { DesignerOptions } from "./designer/designer";
 import Renderer, { RendererOptions } from "./renderer/renderer";
-import Designer, { DesignerOptions } from "./workbench/designer";
 import * as pkg from "../package.json";
 import "./index.css";
 
