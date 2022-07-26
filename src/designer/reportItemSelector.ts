@@ -6,6 +6,7 @@ import { ChangeEventArgs } from "./reportItemProperties";
 import ReportSection from "./reportSection";
 import SelectorBound, { SelectorBoundOrientation } from "./selectorBound";
 import "./reportItemSelector.css";
+import ContextMenu from "./contextMenu";
 
 const LONG_MOVE_DISTANCE = 10;
 const SHORT_MOVE_DISTANCE = 1;
@@ -42,6 +43,7 @@ export default class ReportItemSelector {
   private readonly originalSize = new Size();
   private readonly newLocation = new Point();
   private readonly newSize = new Size();
+  public scope = document.querySelector("body")!;
 
   constructor(private readonly mouseMoveContainer: ReportSection) {
     this.init();
@@ -227,6 +229,12 @@ export default class ReportItemSelector {
     this.newSize.height = item.properties.height;
     this.element.style.display = "block";
 
+    const contextMenu = new ContextMenu(this.element, () => {
+      this.delete();
+    });
+
+    this.scope.appendChild(contextMenu.contextMenuElement);
+
     document.addEventListener("keydown", this.onKeyDown);
 
     this.refresh();
@@ -238,6 +246,17 @@ export default class ReportItemSelector {
     if (["width", "height", "x", "y", "endUpdate"].includes(e.property)) {
       this.show(this.attachedTo!);
     }
+  }
+
+  delete() {
+    document.removeEventListener("keydown", this.onKeyDown);
+    this.attachedTo?.properties.removeEventListener(
+      "change",
+      this.onItemPropertyChange,
+    );
+    this.attachedTo!.dispose();
+    this.attachedTo = undefined;
+    this.element.style.display = "none";
   }
 
   hide() {
