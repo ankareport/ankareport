@@ -2,7 +2,7 @@
 sidebar_position: 1
 ---
 
-# Anka Report 
+# Anka Report
 
 ```ts
 AnkaReport = {

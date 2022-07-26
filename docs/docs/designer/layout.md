@@ -46,7 +46,7 @@ sidebar_position: 3
     // highlight-start
     onSaveButtonClick: (layout) => {
       console.log(layout);
-    }
+    },
     // highlight-end
   });
 </script>

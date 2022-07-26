@@ -5,7 +5,5 @@
     "moduleResolution": "node",
     "resolveJsonModule": true
   },
-  "exclude": [
-    "docs"
-  ]
+  "exclude": ["docs"]
 }

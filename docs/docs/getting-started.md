@@ -9,7 +9,10 @@ Get started by **creating a html file**.
 ### HTML
 
 ```html title="Style"
-<link rel="stylesheet" href="https://unpkg.com/ankareport/dist/ankareport.css" />
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/ankareport/dist/ankareport.css"
+/>
 ```
 
 ```html title="Script"
@@ -19,22 +22,25 @@ Get started by **creating a html file**.
 ```html title="Example"
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Anka Report</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Anka Report</title>
 
-  <link rel="stylesheet" href="https://unpkg.com/ankareport/dist/ankareport.css" />
-</head>
-<body>
-  ...
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/ankareport/dist/ankareport.css"
+    />
+  </head>
+  <body>
+    ...
 
-  <script src="https://unpkg.com/ankareport/dist/ankareport.js"></script>
-  <script>
-    console.log(AnkaReport.version);
-  </script>
-</body>
+    <script src="https://unpkg.com/ankareport/dist/ankareport.js"></script>
+    <script>
+      console.log(AnkaReport.version);
+    </script>
+  </body>
 </html>
 ```
 

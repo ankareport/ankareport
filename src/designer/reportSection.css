@@ -11,9 +11,15 @@
 }
 
 .anka-report-section__content {
-  background-image: 
-    linear-gradient(var(--color-paper-line-large) 1.5px, transparent 1.5px),
-    linear-gradient(90deg, var(--color-paper-line-large) 1.5px, transparent 1.5px),
+  background-image: linear-gradient(
+      var(--color-paper-line-large) 1.5px,
+      transparent 1.5px
+    ),
+    linear-gradient(
+      90deg,
+      var(--color-paper-line-large) 1.5px,
+      transparent 1.5px
+    ),
     linear-gradient(var(--color-paper-line-small) 1px, transparent 1px),
     linear-gradient(90deg, var(--color-paper-line-small) 1px, transparent 1px);
   background-size: 100px 100px, 100px 100px, 20px 20px, 20px, 20px;

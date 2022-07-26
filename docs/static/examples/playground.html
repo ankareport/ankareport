@@ -29,9 +29,10 @@
 
     <script>
       const hostname = window.location.hostname;
-      const host = !hostname || hostname == "localhost"
-        ? "../../../dist/"
-        : "https://unpkg.com/ankareport/dist/";
+      const host =
+        !hostname || hostname == "localhost"
+          ? "../../../dist/"
+          : "https://unpkg.com/ankareport/dist/";
 
       const link = document.createElement("link");
       link.rel = "stylesheet";

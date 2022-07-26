@@ -16,10 +16,10 @@ Create export function:
 
 ```html
 <script>
-    const rendererDiv = document.getElementById("renderer");
+  const rendererDiv = document.getElementById("renderer");
 
-    function exportToPdf() {
-      html2pdf().from(rendererDiv).save("report.pdf");
-    }
+  function exportToPdf() {
+    html2pdf().from(rendererDiv).save("report.pdf");
+  }
 </script>
 ```

@@ -36,7 +36,9 @@ export default class ReportItem {
     this.element.style.backgroundColor = this.properties.backgroundColor!;
     this.element.style.color = this.properties.color!;
     this.element.style.border = this.properties.border || "1px solid #cccccc";
-    this.element.style.fontFamily = this.properties.fontFamily ? this.properties.fontFamily : "Tahoma";
+    this.element.style.fontFamily = this.properties.fontFamily
+      ? this.properties.fontFamily
+      : "Tahoma";
     this.element.style.fontSize = this.properties.fontSize
       ? this.properties.fontSize + "px"
       : "";
