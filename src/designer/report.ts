@@ -1,5 +1,5 @@
 import { EventCallback } from "../core/eventEmitter";
-import { ReportLayout } from "../core/layout";
+import { ILayout } from "../core/layout";
 import ReportSection, { SelectEventArgs } from "./reportSection";
 import Resizer, { ResizerOrientation } from "./resizer";
 import "./report.css";
@@ -122,7 +122,7 @@ export default class Report {
     }
   }
 
-  loadLayout(layout: ReportLayout) {
+  loadLayout(layout: ILayout) {
     this._width = layout.width;
 
     this.reportSectionHeader.loadLayout(layout.headerSection);
@@ -132,7 +132,7 @@ export default class Report {
     this.refresh();
   }
 
-  toJSON(): ReportLayout {
+  toJSON(): ILayout {
     return {
       width: this.width,
       headerSection: this.reportSectionHeader.toJSON(),

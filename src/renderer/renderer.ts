@@ -1,9 +1,9 @@
-import { ReportLayout } from "../core/layout";
+import { ILayout } from "../core/layout";
 import Section from "./section";
 
 export interface RendererOptions {
   element: HTMLDivElement;
-  layout: ReportLayout;
+  layout: ILayout;
   data: any;
 }
 

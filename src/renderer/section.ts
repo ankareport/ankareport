@@ -1,4 +1,4 @@
-import { ReportSection } from "../core/layout";
+import { ISection } from "../core/layout";
 import ReportItem from "../designer/reportItem";
 
 export default class Section {
@@ -6,7 +6,7 @@ export default class Section {
   private readonly reportItems: ReportItem[] = [];
 
   constructor(
-    private readonly layout: ReportSection,
+    private readonly layout: ISection,
     private readonly data: any,
   ) {
     this.init();

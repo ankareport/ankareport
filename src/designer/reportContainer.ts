@@ -1,5 +1,5 @@
 import { EventCallback } from "../core/eventEmitter";
-import { ReportLayout } from "../core/layout";
+import { ILayout } from "../core/layout";
 import Report from "./report";
 import { SelectEventArgs } from "./reportSection";
 import "./reportContainer.css";
@@ -33,11 +33,11 @@ export default class ReportContainer {
     }
   }
 
-  loadLayout(layout: ReportLayout) {
+  loadLayout(layout: ILayout) {
     return this.report.loadLayout(layout);
   }
 
-  toJSON(): ReportLayout {
+  toJSON(): ILayout {
     return this.report.toJSON();
   }
 }

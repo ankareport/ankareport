@@ -13,7 +13,7 @@ class Renderer {
 ```ts title="RendererOptions"
 interface RendererOptions {
   element: HTMLDivElement;
-  layout: ReportLayout;
+  layout: IReportLayout;
   data: any;
 }
 ```

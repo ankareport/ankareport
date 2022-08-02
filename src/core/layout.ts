@@ -1,17 +1,17 @@
-export interface ReportLayout {
+export interface ILayout {
   width: number;
-  headerSection: ReportSection;
-  contentSection: ReportSection;
-  footerSection: ReportSection;
+  headerSection: ISection;
+  contentSection: ISection;
+  footerSection: ISection;
 }
 
-export interface ReportSection {
+export interface ISection {
   height: number;
   binding: string;
-  items: ReportItem[];
+  items: IReportItem[];
 }
 
-export interface ReportItem {
+export interface IReportItem {
   text: string;
   binding?: string;
   x: number;

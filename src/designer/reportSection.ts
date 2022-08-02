@@ -1,5 +1,5 @@
 import EventEmitter, { EventCallback } from "../core/eventEmitter";
-import { ReportSection as LayoutReportSection } from "../core/layout";
+import { ISection as LayoutReportSection } from "../core/layout";
 import ReportItem from "./reportItem";
 import ReportItemSelector from "./reportItemSelector";
 import ReportSectionProperties from "./reportSectionProperties";

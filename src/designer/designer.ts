@@ -1,5 +1,5 @@
 import PropertyGrid from "../components/propertyGrid/propertyGrid";
-import { ReportLayout } from "../core/layout";
+import { ILayout } from "../core/layout";
 import DataSourceTreeList, {
   DataSourceTreeItemData,
 } from "./dataSourceTreeList";
@@ -9,13 +9,13 @@ import ToolbarLeftMenu from "./toolbarLeftMenu";
 import ToolbarTopMenu from "./toolbarTopMenu";
 import "./designer.css";
 
-export type SaveButtonClickCallback = (layout: ReportLayout) => void;
+export type SaveButtonClickCallback = (layout: ILayout) => void;
 
 export interface DesignerOptions {
   element: HTMLDivElement;
   dataSource?: DataSourceTreeItemData[];
   onSaveButtonClick?: SaveButtonClickCallback;
-  layout?: ReportLayout;
+  layout?: ILayout;
 }
 
 export default class Designer {
@@ -75,11 +75,11 @@ export default class Designer {
     this.dataSourceTreeList.setDataSource(dataSource);
   }
 
-  loadLayout(layout: ReportLayout) {
+  loadLayout(layout: ILayout) {
     return this.reportContainer.loadLayout(layout);
   }
 
-  toJSON(): ReportLayout {
+  toJSON(): ILayout {
     return this.reportContainer.toJSON();
   }
 }

@@ -4,25 +4,25 @@ sidebar_position: 2
 
 # Layout
 
-```ts title="ReportLayout"
-interface ReportLayout {
+```ts title="ILayout"
+interface ILayout {
   width: number;
-  headerSection: ReportSection;
-  contentSection: ReportSection;
-  footerSection: ReportSection;
+  headerSection: ISection;
+  contentSection: ISection;
+  footerSection: ISection;
 }
 ```
 
-```ts title="ReportSection"
-interface ReportSection {
+```ts title="ISection"
+interface ISection {
   height: number;
   binding: string;
-  items: ReportItem[];
+  items: IReportItem[];
 }
 ```
 
-```ts title="ReportItem"
-interface ReportItem {
+```ts title="IReportItem"
+interface IReportItem {
   text: string;
   binding?: string;
   x: number;

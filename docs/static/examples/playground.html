@@ -201,30 +201,30 @@
         const layoutInput = document.getElementById("layout-input");
         const dataInput = document.getElementById("data-input");
 
-        function fillLayoutInputFromDesigner() {
-          const json = designer.toJSON();
-          layoutInput.value = JSON.stringify(json, null, 2);
-        }
-
-        function refreshRenderer() {
-          const layout = JSON.parse(layoutInput.value);
-          const data = JSON.parse(dataInput.value);
-
-          rendererDiv.innerHTML = "";
-
-          const renderer = AnkaReport.render({
-            element: rendererDiv,
-            layout,
-            data,
-          });
-        }
-
-        function exportToPdf() {
-          html2pdf().from(rendererDiv).save("report.pdf");
-        }
-
         layoutInput.value = JSON.stringify(layout, null, 2);
         dataInput.value = JSON.stringify(data, null, 2);
+      }
+
+      function fillLayoutInputFromDesigner() {
+        const json = designer.toJSON();
+        layoutInput.value = JSON.stringify(json, null, 2);
+      }
+
+      function refreshRenderer() {
+        const layout = JSON.parse(layoutInput.value);
+        const data = JSON.parse(dataInput.value);
+
+        rendererDiv.innerHTML = "";
+
+        const renderer = AnkaReport.render({
+          element: rendererDiv,
+          layout,
+          data,
+        });
+      }
+
+      function exportToPdf() {
+        html2pdf().from(rendererDiv).save("report.pdf");
       }
     </script>
   </body>

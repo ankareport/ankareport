@@ -12,18 +12,18 @@ class Designer {
 
   setDataSource(dataSource: DataSourceTreeItemData[]);
 
-  loadLayout(layout: ReportLayout);
+  loadLayout(layout: ILayout);
 
-  toJSON(): ReportLayout;
+  toJSON(): ILayout;
 }
 ```
 
 ```ts title="DesignerOptions"
 interface DesignerOptions {
   element: HTMLDivElement;
-  layout?: ReportLayout;
+  layout?: ILayout;
   dataSource?: DataSourceTreeItemData[];
-  onSaveButtonClick?: (layout: ReportLayout) => void;
+  onSaveButtonClick?: (layout: ILayout) => void;
 }
 ```
 
