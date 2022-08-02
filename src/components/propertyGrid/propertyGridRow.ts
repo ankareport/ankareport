@@ -6,16 +6,16 @@ export interface ChangeEventArgs {
   value: string;
 }
 
-export default class PropertyGridRow<TDataSource> {
+export default class PropertyGridRow {
   public readonly element = document.createElement("div");
   public readonly elementLabel = document.createElement("div");
   public readonly elementEditorContainer = document.createElement("div");
   public readonly elementEditor = document.createElement("input");
 
-  private readonly _onChangeEventEmitter = new EventEmitter<ChangeEventArgs>();
+  private readonly _changeEventEmitter = new EventEmitter<ChangeEventArgs>();
 
   constructor(
-    public readonly property: Property<TDataSource>,
+    public readonly property: Property,
     private readonly value: string,
   ) {
     this.init();
@@ -33,7 +33,7 @@ export default class PropertyGridRow<TDataSource> {
     this.elementEditorContainer.appendChild(this.elementEditor);
 
     this.elementEditor.addEventListener("change", () => {
-      this._onChangeEventEmitter.emit({ value: this.elementEditor.value });
+      this._changeEventEmitter.emit({ value: this.elementEditor.value });
     });
 
     this.refresh();
@@ -47,7 +47,7 @@ export default class PropertyGridRow<TDataSource> {
   addEventListener(event: "change", callback: EventCallback<ChangeEventArgs>) {
     switch (event) {
       case "change":
-        this._onChangeEventEmitter.add(callback);
+        this._changeEventEmitter.add(callback);
         break;
     }
   }

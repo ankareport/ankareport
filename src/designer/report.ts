@@ -7,6 +7,10 @@ import "./report.css";
 const DEFAULT_REPORT_WIDTH = 400;
 const MIN_REPORT_WIDTH = 100;
 
+export interface ReportEventMap {
+  select: SelectEventArgs;
+}
+
 export default class Report {
   public readonly element = document.createElement("div");
 
@@ -38,26 +42,66 @@ export default class Report {
   private init() {
     this.element.classList.add("anka-report");
 
+    this.element.tabIndex = 0;
+
     this.element.appendChild(this.reportSectionHeader.element);
     this.element.appendChild(this.reportSectionContent.element);
     this.element.appendChild(this.reportSectionFooter.element);
     this.element.appendChild(this.resizer.element);
 
-    this.initItemSelectionChangedEvents();
+    this.initSelectEvents();
+    this.initKeyDownEvent();
+
     this.refresh();
   }
 
-  initItemSelectionChangedEvents() {
-    this.reportSectionHeader.addEventListener("select", () => {
-      this.deselectExcept(this.reportSectionHeader);
+  private initSelectEvents() {
+    this.reportSectionHeader.addEventListener("select", (e) => {
+      this.deselectExcept(e, this.reportSectionHeader);
     });
 
-    this.reportSectionContent.addEventListener("select", () => {
-      this.deselectExcept(this.reportSectionContent);
+    this.reportSectionContent.addEventListener("select", (e) => {
+      this.deselectExcept(e, this.reportSectionContent);
     });
 
-    this.reportSectionFooter.addEventListener("select", () => {
-      this.deselectExcept(this.reportSectionFooter);
+    this.reportSectionFooter.addEventListener("select", (e) => {
+      this.deselectExcept(e, this.reportSectionFooter);
+    });
+  }
+
+  private deselectExcept(
+    e: SelectEventArgs,
+    exceptReportSection: ReportSection,
+  ) {
+    if (
+      e.type !== "ReportItem" ||
+      exceptReportSection !== this.reportSectionHeader
+    ) {
+      this.reportSectionHeader.deselectAll();
+    }
+
+    if (
+      e.type !== "ReportItem" ||
+      exceptReportSection !== this.reportSectionContent
+    ) {
+      this.reportSectionContent.deselectAll();
+    }
+
+    if (
+      e.type !== "ReportItem" ||
+      exceptReportSection !== this.reportSectionFooter
+    ) {
+      this.reportSectionFooter.deselectAll();
+    }
+  }
+
+  private initKeyDownEvent() {
+    this.element.addEventListener("keydown", (e) => {
+      if (e.key === "Delete") {
+        this.reportSectionHeader.removeSelectedItem();
+        this.reportSectionContent.removeSelectedItem();
+        this.reportSectionFooter.removeSelectedItem();
+      }
     });
   }
 
@@ -65,24 +109,15 @@ export default class Report {
     this.element.style.width = `${this.width}px`;
   }
 
-  private deselectExcept(reportSection: ReportSection) {
-    if (reportSection !== this.reportSectionHeader) {
-      this.reportSectionHeader.deselectAll();
-    }
-    if (reportSection !== this.reportSectionContent) {
-      this.reportSectionContent.deselectAll();
-    }
-    if (reportSection !== this.reportSectionFooter) {
-      this.reportSectionFooter.deselectAll();
-    }
-  }
-
-  addEventListener(event: "select", callback: EventCallback<SelectEventArgs>) {
+  addEventListener<K extends keyof ReportEventMap>(
+    event: K,
+    listener: EventCallback<ReportEventMap[K]>,
+  ) {
     switch (event) {
       case "select":
-        this.reportSectionHeader.addEventListener(event, callback);
-        this.reportSectionContent.addEventListener(event, callback);
-        this.reportSectionFooter.addEventListener(event, callback);
+        this.reportSectionHeader.addEventListener(event, listener);
+        this.reportSectionContent.addEventListener(event, listener);
+        this.reportSectionFooter.addEventListener(event, listener);
         break;
     }
   }

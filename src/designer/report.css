@@ -2,4 +2,5 @@
   background-color: var(--color-background);
   overflow: hidden;
   position: absolute;
+  outline: none;
 }

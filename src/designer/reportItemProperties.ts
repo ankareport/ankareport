@@ -1,16 +1,9 @@
 import { Property } from "../components/propertyGrid/property";
-import EventEmitter, { EventCallback } from "../core/eventEmitter";
-
-export interface ChangeEventArgs {
-  property: string;
-}
+import Properties from "../core/properties";
 
 export type TextAlign = "left" | "center" | "right";
 
-export default class ReportItemProperties {
-  private readonly _onChangeEventEmitter = new EventEmitter<ChangeEventArgs>();
-  private _updating = false;
-
+export default class ReportItemProperties extends Properties {
   private _width = 0;
   private _height = 0;
   private _x = 0;
@@ -134,32 +127,7 @@ export default class ReportItemProperties {
     this.emitOnChange("textAlign");
   }
 
-  addEventListener(event: "change", callback: EventCallback<ChangeEventArgs>) {
-    switch (event) {
-      case "change":
-        this._onChangeEventEmitter.add(callback);
-        break;
-    }
-  }
-
-  removeEventListener(
-    event: "change",
-    callback: EventCallback<ChangeEventArgs>,
-  ) {
-    switch (event) {
-      case "change":
-        this._onChangeEventEmitter.remove(callback);
-        break;
-    }
-  }
-
-  private emitOnChange(property: keyof ReportItemProperties) {
-    if (this._updating) return;
-
-    this._onChangeEventEmitter.emit({ property });
-  }
-
-  getPropertyDefinitions(): Property<ReportItemProperties>[] {
+  getPropertyDefinitions(): Property[] {
     return [
       { field: "width", label: "Width", type: "number" },
       { field: "height", label: "Height", type: "number" },
@@ -177,15 +145,5 @@ export default class ReportItemProperties {
       { field: "fontWeight", label: "Font Weight", type: "string" },
       { field: "textAlign", label: "Text Align", type: "string" },
     ];
-  }
-
-  beginUpdate() {
-    this._updating = true;
-  }
-
-  endUpdate() {
-    this._updating = false;
-
-    this.emitOnChange("endUpdate");
   }
 }

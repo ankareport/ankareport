@@ -3,4 +3,5 @@
   position: absolute;
   user-select: none;
   cursor: all-scroll;
+  outline: none;
 }

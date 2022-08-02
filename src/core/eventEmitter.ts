@@ -12,6 +12,12 @@ export default class EventEmitter<TEventArgs> {
 
     if (callbackIndex >= 0) {
       this.callbacks.splice(callbackIndex, 1);
+    } else {
+      console.warn(
+        new Error(
+          `Callback not found. Callback count: ${this.callbacks.length}.`,
+        ),
+      );
     }
   }
 

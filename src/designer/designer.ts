@@ -4,7 +4,6 @@ import DataSourceTreeList, {
   DataSourceTreeItemData,
 } from "./dataSourceTreeList";
 import ReportContainer from "./reportContainer";
-import ReportItemProperties from "./reportItemProperties";
 import Sidebar from "./sidebar";
 import ToolbarLeftMenu from "./toolbarLeftMenu";
 import ToolbarTopMenu from "./toolbarTopMenu";
@@ -29,7 +28,7 @@ export default class Designer {
 
   public readonly sidebar = new Sidebar();
   private readonly dataSourceTreeList = new DataSourceTreeList();
-  private readonly propertyGrid = new PropertyGrid<ReportItemProperties>();
+  private readonly propertyGrid = new PropertyGrid();
 
   constructor(options: DesignerOptions) {
     const { element } = options;
@@ -49,13 +48,15 @@ export default class Designer {
     if (options.dataSource) this.setDataSource(options.dataSource);
 
     this.reportContainer.addEventListener("select", (e) => {
-      this.propertyGrid.properties = e.item.properties.getPropertyDefinitions();
-      this.propertyGrid.dataSource = e.item.properties;
-
-      // TODO: Remove this because event will be triggerred even if selected item changed
-      e.item.properties.addEventListener("change", () => {
-        this.propertyGrid.refresh();
-      });
+      switch (e.type) {
+        case "ReportSection":
+        case "ReportItem":
+          this.propertyGrid.setDataSource(e.element.properties);
+          break;
+        default:
+          this.propertyGrid.setDataSource(null);
+          break;
+      }
     });
 
     if (options.layout) {

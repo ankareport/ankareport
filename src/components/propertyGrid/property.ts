@@ -1,7 +1,7 @@
 export type PropertyType = "boolean" | "string" | "number" | "color";
 
-export interface Property<TDataSource> {
-  field: keyof TDataSource;
+export interface Property {
+  field: string;
   label: string;
   type: PropertyType;
 }
