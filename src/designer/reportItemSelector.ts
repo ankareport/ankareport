@@ -1,8 +1,8 @@
 import DragDrop from "../core/dragDrop";
 import Point from "../core/point";
+import { ChangeEventArgs } from "../core/properties";
 import Size from "../core/size";
 import ReportItem from "./reportItem";
-import { ChangeEventArgs } from "./reportItemProperties";
 import ReportSection from "./reportSection";
 import SelectorBound, { SelectorBoundOrientation } from "./selectorBound";
 import "./reportItemSelector.css";
@@ -10,9 +10,10 @@ import ContextMenu from "./contextMenu";
 
 const LONG_MOVE_DISTANCE = 10;
 const SHORT_MOVE_DISTANCE = 1;
+
 export default class ReportItemSelector {
   public readonly element = document.createElement("div");
-  private attachedTo?: ReportItem;
+  public attachedTo?: ReportItem;
 
   private readonly boundTL = new SelectorBound(
     SelectorBoundOrientation.TopLeft,
@@ -54,6 +55,7 @@ export default class ReportItemSelector {
     this.onItemPropertyChange = this.onItemPropertyChange.bind(this);
 
     this.element.classList.add("anka-report-item-selector");
+
     this.element.appendChild(this.boundTL.element);
     this.element.appendChild(this.boundTC.element);
     this.element.appendChild(this.boundTR.element);
@@ -62,6 +64,9 @@ export default class ReportItemSelector {
     this.element.appendChild(this.boundBL.element);
     this.element.appendChild(this.boundBC.element);
     this.element.appendChild(this.boundBR.element);
+
+    this.element.tabIndex = -1;
+
     this.hide();
 
     this.initMoveDragDrop();
@@ -235,11 +240,13 @@ export default class ReportItemSelector {
 
     this.scope.appendChild(contextMenu.contextMenuElement);
 
-    document.addEventListener("keydown", this.onKeyDown);
+    this.element.addEventListener("keydown", this.onKeyDown);
 
     this.refresh();
 
     item.properties.addEventListener("change", this.onItemPropertyChange);
+
+    this.element.focus();
   }
 
   onItemPropertyChange(e: ChangeEventArgs) {
@@ -249,7 +256,7 @@ export default class ReportItemSelector {
   }
 
   delete() {
-    document.removeEventListener("keydown", this.onKeyDown);
+    this.element.removeEventListener("keydown", this.onKeyDown);
     this.attachedTo?.properties.removeEventListener(
       "change",
       this.onItemPropertyChange,
@@ -260,7 +267,7 @@ export default class ReportItemSelector {
   }
 
   hide() {
-    document.removeEventListener("keydown", this.onKeyDown);
+    this.element.removeEventListener("keydown", this.onKeyDown);
     this.attachedTo?.properties.removeEventListener(
       "change",
       this.onItemPropertyChange,

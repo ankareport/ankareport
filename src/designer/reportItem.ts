@@ -1,21 +1,28 @@
+import IDisposable from "../core/disposable";
+import { EventCallback } from "../core/eventEmitter";
 import { ReportItem as LayoutReportItem } from "../core/layout";
 import ReportItemProperties from "./reportItemProperties";
 
-export default class ReportItem {
+export interface ReportItemEventMap {
+  select: unknown;
+}
+
+export default class ReportItem implements IDisposable {
   public readonly element = document.createElement("div");
 
-  public isSelected = false;
   public readonly properties = new ReportItemProperties();
 
   constructor() {
     this.init();
   }
 
-  init() {
+  private init() {
+    this.element.tabIndex = 0;
     this.element.style.display = "inline-block";
     this.element.style.position = "absolute";
     this.element.style.cursor = "pointer";
     this.element.style.userSelect = "none";
+    this.element.style.outline = "none";
 
     this.properties.addEventListener("change", () => {
       this.refresh();
@@ -46,8 +53,15 @@ export default class ReportItem {
     this.element.style.textAlign = this.properties.textAlign!;
   }
 
-  onClick(callback: () => void) {
-    this.element.onclick = callback;
+  addEventListener<K extends keyof ReportItemEventMap>(
+    event: K,
+    listener: EventCallback<ReportItemEventMap[K]>,
+  ) {
+    switch (event) {
+      case "select":
+        this.element.addEventListener("focus", () => listener(undefined));
+        break;
+    }
   }
 
   dispose() {

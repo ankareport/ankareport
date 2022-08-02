@@ -4,6 +4,10 @@ import Report from "./report";
 import { SelectEventArgs } from "./reportSection";
 import "./reportContainer.css";
 
+export interface ReportContainerEventMap {
+  select: SelectEventArgs;
+}
+
 export default class ReportContainer {
   public readonly element = document.createElement("div");
   public readonly report = new Report();
@@ -18,10 +22,13 @@ export default class ReportContainer {
     this.element.appendChild(this.report.element);
   }
 
-  addEventListener(event: "select", callback: EventCallback<SelectEventArgs>) {
+  addEventListener<K extends keyof ReportContainerEventMap>(
+    event: K,
+    listener: EventCallback<SelectEventArgs>,
+  ) {
     switch (event) {
       case "select":
-        this.report.addEventListener("select", callback);
+        this.report.addEventListener(event, listener);
         break;
     }
   }

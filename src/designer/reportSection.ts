@@ -2,14 +2,26 @@ import EventEmitter, { EventCallback } from "../core/eventEmitter";
 import { ReportSection as LayoutReportSection } from "../core/layout";
 import ReportItem from "./reportItem";
 import ReportItemSelector from "./reportItemSelector";
+import ReportSectionProperties from "./reportSectionProperties";
 import Resizer, { ResizerOrientation } from "./resizer";
 import "./reportSection.css";
 
-const DEFAULT_SECTION_HEIGHT = 100;
-const MIN_SECTION_HEIGHT = 10;
+export type SelectEventArgs =
+  | SelectReportSectionEventArgs
+  | SelectReportItemEventArgs;
 
-export interface SelectEventArgs {
-  item: ReportItem;
+export interface SelectReportSectionEventArgs {
+  type: "ReportSection";
+  element: ReportSection;
+}
+
+export interface SelectReportItemEventArgs {
+  type: "ReportItem";
+  element: ReportItem;
+}
+
+export interface ReportSectionEventMap {
+  select: SelectEventArgs;
 }
 
 export default class ReportSection {
@@ -20,34 +32,14 @@ export default class ReportSection {
   public readonly resizer = new Resizer({
     orientation: ResizerOrientation.Horizontal,
     onResize: (e) => {
-      this.height = this.height + e.offsetY;
+      this.properties.height = this.properties.height + e.offsetY;
     },
   });
   public items: ReportItem[] = [];
 
-  private readonly _onSelectEventEmitter = new EventEmitter<SelectEventArgs>();
+  public readonly properties = new ReportSectionProperties();
 
-  private _height: number = DEFAULT_SECTION_HEIGHT;
-
-  get height() {
-    return this._height;
-  }
-
-  set height(value: number) {
-    this._height = Math.max(MIN_SECTION_HEIGHT, value);
-    this.refresh();
-  }
-
-  private _binding = "";
-
-  get binding() {
-    return this._binding;
-  }
-
-  set binding(value: string) {
-    this._binding = value;
-    this.refresh();
-  }
+  private readonly _selectEventEmitter = new EventEmitter<SelectEventArgs>();
 
   constructor(private readonly text: string) {
     this.init();
@@ -58,26 +50,30 @@ export default class ReportSection {
     this.elementHeader.classList.add("anka-report-section__header");
     this.elementContent.classList.add("anka-report-section__content");
 
+    this.element.tabIndex = 0;
+
     this.element.appendChild(this.elementHeader);
     this.element.appendChild(this.elementContent);
     this.elementContent.appendChild(this.reportItemSelector.element);
     this.elementContent.appendChild(this.resizer.element);
     this.refresh();
 
-    this.element.onclick = (e) => this.onContentClick(e);
+    this.element.addEventListener("focus", () => {
+      this._selectEventEmitter.emit({
+        type: "ReportSection",
+        element: this,
+      });
+    });
+    this.properties.addEventListener("change", () => {
+      this.refresh();
+    });
     this.elementContent.ondragover = (e) => e.preventDefault();
     this.elementContent.ondrop = (e) => this.onContentDrop(e);
   }
 
   refresh() {
     this.elementHeader.innerText = this.text;
-    this.elementContent.style.height = `${this.height}px`;
-  }
-
-  private onContentClick(e: MouseEvent) {
-    if (e.target === this.elementContent) {
-      this.deselectAll();
-    }
+    this.elementContent.style.height = `${this.properties.height}px`;
   }
 
   private onContentDrop(e: DragEvent) {
@@ -96,17 +92,20 @@ export default class ReportSection {
     this.selectItem(item);
   }
 
-  addEventListener(event: "select", callback: EventCallback<SelectEventArgs>) {
+  addEventListener<K extends keyof ReportSectionEventMap>(
+    event: K,
+    listener: EventCallback<ReportSectionEventMap[K]>,
+  ) {
     switch (event) {
       case "select":
-        this._onSelectEventEmitter.add(callback);
+        this._selectEventEmitter.add(listener);
         break;
     }
   }
 
   addItem() {
     const item = new ReportItem();
-    item.onClick(() => this.selectItem(item));
+    item.addEventListener("select", () => this.selectItem(item));
     this.items.push(item);
 
     this.elementContent.insertBefore(
@@ -120,26 +119,36 @@ export default class ReportSection {
   selectItem(item: ReportItem) {
     this.deselectAll();
 
-    item.isSelected = true;
-    item.refresh();
-
     this.reportItemSelector.show(item);
 
-    this._onSelectEventEmitter.emit({ item });
+    this._selectEventEmitter.emit({
+      type: "ReportItem",
+      element: item,
+    });
+  }
+
+  removeItem(item: ReportItem) {
+    const index = this.items.findIndex((x) => x === item);
+    this.items.splice(index, 1);
+    item.dispose();
+  }
+
+  removeSelectedItem() {
+    const item = this.reportItemSelector.attachedTo;
+
+    if (item) {
+      this.reportItemSelector.hide();
+      this.removeItem(item);
+    }
   }
 
   deselectAll() {
-    this.items.forEach((x) => {
-      x.isSelected = false;
-      x.refresh();
-    });
-
     this.reportItemSelector.hide();
   }
 
   loadLayout(layout: LayoutReportSection) {
-    this.height = layout.height;
-    this.binding = layout.binding;
+    this.properties.height = layout.height;
+    this.properties.binding = layout.binding;
 
     layout.items.forEach((data) => {
       const item = this.addItem();
@@ -151,8 +160,8 @@ export default class ReportSection {
 
   toJSON(): LayoutReportSection {
     return {
-      height: this.height,
-      binding: this.binding,
+      height: this.properties.height,
+      binding: this.properties.binding,
       items: this.items.map((x) => x.toJSON()),
     };
   }
