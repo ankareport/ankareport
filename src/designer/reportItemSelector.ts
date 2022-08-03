@@ -1,4 +1,7 @@
+import ContextMenu from "../components/contextMenu/contextMenu";
+import { ClickEventArgs, MenuButton } from "../components/menu/menu";
 import DragDrop from "../core/dragDrop";
+import { EventCallback } from "../core/eventEmitter";
 import Point from "../core/point";
 import { ChangeEventArgs } from "../core/properties";
 import Size from "../core/size";
@@ -6,10 +9,20 @@ import ReportItem from "./reportItem";
 import ReportSection from "./reportSection";
 import SelectorBound, { SelectorBoundOrientation } from "./selectorBound";
 import "./reportItemSelector.css";
-import ContextMenu from "./contextMenu";
 
 const LONG_MOVE_DISTANCE = 10;
 const SHORT_MOVE_DISTANCE = 1;
+
+export interface ReportItemSelectorContextMenuArgs {
+  item: ReportItem;
+  width: string;
+  buttons: MenuButton[];
+  onClick: (ev: ClickEventArgs) => void;
+}
+
+export interface ReportItemSelectorEventMap {
+  contextmenu: ReportItemSelectorContextMenuArgs;
+}
 
 export default class ReportItemSelector {
   public readonly element = document.createElement("div");
@@ -44,7 +57,6 @@ export default class ReportItemSelector {
   private readonly originalSize = new Size();
   private readonly newLocation = new Point();
   private readonly newSize = new Size();
-  public scope = document.querySelector("body")!;
 
   constructor(private readonly mouseMoveContainer: ReportSection) {
     this.init();
@@ -234,12 +246,6 @@ export default class ReportItemSelector {
     this.newSize.height = item.properties.height;
     this.element.style.display = "block";
 
-    const contextMenu = new ContextMenu(this.element, () => {
-      this.delete();
-    });
-
-    this.scope.appendChild(contextMenu.contextMenuElement);
-
     this.element.addEventListener("keydown", this.onKeyDown);
 
     this.refresh();
@@ -253,17 +259,6 @@ export default class ReportItemSelector {
     if (["width", "height", "x", "y", "endUpdate"].includes(e.property)) {
       this.show(this.attachedTo!);
     }
-  }
-
-  delete() {
-    this.element.removeEventListener("keydown", this.onKeyDown);
-    this.attachedTo?.properties.removeEventListener(
-      "change",
-      this.onItemPropertyChange,
-    );
-    this.attachedTo!.dispose();
-    this.attachedTo = undefined;
-    this.element.style.display = "none";
   }
 
   hide() {
@@ -285,5 +280,40 @@ export default class ReportItemSelector {
     this.attachedTo!.properties.endUpdate();
 
     this.show(this.attachedTo!);
+  }
+
+  addEventListener<K extends keyof ReportItemSelectorEventMap>(
+    event: K,
+    listener: EventCallback<ReportItemSelectorEventMap[K]>,
+  ) {
+    switch (event) {
+      case "contextmenu":
+        this.element.addEventListener("contextmenu", (e) => {
+          if (!this.attachedTo) return;
+
+          const args: ReportItemSelectorContextMenuArgs = {
+            item: this.attachedTo,
+            width: "150px",
+            buttons: [],
+            onClick: () => { },
+          };
+
+          listener(args);
+
+          if (args.buttons.length === 0) return;
+
+          e.preventDefault();
+
+          new ContextMenu({
+            width: args.width,
+            buttons: args.buttons,
+            top: e.clientY,
+            left: e.clientX,
+            onClick: args.onClick,
+          });
+        });
+
+        break;
+    }
   }
 }

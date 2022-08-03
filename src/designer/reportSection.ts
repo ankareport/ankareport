@@ -1,3 +1,4 @@
+import ContextMenu from "../components/contextMenu/contextMenu";
 import EventEmitter, { EventCallback } from "../core/eventEmitter";
 import { ISection as LayoutReportSection } from "../core/layout";
 import ReportItem from "./reportItem";
@@ -69,6 +70,38 @@ export default class ReportSection {
     });
     this.elementContent.ondragover = (e) => e.preventDefault();
     this.elementContent.ondrop = (e) => this.onContentDrop(e);
+
+    this.element.addEventListener("contextmenu", (e) => {
+      if (e.target !== this.elementContent && e.target !== this.elementHeader) {
+        return;
+      }
+
+      e.preventDefault();
+
+      new ContextMenu({
+        width: "150px",
+        buttons: [{ key: "add-section", label: "Add Section (Content)" }],
+        top: e.clientY,
+        left: e.clientX,
+        onClick: (e) => {
+          switch (e.key) {
+            case "remove":
+              this.removeSelectedItem();
+              break;
+          }
+        },
+      });
+    });
+
+    this.reportItemSelector.addEventListener("contextmenu", (e) => {
+      e.buttons = [{ key: "remove", label: "Remove" }];
+
+      e.onClick = (args) => {
+        if (args.key === "remove") {
+          this.removeSelectedItem();
+        }
+      };
+    });
   }
 
   refresh() {
