@@ -3,22 +3,20 @@ import ReportItem from "../designer/reportItem";
 
 export default class Section {
   public readonly element = document.createElement("div");
+  public readonly elementSections = document.createElement("div");
   private readonly reportItems: ReportItem[] = [];
 
-  constructor(
-    private readonly layout: ISection,
-    private readonly data: any,
-  ) {
-    this.init();
+  constructor(private readonly layout: ISection, private readonly data: any) {
+    this._init();
   }
 
-  init() {
+  private _init() {
     this.element.classList.add("anka-section");
 
     this.element.style.height = this.layout.height + "px";
     this.element.style.position = "relative";
 
-    this.layout.items.forEach((layout) => {
+    this.layout.items?.forEach((layout) => {
       const item = new ReportItem();
       item.properties.x = layout.x;
       item.properties.y = layout.y;
@@ -26,7 +24,7 @@ export default class Section {
       item.properties.height = layout.height;
 
       if (layout.binding) {
-        item.properties.text = this.data[layout.binding];
+        item.properties.text = this.data ? this.data[layout.binding] : "NULL";
       } else {
         item.properties.text = layout.text;
       }
@@ -35,6 +33,17 @@ export default class Section {
       this.element.appendChild(item.element);
 
       this.reportItems.push(item);
+    });
+
+    this.layout.sections?.forEach((sectionLayout) => {
+      const subDataSource = this.data ? this.data[sectionLayout.binding] : {};
+
+      subDataSource?.forEach((sectionDataSource: any) => {
+        const section = new Section(sectionLayout, sectionDataSource);
+
+        this.elementSections.appendChild(section.element);
+        this.elementSections.appendChild(section.elementSections);
+      });
     });
   }
 }

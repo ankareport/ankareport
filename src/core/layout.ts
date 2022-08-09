@@ -8,7 +8,8 @@ export interface ILayout {
 export interface ISection {
   height: number;
   binding: string;
-  items: IReportItem[];
+  items?: IReportItem[];
+  sections?: ISection[];
 }
 
 export interface IReportItem {

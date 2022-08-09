@@ -37,6 +37,7 @@ export default class Renderer {
         data,
       );
       this.options.element.appendChild(contentSection.element);
+      this.options.element.appendChild(contentSection.elementSections);
     });
 
     this.options.element.appendChild(this.footerSection.element);

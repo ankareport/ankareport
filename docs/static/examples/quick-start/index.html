@@ -79,10 +79,29 @@
         { label: "Header 1", field: "header1" },
         { label: "Header 2", field: "header2" },
         {
-          label: "Content",
+          label: "Users",
+          field: "content",
           children: [
             { label: "Name", field: "name" },
             { label: "Surname", field: "surname" },
+            {
+              label: "Invoices",
+              field: "invoices",
+              children: [
+                { label: "Date", field: "date" },
+                { label: "No", field: "no" },
+                { label: "Price", field: "price" },
+                {
+                  label: "Invoice Lines",
+                  field: "invoiceLines",
+                  children: [
+                    { label: "Item", field: "item" },
+                    { label: "Amount", field: "amount" },
+                    { label: "Price", field: "price" },
+                  ],
+                },
+              ],
+            },
           ],
         },
         { label: "Footer 1", field: "footer1" },
@@ -164,7 +183,22 @@
         header1: "Header1X",
         header2: "Header2X",
         content: [
-          { name: "John1", surname: "Doe1" },
+          {
+            name: "John1",
+            surname: "Doe1",
+            invoices: [
+              {
+                date: new Date(),
+                no: "001",
+                price: 10,
+              },
+              {
+                date: new Date(),
+                no: "002",
+                price: 20,
+              },
+            ],
+          },
           { name: "John2", surname: "Doe2" },
           { name: "John3", surname: "Doe3" },
         ],

@@ -3,6 +3,7 @@ import "./menu.css";
 
 export interface ClickEventArgs {
   key: string;
+  data?: any;
 }
 
 export interface MenuEventMap {
@@ -12,6 +13,7 @@ export interface MenuEventMap {
 export interface MenuButton {
   key: string;
   label: string;
+  data?: any;
 }
 
 export interface MenuOptions {
@@ -51,7 +53,7 @@ export default class Menu {
       elementButton.classList.add("anka-menu-button");
       elementButton.innerText = button.label;
       elementButton.addEventListener("click", () => {
-        this.emitOnClick(button.key);
+        this.emitOnClick(button.key, button.data);
       });
 
       this.element.appendChild(elementButton);
@@ -69,7 +71,7 @@ export default class Menu {
     }
   }
 
-  private emitOnClick(key: string) {
-    this._clickEventEmitter.emit({ key });
+  private emitOnClick(key: string, data?: any) {
+    this._clickEventEmitter.emit({ key, data });
   }
 }

@@ -1,5 +1,6 @@
 import { EventCallback } from "../core/eventEmitter";
 import { ILayout } from "../core/layout";
+import Designer from "./designer";
 import ReportSection, { SelectEventArgs } from "./reportSection";
 import Resizer, { ResizerOrientation } from "./resizer";
 import "./report.css";
@@ -11,12 +12,16 @@ export interface ReportEventMap {
   select: SelectEventArgs;
 }
 
+export interface ReportOptions {
+  designer: Designer;
+}
+
 export default class Report {
   public readonly element = document.createElement("div");
 
-  public readonly reportSectionHeader = new ReportSection("Header");
-  public readonly reportSectionContent = new ReportSection("Content");
-  public readonly reportSectionFooter = new ReportSection("Footer");
+  public readonly reportSectionHeader: ReportSection;
+  public readonly reportSectionContent: ReportSection;
+  public readonly reportSectionFooter: ReportSection;
   public readonly resizer = new Resizer({
     orientation: ResizerOrientation.Vertical,
     onResize: (e) => {
@@ -35,7 +40,20 @@ export default class Report {
     this.refresh();
   }
 
-  constructor() {
+  constructor(options: ReportOptions) {
+    this.reportSectionHeader = new ReportSection({
+      title: "Header",
+      designer: options.designer,
+    });
+    this.reportSectionContent = new ReportSection({
+      title: "Content",
+      designer: options.designer,
+    });
+    this.reportSectionFooter = new ReportSection({
+      title: "Footer",
+      designer: options.designer,
+    });
+
     this.init();
   }
 

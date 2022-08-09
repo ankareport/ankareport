@@ -1,28 +1,19 @@
 import ContextMenu from "../components/contextMenu/contextMenu";
 import EventEmitter, { EventCallback } from "../core/eventEmitter";
-import { ISection as LayoutReportSection } from "../core/layout";
+import { ISection } from "../core/layout";
+import { DataSourceTreeItemData } from "./dataSourceTreeList";
+import Designer from "./designer";
 import ReportItem from "./reportItem";
 import ReportItemSelector from "./reportItemSelector";
 import ReportSectionProperties from "./reportSectionProperties";
 import Resizer, { ResizerOrientation } from "./resizer";
 import "./reportSection.css";
 
-export type SelectEventArgs =
-  | SelectReportSectionEventArgs
-  | SelectReportItemEventArgs;
-
-export interface SelectReportSectionEventArgs {
-  type: "ReportSection";
-  element: ReportSection;
-}
-
-export interface SelectReportItemEventArgs {
-  type: "ReportItem";
-  element: ReportItem;
-}
-
-export interface ReportSectionEventMap {
-  select: SelectEventArgs;
+export interface ReportSectionOptions {
+  title: string;
+  binding?: string;
+  designer: Designer;
+  parent?: ReportSection;
 }
 
 export default class ReportSection {
@@ -36,17 +27,25 @@ export default class ReportSection {
       this.properties.height = this.properties.height + e.offsetY;
     },
   });
+  public subsections: ReportSection[] = [];
   public items: ReportItem[] = [];
 
   public readonly properties = new ReportSectionProperties();
 
   private readonly _selectEventEmitter = new EventEmitter<SelectEventArgs>();
+  private readonly _designer: Designer;
+  public readonly parent: ReportSection | undefined;
 
-  constructor(private readonly text: string) {
-    this.init();
+  constructor(options: ReportSectionOptions) {
+    this.properties.binding = options.binding || "";
+    this.properties.title = options.title;
+    this._designer = options.designer;
+    this.parent = options.parent;
+
+    this._init();
   }
 
-  init() {
+  private _init() {
     this.element.classList.add("anka-report-section");
     this.elementHeader.classList.add("anka-report-section__header");
     this.elementContent.classList.add("anka-report-section__content");
@@ -72,21 +71,54 @@ export default class ReportSection {
     this.elementContent.ondrop = (e) => this.onContentDrop(e);
 
     this.element.addEventListener("contextmenu", (e) => {
+      if (!this.properties.binding) return;
+
       if (e.target !== this.elementContent && e.target !== this.elementHeader) {
         return;
       }
+
+      const dataSource = this._designer.getDataSource();
+      const bindings = getReportSectionBindings(this);
+
+      let sectionDataSource = dataSource;
+
+      for (let i = bindings.length - 1; i >= 0; i--) {
+        const field = bindings[i];
+
+        const dataSourceItem = sectionDataSource.find((x) => x.field === field);
+
+        // TODO: Possible null value here
+        sectionDataSource = dataSourceItem?.children!;
+      }
+
+      const subsectionDataList = getSubsectionDataList(
+        sectionDataSource,
+        this.subsections,
+      );
+
+      if (subsectionDataList.length === 0) return;
 
       e.preventDefault();
 
       new ContextMenu({
         width: "150px",
-        buttons: [{ key: "add-section", label: "Add Section (Content)" }],
+        buttons: [
+          ...subsectionDataList.map((x) => ({
+            key: "add-section",
+            label: `Add Section (${x.label})`,
+            data: x,
+          })),
+        ],
         top: e.clientY,
         left: e.clientX,
         onClick: (e) => {
           switch (e.key) {
-            case "remove":
-              this.removeSelectedItem();
+            case "add-section":
+              const data = e.data as DataSourceTreeItemData;
+
+              const subsection = this.addSection();
+              subsection.properties.binding = data.field;
+
               break;
           }
         },
@@ -105,8 +137,18 @@ export default class ReportSection {
   }
 
   refresh() {
-    this.elementHeader.innerText = this.text;
+    this.elementHeader.innerText = this._getHeaderText();
     this.elementContent.style.height = `${this.properties.height}px`;
+  }
+
+  private _getHeaderText() {
+    let title = this.properties.title;
+
+    if (this.properties.binding) {
+      title += ` (${this.properties.binding})`;
+    }
+
+    return title;
   }
 
   private onContentDrop(e: DragEvent) {
@@ -149,6 +191,25 @@ export default class ReportSection {
     return item;
   }
 
+  addSection() {
+    const section = new ReportSection({
+      title: "Content",
+      binding: "",
+      designer: this._designer,
+      parent: this,
+    });
+
+    section.addEventListener("select", (e) => {
+      this._selectEventEmitter.emit(e);
+    });
+
+    this.subsections.push(section);
+
+    this.element.appendChild(section.element);
+
+    return section;
+  }
+
   selectItem(item: ReportItem) {
     this.deselectAll();
 
@@ -177,25 +238,80 @@ export default class ReportSection {
 
   deselectAll() {
     this.reportItemSelector.hide();
+
+    this.subsections.forEach((x) => x.deselectAll());
   }
 
-  loadLayout(layout: LayoutReportSection) {
+  loadLayout(layout: ISection) {
     this.properties.height = layout.height;
     this.properties.binding = layout.binding;
 
-    layout.items.forEach((data) => {
+    layout.items?.forEach((data) => {
       const item = this.addItem();
       item.loadLayout(data);
+    });
+
+    layout.sections?.forEach((data) => {
+      const section = this.addSection();
+      section.loadLayout(data);
     });
 
     this.refresh();
   }
 
-  toJSON(): LayoutReportSection {
+  toJSON(): ISection {
     return {
       height: this.properties.height,
       binding: this.properties.binding,
       items: this.items.map((x) => x.toJSON()),
+      sections: this.subsections.map((x) => x.toJSON()),
     };
   }
+}
+
+export type SelectEventArgs =
+  | SelectReportSectionEventArgs
+  | SelectReportItemEventArgs;
+
+export interface SelectReportSectionEventArgs {
+  type: "ReportSection";
+  element: ReportSection;
+}
+
+export interface SelectReportItemEventArgs {
+  type: "ReportItem";
+  element: ReportItem;
+}
+
+export interface ReportSectionEventMap {
+  select: SelectEventArgs;
+}
+
+function getSubsectionDataList(
+  items: DataSourceTreeItemData[] | undefined,
+  sections: ReportSection[],
+) {
+  if (!items) return [];
+
+  const subsectionDataList = items.filter(
+    (x) => x.children && x.children.length > 0,
+  );
+
+  const existingFields = sections.map((x) => x.properties.binding);
+
+  return subsectionDataList.filter((x) => !existingFields.includes(x.field));
+}
+
+function getReportSectionBindings(section: ReportSection): string[] {
+  const result = [];
+
+  let iterator: ReportSection | undefined = section;
+
+  while (iterator) {
+    result.push(iterator.properties.binding);
+
+    iterator = iterator.parent;
+  }
+
+  return result;
 }

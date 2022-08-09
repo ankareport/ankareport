@@ -24,7 +24,7 @@ export default class Designer {
   public readonly menu = new ToolbarTopMenu();
   public readonly toolbar = new ToolbarLeftMenu();
 
-  public readonly reportContainer = new ReportContainer();
+  public readonly reportContainer: ReportContainer;
 
   public readonly sidebar = new Sidebar();
   private readonly dataSourceTreeList = new DataSourceTreeList();
@@ -32,6 +32,11 @@ export default class Designer {
 
   constructor(options: DesignerOptions) {
     const { element } = options;
+
+    this.reportContainer = new ReportContainer({
+      designer: this,
+    });
+
     element.classList.add("anka-designer");
     this.elementContent.classList.add("anka-designer__content");
 
@@ -73,6 +78,10 @@ export default class Designer {
 
   setDataSource(dataSource: DataSourceTreeItemData[]) {
     this.dataSourceTreeList.setDataSource(dataSource);
+  }
+
+  getDataSource(): DataSourceTreeItemData[] {
+    return this.dataSourceTreeList.dataSource.map((x) => x.data);
   }
 
   loadLayout(layout: ILayout) {
