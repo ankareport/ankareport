@@ -1,4 +1,5 @@
 import PropertyGrid from "../components/propertyGrid/propertyGrid";
+import EventEmitter, { EventCallback } from "../core/eventEmitter";
 import { ILayout } from "../core/layout";
 import DataSourceTreeList, {
   DataSourceTreeItemData,
@@ -9,12 +10,18 @@ import ToolbarLeftMenu from "./toolbarLeftMenu";
 import ToolbarTopMenu from "./toolbarTopMenu";
 import "./designer.css";
 
-export type SaveButtonClickCallback = (layout: ILayout) => void;
+export interface DataSourceChangeEventArgs {
+  dataSource: DataSourceTreeItemData[];
+}
+
+export interface DesignerEventsMap {
+  dataSourceChange: DataSourceChangeEventArgs;
+}
 
 export interface DesignerOptions {
   element: HTMLDivElement;
   dataSource?: DataSourceTreeItemData[];
-  onSaveButtonClick?: SaveButtonClickCallback;
+  onSaveButtonClick?: EventCallback<ILayout>;
   layout?: ILayout;
 }
 
@@ -29,6 +36,9 @@ export default class Designer {
   public readonly sidebar = new Sidebar();
   private readonly dataSourceTreeList = new DataSourceTreeList();
   private readonly propertyGrid = new PropertyGrid();
+
+  private readonly _dataSourceChangeEventEmitter =
+    new EventEmitter<DataSourceChangeEventArgs>();
 
   constructor(options: DesignerOptions) {
     const { element } = options;
@@ -76,8 +86,20 @@ export default class Designer {
     }
   }
 
+  addEventListener<K extends keyof DesignerEventsMap>(
+    event: K,
+    listener: EventCallback<DesignerEventsMap[K]>,
+  ) {
+    switch (event) {
+      case "dataSourceChange":
+        this._dataSourceChangeEventEmitter.add(listener);
+        break;
+    }
+  }
+
   setDataSource(dataSource: DataSourceTreeItemData[]) {
     this.dataSourceTreeList.setDataSource(dataSource);
+    this._dataSourceChangeEventEmitter.emit({ dataSource });
   }
 
   getDataSource(): DataSourceTreeItemData[] {

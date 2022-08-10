@@ -37,10 +37,10 @@ export default class PropertyGrid {
   }
 
   constructor() {
-    this.init();
+    this._init();
   }
 
-  private init() {
+  private _init() {
     this.element.classList.add("anka-property-grid");
 
     this.refresh = this.refresh.bind(this);

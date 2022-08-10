@@ -1,16 +1,21 @@
 import EventEmitter, { EventCallback } from "../../core/eventEmitter";
-import { Property } from "./property";
+import Textbox from "./editors/textbox";
+import { Property, PropertyEditor } from "./property";
 import "./propertyGridRow.css";
 
 export interface ChangeEventArgs {
   value: string;
 }
 
+export interface PropertyGridRowEventsMap {
+  change: ChangeEventArgs;
+}
+
 export default class PropertyGridRow {
   public readonly element = document.createElement("div");
   public readonly elementLabel = document.createElement("div");
   public readonly elementEditorContainer = document.createElement("div");
-  public readonly elementEditor = document.createElement("input");
+  public readonly editor: PropertyEditor;
 
   private readonly _changeEventEmitter = new EventEmitter<ChangeEventArgs>();
 
@@ -18,10 +23,12 @@ export default class PropertyGridRow {
     public readonly property: Property,
     private readonly value: string,
   ) {
-    this.init();
+    this.editor = property.editor || new Textbox();
+
+    this._init();
   }
 
-  private init() {
+  private _init() {
     this.element.classList.add("anka-property-grid-row");
     this.elementLabel.classList.add("anka-property-grid-row__label");
     this.elementEditorContainer.classList.add(
@@ -30,10 +37,10 @@ export default class PropertyGridRow {
 
     this.element.appendChild(this.elementLabel);
     this.element.appendChild(this.elementEditorContainer);
-    this.elementEditorContainer.appendChild(this.elementEditor);
+    this.elementEditorContainer.appendChild(this.editor.element);
 
-    this.elementEditor.addEventListener("change", () => {
-      this._changeEventEmitter.emit({ value: this.elementEditor.value });
+    this.editor.addEventListener("change", (e) => {
+      this._changeEventEmitter.emit({ value: e.value });
     });
 
     this.refresh();
@@ -41,10 +48,14 @@ export default class PropertyGridRow {
 
   refresh() {
     this.elementLabel.innerText = this.property.label;
-    this.elementEditor.value = this.value;
+    // TODO: I think this is wrong. But working.
+    this.editor.value = this.value;
   }
 
-  addEventListener(event: "change", callback: EventCallback<ChangeEventArgs>) {
+  addEventListener<K extends keyof PropertyGridRowEventsMap>(
+    event: K,
+    callback: EventCallback<PropertyGridRowEventsMap[K]>,
+  ) {
     switch (event) {
       case "change":
         this._changeEventEmitter.add(callback);

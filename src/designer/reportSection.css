@@ -28,3 +28,7 @@
   position: relative;
   overflow: hidden;
 }
+
+.anka-report-section:focus .anka-report-section__content {
+  filter: brightness(98%);
+}

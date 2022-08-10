@@ -33,9 +33,6 @@ export default class ReportSectionProperties extends Properties {
   }
 
   getPropertyDefinitions(): Property[] {
-    return [
-      { field: "height", label: "Height", type: "number" },
-      { field: "binding", label: "Binding", type: "string" },
-    ];
+    return [{ field: "height", label: "Height", type: "number" }];
   }
 }
