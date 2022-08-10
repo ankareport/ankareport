@@ -7,4 +7,6 @@
   --color-paper-background: #eeeeee;
   --color-paper-line-small: #dddddd;
   --color-paper-line-large: #cccccc;
+  --font: sans-serif;
+  --font-size: 13px;
 }
