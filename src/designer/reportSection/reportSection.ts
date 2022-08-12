@@ -1,12 +1,12 @@
-import ContextMenu from "../components/contextMenu/contextMenu";
-import EventEmitter, { EventCallback } from "../core/eventEmitter";
-import { ISection } from "../core/layout";
-import { DataSourceTreeItemData } from "./dataSourceTreeList";
-import Designer from "./designer";
-import ReportItem from "./reportItem";
-import ReportItemSelector from "./reportItemSelector";
+import ContextMenu from "../../components/contextMenu/contextMenu";
+import EventEmitter, { EventCallback } from "../../core/eventEmitter";
+import { ISection } from "../../core/layout";
+import { DataSourceTreeItemData } from "../components/dataSourceTreeList";
+import Resizer, { ResizerOrientation } from "../components/resizer";
+import Designer from "../designer";
+import ReportItem from "../reportItem/reportItem";
+import ReportItemSelector from "../reportItem/reportItemSelector";
 import ReportSectionProperties from "./reportSectionProperties";
-import Resizer, { ResizerOrientation } from "./resizer";
 import "./reportSection.css";
 
 export interface ReportSectionOptions {

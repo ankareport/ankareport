@@ -3,11 +3,11 @@ import EventEmitter, { EventCallback } from "../core/eventEmitter";
 import { ILayout } from "../core/layout";
 import DataSourceTreeList, {
   DataSourceTreeItemData,
-} from "./dataSourceTreeList";
-import ReportContainer from "./reportContainer";
-import Sidebar from "./sidebar";
-import ToolbarLeftMenu from "./toolbarLeftMenu";
-import ToolbarTopMenu from "./toolbarTopMenu";
+} from "./components/dataSourceTreeList";
+import ReportContainer from "./reportContainer/reportContainer";
+import Sidebar from "./sidebar/sidebar";
+import ToolbarLeftMenu from "./toolbar/toolbarLeftMenu";
+import ToolbarTopMenu from "./toolbar/toolbarTopMenu";
 import "./designer.css";
 
 export interface DataSourceChangeEventArgs {

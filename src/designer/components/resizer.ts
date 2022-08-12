@@ -1,5 +1,5 @@
-import DragDrop, { MoveEventArgs } from "../core/dragDrop";
-import Point from "../core/point";
+import DragDrop, { MoveEventArgs } from "../../core/dragDrop";
+import Point from "../../core/point";
 import "./resizer.css";
 
 export enum ResizerOrientation {

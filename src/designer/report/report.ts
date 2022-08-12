@@ -1,8 +1,8 @@
-import { EventCallback } from "../core/eventEmitter";
-import { ILayout } from "../core/layout";
-import Designer from "./designer";
-import ReportSection, { SelectEventArgs } from "./reportSection";
-import Resizer, { ResizerOrientation } from "./resizer";
+import { EventCallback } from "../../core/eventEmitter";
+import { ILayout } from "../../core/layout";
+import Resizer, { ResizerOrientation } from "../components/resizer";
+import Designer from "../designer";
+import ReportSection, { SelectEventArgs } from "../reportSection/reportSection";
 import "./report.css";
 
 const DEFAULT_REPORT_WIDTH = 400;

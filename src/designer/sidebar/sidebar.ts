@@ -1,4 +1,4 @@
-import Panel from "../components/panel/panel";
+import Panel from "../../components/panel/panel";
 import "./sidebar.css";
 
 export default class Sidebar {

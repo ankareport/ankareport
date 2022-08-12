@@ -1,5 +1,5 @@
-import { Property } from "../components/propertyGrid/property";
-import Properties from "../core/properties";
+import { Property } from "../../components/propertyGrid/property";
+import Properties from "../../core/properties";
 
 const DEFAULT_SECTION_HEIGHT = 100;
 const MIN_SECTION_HEIGHT = 10;

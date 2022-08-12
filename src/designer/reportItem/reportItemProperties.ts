@@ -1,5 +1,5 @@
-import { Property } from "../components/propertyGrid/property";
-import Properties from "../core/properties";
+import { Property } from "../../components/propertyGrid/property";
+import Properties from "../../core/properties";
 
 export type TextAlign = "left" | "center" | "right";
 

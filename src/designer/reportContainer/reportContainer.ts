@@ -1,8 +1,8 @@
-import { EventCallback } from "../core/eventEmitter";
-import { ILayout } from "../core/layout";
-import Designer from "./designer";
-import Report from "./report";
-import { SelectEventArgs } from "./reportSection";
+import { EventCallback } from "../../core/eventEmitter";
+import { ILayout } from "../../core/layout";
+import Designer from "../designer";
+import Report from "../report/report";
+import { SelectEventArgs } from "../reportSection/reportSection";
 import "./reportContainer.css";
 
 export interface ReportContainerEventMap {

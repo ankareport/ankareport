@@ -1,5 +1,5 @@
 import { ISection } from "../core/layout";
-import ReportItem from "../designer/reportItem";
+import ReportItem from "../designer/reportItem/reportItem";
 
 export default class Section {
   public readonly element = document.createElement("div");

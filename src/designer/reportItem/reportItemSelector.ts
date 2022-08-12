@@ -1,12 +1,12 @@
-import ContextMenu from "../components/contextMenu/contextMenu";
-import { ClickEventArgs, MenuButton } from "../components/menu/menu";
-import DragDrop from "../core/dragDrop";
-import { EventCallback } from "../core/eventEmitter";
-import Point from "../core/point";
-import { ChangeEventArgs } from "../core/properties";
-import Size from "../core/size";
+import ContextMenu from "../../components/contextMenu/contextMenu";
+import { ClickEventArgs, MenuButton } from "../../components/menu/menu";
+import DragDrop from "../../core/dragDrop";
+import { EventCallback } from "../../core/eventEmitter";
+import Point from "../../core/point";
+import { ChangeEventArgs } from "../../core/properties";
+import Size from "../../core/size";
+import ReportSection from "../reportSection/reportSection";
 import ReportItem from "./reportItem";
-import ReportSection from "./reportSection";
 import SelectorBound, { SelectorBoundOrientation } from "./selectorBound";
 import "./reportItemSelector.css";
 

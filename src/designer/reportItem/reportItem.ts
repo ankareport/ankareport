@@ -1,6 +1,6 @@
-import IDisposable from "../core/disposable";
-import { EventCallback } from "../core/eventEmitter";
-import { IReportItem as LayoutReportItem } from "../core/layout";
+import IDisposable from "../../core/disposable";
+import { EventCallback } from "../../core/eventEmitter";
+import { IReportItem as LayoutReportItem } from "../../core/layout";
 import ReportItemProperties from "./reportItemProperties";
 
 export interface ReportItemEventMap {

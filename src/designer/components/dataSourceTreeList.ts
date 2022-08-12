@@ -1,5 +1,5 @@
-import TreeItem, { TreeItemData } from "../components/treeList/treeItem";
-import TreeList from "../components/treeList/treeList";
+import TreeItem, { TreeItemData } from "../../components/treeList/treeItem";
+import TreeList from "../../components/treeList/treeList";
 
 export interface DataSourceTreeItemData {
   label: string;
