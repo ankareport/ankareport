@@ -1,0 +1,68 @@
+html {
+  font-family: Tahoma;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.container {
+  display: flex;
+  height: 100%;
+  background-color: #eeeeee;
+}
+
+.panel {
+  width: 400px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #cccccc;
+}
+
+.panel > .panel-header {
+  border-bottom: 1px solid #cccccc;
+  padding: 10px;
+  display: flex;
+}
+
+.panel > .panel-body {
+  flex: 1;
+}
+
+.content {
+  padding: 6px;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.content > div {
+  background-color: white;
+  border: 1px solid #333333;
+}
+
+#designer {
+  width: 100%;
+  height: 100%;
+}
+
+#export-to-pdf-button {
+  margin-bottom: 10px;
+}
+
+#layout-editor {
+  height: 100%;
+}
+
+#data-source-editor {
+  height: 100%;
+}
+
+#data-editor {
+  height: 100%;
+}

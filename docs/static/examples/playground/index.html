@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>AnkaReport Dev Server</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/ankareport/dist/ankareport.css" />
+    <link rel="stylesheet" href="style.css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.12.3/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://unpkg.com/ankareport/dist/ankareport.js"></script>
+    <script src="layout.js"></script>
+    <script src="data-source.js"></script>
+    <script src="data.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="panel">
+        <div class="panel-header">
+          <span style="flex: 1">Layout</span>
+          <input id="load-layout-from-designer" type="button" value="Load From Designer" onclick="loadLayoutFromDesigner()" />
+          <input id="switch-layout" type="button" value="Show" onclick="switchLayout()" />
+        </div>
+        <div class="panel-body">
+          <div id="layout-editor"></div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div id="designer"></div>
+
+        <input id="export-to-pdf-button" type="button" value="Export To Pdf" onclick="exportToPdf()" />
+        <div id="report"></div>
+      </div>
+
+      <div id="data-source-panel" class="panel">
+        <div class="panel-header">Data Source</div>
+        <div class="panel-body">
+          <div id="data-source-editor"></div>
+        </div>
+      </div>
+
+      <div id="data-panel" class="panel">
+        <div class="panel-header">Data</div>
+        <div class="panel-body">
+          <div id="data-editor"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      console.log("AnkaReport Version: " + AnkaReport.version);
+      document.title = `AnkaReport ${AnkaReport.version}-dev`;
+
+      var page = 1;
+      var designer = null;
+
+      const designerDiv = document.getElementById("designer");
+      const rendererDiv = document.getElementById("report");
+
+      const loadLayoutFromDesignerButton = document.getElementById("load-layout-from-designer");
+      const switchLayoutButton = document.getElementById("switch-layout");
+      const dataSourcePanel = document.getElementById("data-source-panel");
+      const dataPanel = document.getElementById("data-panel");
+      const exportToPdfButton = document.getElementById("export-to-pdf-button");
+
+      const layoutEditor = ace.edit("layout-editor");
+      layoutEditor.session.setMode("ace/mode/json");
+      layoutEditor.setValue(JSON.stringify(layout, null, 2), 1);
+
+      const dataSourceEditor = ace.edit("data-source-editor");
+      dataSourceEditor.session.setMode("ace/mode/json");
+      dataSourceEditor.setValue(JSON.stringify(dataSource, null, 2), 1);
+
+      const dataEditor = ace.edit("data-editor");
+      dataEditor.session.setMode("ace/mode/json");
+      dataEditor.setValue(JSON.stringify(data, null, 2), 1);
+
+      const refreshDesigner = () => {
+        try {
+          const layout = JSON.parse(layoutEditor.getValue());
+          const dataSource = JSON.parse(dataSourceEditor.getValue());
+
+          designerDiv.innerHTML = "";
+
+          designer = AnkaReport.designer({
+            element: designerDiv,
+            dataSource,
+            layout,
+            onSaveButtonClick: (layout) => {
+              console.log(layout);
+            },
+          });
+        } catch {
+        }
+      };
+
+      const refreshReport = () => {
+        try {
+          const layout = JSON.parse(layoutEditor.getValue());
+          const data = JSON.parse(dataEditor.getValue());
+
+          rendererDiv.innerHTML = "";
+
+          const renderer = AnkaReport.render({
+            element: rendererDiv,
+            layout,
+            data,
+          });
+        } catch {
+        }
+      };
+
+      layoutEditor.on("change", () => {
+        refreshDesigner();
+        refreshReport();
+      });
+      dataSourceEditor.on("change", () => refreshDesigner());
+      dataEditor.on("change", () => refreshReport());
+
+      refreshDesigner();
+      refreshReport();
+
+      const exportToPdf = () => {
+        html2pdf().from(rendererDiv).save("report.pdf");
+      };
+
+      const showDesigner = () => {
+        page = 0;
+        switchLayoutButton.value = "Show Report";
+        designerDiv.style.display = null;
+        rendererDiv.style.display = "none";
+        loadLayoutFromDesignerButton.style.display = null;
+        exportToPdfButton.style.display = "none";
+        dataSourcePanel.style.display = null;
+        dataPanel.style.display = "none";
+      };
+
+      const showReport = () => {
+        page = 1;
+        switchLayoutButton.value = "Show Designer";
+        designerDiv.style.display = "none";
+        rendererDiv.style.display = null;
+        loadLayoutFromDesignerButton.style.display = "none";
+        exportToPdfButton.style.display = null;
+        dataSourcePanel.style.display = "none";
+        dataPanel.style.display = null;
+      };
+
+      showDesigner();
+
+      const switchLayout = () => {
+        switch (page) {
+          case 0:
+            showReport();
+            break;
+          case 1:
+            showDesigner();
+            break;
+        }
+      };
+
+      const loadLayoutFromDesigner = () => {
+        const layout = designer.toJSON();
+        layoutEditor.setValue(JSON.stringify(layout, null, 2), 1);
+      };
+    </script>
+  </body>
+</html>

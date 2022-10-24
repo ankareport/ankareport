@@ -68,9 +68,10 @@ const config = {
             label: "Docs",
           },
           {
-            to: "/examples/playground.html",
+            to: "/examples/playground",
             label: "Playground",
             position: "left",
+            target: "_blank",
           },
           // {to: '/blog', label: 'Blog', position: 'left'},
           {
