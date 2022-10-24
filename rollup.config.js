@@ -3,6 +3,7 @@ import json from "@rollup/plugin-json";
 import resolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 import css from "rollup-plugin-import-css";
+import dev from "rollup-plugin-dev";
 
 export default {
   input: "src/index.ts",
@@ -12,5 +13,12 @@ export default {
     format: "iife",
     exports: "named",
   },
-  plugins: [typescript(), commonjs(), resolve(), json(), css()],
+  plugins: [
+    typescript(),
+    commonjs(),
+    resolve(),
+    json(),
+    css(),
+    dev({ dirs: ["dev", "dist"] }),
+  ],
 };
