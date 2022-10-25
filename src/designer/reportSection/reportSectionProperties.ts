@@ -1,10 +1,10 @@
 import { Property } from "../../components/propertyGrid/property";
-import Properties from "../../core/properties";
+import StyleProperties from "../../core/styleProperties";
 
 const DEFAULT_SECTION_HEIGHT = 100;
 const MIN_SECTION_HEIGHT = 10;
 
-export default class ReportSectionProperties extends Properties {
+export default class ReportSectionProperties extends StyleProperties {
   private _height: number = DEFAULT_SECTION_HEIGHT;
   private _binding = "";
   private _title = "Section";
@@ -33,6 +33,9 @@ export default class ReportSectionProperties extends Properties {
   }
 
   getPropertyDefinitions(): Property[] {
-    return [{ field: "height", label: "Height", type: "number" }];
+    return [
+      { field: "height", label: "Height", type: "number" },
+      ...super.getPropertyDefinitions(),
+    ];
   }
 }

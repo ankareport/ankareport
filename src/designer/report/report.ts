@@ -22,6 +22,7 @@ export default class Report {
   public readonly reportSectionHeader: ReportSection;
   public readonly reportSectionContent: ReportSection;
   public readonly reportSectionFooter: ReportSection;
+
   public readonly resizer = new Resizer({
     orientation: ResizerOrientation.Vertical,
     onResize: (e) => {
@@ -54,10 +55,10 @@ export default class Report {
       designer: options.designer,
     });
 
-    this.init();
+    this._init();
   }
 
-  private init() {
+  private _init() {
     this.element.classList.add("anka-report");
 
     this.element.tabIndex = 0;

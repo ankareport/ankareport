@@ -1,10 +1,11 @@
 import ContextMenu from "../../components/contextMenu/contextMenu";
 import EventEmitter, { EventCallback } from "../../core/eventEmitter";
 import { ISection } from "../../core/layout";
+import { TextAlign } from "../../core/styleProperties";
 import { DataSourceTreeItemData } from "../components/dataSourceTreeList";
 import Resizer, { ResizerOrientation } from "../components/resizer";
 import Designer from "../designer";
-import ReportItem from "../reportItem/reportItem";
+import DesignerReportItem from "../reportItem/designerReportItem";
 import ReportItemSelector from "../reportItem/reportItemSelector";
 import ReportSectionProperties from "./reportSectionProperties";
 import "./reportSection.css";
@@ -28,7 +29,7 @@ export default class ReportSection {
     },
   });
   public subsections: ReportSection[] = [];
-  public items: ReportItem[] = [];
+  public items: DesignerReportItem[] = [];
 
   public readonly properties = new ReportSectionProperties();
 
@@ -179,7 +180,7 @@ export default class ReportSection {
   }
 
   addItem() {
-    const item = new ReportItem();
+    const item = new DesignerReportItem({ defaultStyles: this.properties });
     item.addEventListener("select", () => this.selectItem(item));
     this.items.push(item);
 
@@ -210,7 +211,7 @@ export default class ReportSection {
     return section;
   }
 
-  selectItem(item: ReportItem) {
+  selectItem(item: DesignerReportItem) {
     this.deselectAll();
 
     this.reportItemSelector.show(item);
@@ -221,7 +222,7 @@ export default class ReportSection {
     });
   }
 
-  removeItem(item: ReportItem) {
+  removeItem(item: DesignerReportItem) {
     const index = this.items.findIndex((x) => x === item);
     this.items.splice(index, 1);
     item.dispose();
@@ -256,6 +257,15 @@ export default class ReportSection {
       section.loadLayout(data);
     });
 
+    this.properties.color = layout.color;
+    this.properties.backgroundColor = layout.backgroundColor;
+    this.properties.padding = layout.padding;
+    this.properties.textAlign = layout.textAlign as TextAlign;
+    this.properties.border = layout.border;
+    this.properties.fontFamily = layout.fontFamily;
+    this.properties.fontSize = layout.fontSize;
+    this.properties.fontWeight = layout.fontWeight;
+
     this.refresh();
   }
 
@@ -265,6 +275,14 @@ export default class ReportSection {
       binding: this.properties.binding,
       items: this.items.map((x) => x.toJSON()),
       sections: this.subsections.map((x) => x.toJSON()),
+      color: this.properties.color,
+      backgroundColor: this.properties.backgroundColor,
+      padding: this.properties.padding,
+      textAlign: this.properties.textAlign,
+      border: this.properties.border,
+      fontFamily: this.properties.fontFamily,
+      fontSize: this.properties.fontSize,
+      fontWeight: this.properties.fontWeight,
     };
   }
 }
@@ -280,7 +298,7 @@ export interface SelectReportSectionEventArgs {
 
 export interface SelectReportItemEventArgs {
   type: "ReportItem";
-  element: ReportItem;
+  element: DesignerReportItem;
 }
 
 export interface ReportSectionEventMap {

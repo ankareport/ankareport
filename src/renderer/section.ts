@@ -1,12 +1,16 @@
 import { ISection } from "../core/layout";
-import ReportItem from "../designer/reportItem/reportItem";
+import ReportItem from "../core/reportItem";
+import StyleProperties, { TextAlign } from "../core/styleProperties";
 
 export default class Section {
   public readonly element = document.createElement("div");
   public readonly elementSections = document.createElement("div");
   private readonly reportItems: ReportItem[] = [];
 
-  constructor(private readonly layout: ISection, private readonly data: any) {
+  constructor(
+    private readonly layout: ISection,
+    private readonly data: any,
+  ) {
     this._init();
   }
 
@@ -17,11 +21,21 @@ export default class Section {
     this.element.style.position = "relative";
 
     this.layout.items?.forEach((layout) => {
-      const item = new ReportItem();
+      const item = new ReportItem({
+        defaultStyles: new StyleProperties(this.layout),
+      });
       item.properties.x = layout.x;
       item.properties.y = layout.y;
       item.properties.width = layout.width;
       item.properties.height = layout.height;
+      item.properties.color = layout.color;
+      item.properties.backgroundColor = layout.backgroundColor;
+      item.properties.border = layout.border;
+      item.properties.fontFamily = layout.fontFamily;
+      item.properties.fontSize = layout.fontSize;
+      item.properties.fontWeight = layout.fontWeight;
+      item.properties.padding = layout.padding;
+      item.properties.textAlign = layout.textAlign as TextAlign;
 
       if (layout.binding) {
         item.properties.text = this.data ? this.data[layout.binding] : "NULL";
