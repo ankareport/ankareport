@@ -22,7 +22,7 @@ export default class Section {
 
     this.layout.items?.forEach((layout) => {
       const item = new ReportItem({
-        defaultStyles: new StyleProperties(this.layout),
+        defaultStylesList: [new StyleProperties(this.layout)],
       });
       item.properties.x = layout.x;
       item.properties.y = layout.y;

@@ -64,6 +64,7 @@ export default class Designer {
 
     this.reportContainer.addEventListener("select", (e) => {
       switch (e.type) {
+        case "Report":
         case "ReportSection":
         case "ReportItem":
           this.propertyGrid.setDataSource(e.element.properties);

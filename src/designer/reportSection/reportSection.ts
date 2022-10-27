@@ -1,7 +1,7 @@
 import ContextMenu from "../../components/contextMenu/contextMenu";
 import EventEmitter, { EventCallback } from "../../core/eventEmitter";
 import { ISection } from "../../core/layout";
-import { TextAlign } from "../../core/styleProperties";
+import StyleProperties, { TextAlign } from "../../core/styleProperties";
 import { DataSourceTreeItemData } from "../components/dataSourceTreeList";
 import Resizer, { ResizerOrientation } from "../components/resizer";
 import Designer from "../designer";
@@ -9,12 +9,14 @@ import DesignerReportItem from "../reportItem/designerReportItem";
 import ReportItemSelector from "../reportItem/reportItemSelector";
 import ReportSectionProperties from "./reportSectionProperties";
 import "./reportSection.css";
+import { JoinStyles } from "../../core/utils/style.utils";
 
 export interface ReportSectionOptions {
   title: string;
   binding?: string;
   designer: Designer;
   parent?: ReportSection;
+  defaultStylesList: StyleProperties[];
 }
 
 export default class ReportSection {
@@ -32,6 +34,7 @@ export default class ReportSection {
   public items: DesignerReportItem[] = [];
 
   public readonly properties = new ReportSectionProperties();
+  public readonly joinStyls = new JoinStyles();
 
   private readonly _selectEventEmitter = new EventEmitter<SelectEventArgs>();
   private readonly _designer: Designer;
@@ -42,6 +45,9 @@ export default class ReportSection {
     this.properties.title = options.title;
     this._designer = options.designer;
     this.parent = options.parent;
+
+    options.defaultStylesList.forEach((x) => this.joinStyls.join(x));
+    this.joinStyls.join(this.properties);
 
     this._init();
   }
@@ -180,7 +186,9 @@ export default class ReportSection {
   }
 
   addItem() {
-    const item = new DesignerReportItem({ defaultStyles: this.properties });
+    const item = new DesignerReportItem({
+      defaultStylesList: this.joinStyls.getList(),
+    });
     item.addEventListener("select", () => this.selectItem(item));
     this.items.push(item);
 
@@ -198,6 +206,7 @@ export default class ReportSection {
       binding: "",
       designer: this._designer,
       parent: this,
+      defaultStylesList: this.joinStyls.getList(),
     });
 
     section.addEventListener("select", (e) => {

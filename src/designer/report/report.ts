@@ -4,9 +4,7 @@ import Resizer, { ResizerOrientation } from "../components/resizer";
 import Designer from "../designer";
 import ReportSection, { SelectEventArgs } from "../reportSection/reportSection";
 import "./report.css";
-
-const DEFAULT_REPORT_WIDTH = 400;
-const MIN_REPORT_WIDTH = 100;
+import ReportProperties from "./reportProperties";
 
 export interface ReportEventMap {
   select: SelectEventArgs;
@@ -26,34 +24,30 @@ export default class Report {
   public readonly resizer = new Resizer({
     orientation: ResizerOrientation.Vertical,
     onResize: (e) => {
-      this.width = this.width + e.offsetX;
+      this.properties.width = this.properties.width + e.offsetX;
     },
   });
 
-  private _width: number = DEFAULT_REPORT_WIDTH;
-
-  get width() {
-    return this._width;
-  }
-
-  set width(value: number) {
-    this._width = Math.max(MIN_REPORT_WIDTH, value);
-    this.refresh();
-  }
+  public readonly properties = new ReportProperties();
 
   constructor(options: ReportOptions) {
     this.reportSectionHeader = new ReportSection({
       title: "Header",
       designer: options.designer,
+      defaultStylesList: [this.properties],
     });
     this.reportSectionContent = new ReportSection({
       title: "Content",
       designer: options.designer,
+      defaultStylesList: [this.properties],
     });
     this.reportSectionFooter = new ReportSection({
       title: "Footer",
       designer: options.designer,
+      defaultStylesList: [this.properties],
     });
+
+    this.properties.addEventListener("change", () => this.refresh());
 
     this._init();
   }
@@ -125,7 +119,7 @@ export default class Report {
   }
 
   refresh() {
-    this.element.style.width = `${this.width}px`;
+    this.element.style.width = `${this.properties.width}px`;
   }
 
   addEventListener<K extends keyof ReportEventMap>(
@@ -142,7 +136,15 @@ export default class Report {
   }
 
   loadLayout(layout: ILayout) {
-    this._width = layout.width;
+    this.properties.width = layout.width;
+    this.properties.color = layout.color;
+    this.properties.backgroundColor = layout.backgroundColor;
+    this.properties.padding = layout.padding;
+    this.properties.textAlign = layout.textAlign;
+    this.properties.border = layout.border;
+    this.properties.fontFamily = layout.fontFamily;
+    this.properties.fontSize = layout.fontSize;
+    this.properties.fontWeight = layout.fontWeight;
 
     this.reportSectionHeader.loadLayout(layout.headerSection);
     this.reportSectionContent.loadLayout(layout.contentSection);
@@ -153,7 +155,15 @@ export default class Report {
 
   toJSON(): ILayout {
     return {
-      width: this.width,
+      width: this.properties.width,
+      color: this.properties.color,
+      backgroundColor: this.properties.backgroundColor,
+      padding: this.properties.padding,
+      textAlign: this.properties.textAlign,
+      border: this.properties.border,
+      fontFamily: this.properties.fontFamily,
+      fontSize: this.properties.fontSize,
+      fontWeight: this.properties.fontWeight,
       headerSection: this.reportSectionHeader.toJSON(),
       contentSection: this.reportSectionContent.toJSON(),
       footerSection: this.reportSectionFooter.toJSON(),

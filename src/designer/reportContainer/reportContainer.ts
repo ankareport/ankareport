@@ -2,7 +2,8 @@ import { EventCallback } from "../../core/eventEmitter";
 import { ILayout } from "../../core/layout";
 import Designer from "../designer";
 import Report from "../report/report";
-import { SelectEventArgs } from "../reportSection/reportSection";
+import DesignerReportItem from "../reportItem/designerReportItem";
+import ReportSection from "../reportSection/reportSection";
 import "./reportContainer.css";
 
 export interface ReportContainerEventMap {
@@ -38,6 +39,17 @@ export default class ReportContainer {
     switch (event) {
       case "select":
         this.report.addEventListener(event, listener);
+
+        this.element.addEventListener("click", (e) => {
+          if (e.target === this.element) {
+            e.preventDefault();
+
+            listener({
+              type: "Report",
+              element: this.report,
+            });
+          }
+        });
         break;
     }
   }
@@ -49,4 +61,24 @@ export default class ReportContainer {
   toJSON(): ILayout {
     return this.report.toJSON();
   }
+}
+
+export type SelectEventArgs =
+  | SelectReportEventArgs
+  | SelectReportSectionEventArgs
+  | SelectReportItemEventArgs;
+
+export interface SelectReportEventArgs {
+  type: "Report";
+  element: Report;
+}
+
+export interface SelectReportSectionEventArgs {
+  type: "ReportSection";
+  element: ReportSection;
+}
+
+export interface SelectReportItemEventArgs {
+  type: "ReportItem";
+  element: DesignerReportItem;
 }

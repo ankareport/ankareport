@@ -3,20 +3,21 @@ import { EventCallback } from "./eventEmitter";
 import { IReportItem as LayoutReportItem } from "./layout";
 import ReportItemProperties from "./reportItemProperties";
 import StyleProperties, { TextAlign } from "./styleProperties";
-import { isValidStyle } from "./utils/style.utils";
+import { JoinStyles } from "./utils/style.utils";
 
 export interface ReportItemEventMap {
   select: unknown;
 }
 
 export interface ReportItemOptions {
-  defaultStyles: StyleProperties;
+  defaultStylesList: StyleProperties[];
 }
 
 export default class ReportItem implements IDisposable {
   public readonly element = document.createElement("div");
 
   public readonly properties = new ReportItemProperties();
+  public readonly joinStyles = new JoinStyles();
 
   constructor(private readonly options: ReportItemOptions) {
     this.init();
@@ -32,10 +33,15 @@ export default class ReportItem implements IDisposable {
     this.element.style.overflow = "hidden";
     this.element.style.textOverflow = "ellipsis";
 
-    this.options.defaultStyles.addEventListener("change", () => {
-      this.refresh();
+    this.options.defaultStylesList.forEach((styles) => {
+      this.joinStyles.join(styles);
+
+      styles.addEventListener("change", () => {
+        this.refresh();
+      });
     });
 
+    this.joinStyles.join(this.properties);
     this.properties.addEventListener("change", () => {
       this.refresh();
     });
@@ -50,27 +56,14 @@ export default class ReportItem implements IDisposable {
     this.element.style.height = `${this.properties.height}px`;
     this.element.innerText = this.properties.text;
 
-    this.element.style.color = this.getStyle("color", "")!;
-    this.element.style.backgroundColor = this.getStyle("backgroundColor", "")!;
-    this.element.style.padding = this.getStyle("padding", "")!;
-    this.element.style.textAlign = this.getStyle("textAlign", "")!;
-    this.element.style.border = this.getStyle("border", "")!;
-    this.element.style.fontFamily = this.getStyle("fontFamily", "Tahoma")!;
-    this.element.style.fontSize = this.getStyle("fontSize", "12px")!;
-    this.element.style.fontWeight = this.getStyle("fontWeight", "")!;
-  }
-
-  getStyle<T extends keyof StyleProperties, TDefault>(
-    property: T,
-    defaultValue: TDefault,
-  ) {
-    if (isValidStyle(this.properties[property])) {
-      return this.properties[property];
-    } else if (isValidStyle(this.options.defaultStyles[property])) {
-      return this.options.defaultStyles[property];
-    }
-
-    return defaultValue;
+    this.element.style.color = this.joinStyles.getStyle("color", "")!;
+    this.element.style.backgroundColor = this.joinStyles.getStyle("backgroundColor", "")!;
+    this.element.style.padding = this.joinStyles.getStyle("padding", "")!;
+    this.element.style.textAlign = this.joinStyles.getStyle("textAlign", "")!;
+    this.element.style.border = this.joinStyles.getStyle("border", "")!;
+    this.element.style.fontFamily = this.joinStyles.getStyle("fontFamily", "Tahoma")!;
+    this.element.style.fontSize = this.joinStyles.getStyle("fontSize", "12px")!;
+    this.element.style.fontWeight = this.joinStyles.getStyle("fontWeight", "")!;
   }
 
   addEventListener<K extends keyof ReportItemEventMap>(
