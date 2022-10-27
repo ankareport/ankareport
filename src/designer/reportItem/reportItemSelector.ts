@@ -9,6 +9,7 @@ import ReportSection from "../reportSection/reportSection";
 import DesignerReportItem from "./designerReportItem";
 import SelectorBound, { SelectorBoundOrientation } from "./selectorBound";
 import "./reportItemSelector.css";
+import { NormalizeEdges, normalizePoints } from "./normalizePoint";
 
 const LONG_MOVE_DISTANCE = 10;
 const SHORT_MOVE_DISTANCE = 1;
@@ -53,10 +54,10 @@ export default class ReportItemSelector {
     SelectorBoundOrientation.BottomRight,
   );
 
-  private readonly originalLocation = new Point();
-  private readonly originalSize = new Size();
-  private readonly newLocation = new Point();
-  private readonly newSize = new Size();
+  public readonly originalLocation = new Point();
+  public readonly originalSize = new Size();
+  public readonly newLocation = new Point();
+  public readonly newSize = new Size();
 
   constructor(private readonly mouseMoveContainer: ReportSection) {
     this.init();
@@ -92,6 +93,7 @@ export default class ReportItemSelector {
       onMouseMove: (e) => {
         this.newLocation.x = this.originalLocation.x + e.offsetX;
         this.newLocation.y = this.originalLocation.y + e.offsetY;
+        this.normalize({ left: true, right: true, top: true, bottom: true });
         this.refresh();
       },
       onMouseUp: () => this.applyInfoToElement(),
@@ -108,6 +110,7 @@ export default class ReportItemSelector {
         this.newLocation.y = this.originalLocation.y + e.offsetY;
         this.newSize.width = this.originalSize.width - e.offsetX;
         this.newSize.height = this.originalSize.height - e.offsetY;
+        this.normalize({ top: true, left: true });
         this.refresh();
       },
       onMouseUp: () => this.applyInfoToElement(),
@@ -120,6 +123,7 @@ export default class ReportItemSelector {
       onMouseMove: (e) => {
         this.newLocation.y = this.originalLocation.y + e.offsetY;
         this.newSize.height = this.originalSize.height - e.offsetY;
+        this.normalize({ top: true });
         this.refresh();
       },
       onMouseUp: () => this.applyInfoToElement(),
@@ -133,6 +137,7 @@ export default class ReportItemSelector {
         this.newLocation.y = this.originalLocation.y + e.offsetY;
         this.newSize.width = this.originalSize.width + e.offsetX;
         this.newSize.height = this.originalSize.height - e.offsetY;
+        this.normalize({ top: true, right: true });
         this.refresh();
       },
       onMouseUp: () => this.applyInfoToElement(),
@@ -145,6 +150,7 @@ export default class ReportItemSelector {
       onMouseMove: (e) => {
         this.newLocation.x = this.originalLocation.x + e.offsetX;
         this.newSize.width = this.originalSize.width - e.offsetX;
+        this.normalize({ left: true });
         this.refresh();
       },
       onMouseUp: () => this.applyInfoToElement(),
@@ -156,6 +162,7 @@ export default class ReportItemSelector {
       container: this.mouseMoveContainer.element,
       onMouseMove: (e) => {
         this.newSize.width = this.originalSize.width + e.offsetX;
+        this.normalize({ right: true });
         this.refresh();
       },
       onMouseUp: () => this.applyInfoToElement(),
@@ -169,6 +176,7 @@ export default class ReportItemSelector {
         this.newLocation.x = this.originalLocation.x + e.offsetX;
         this.newSize.width = this.originalSize.width - e.offsetX;
         this.newSize.height = this.originalSize.height + e.offsetY;
+        this.normalize({ bottom: true, left: true });
         this.refresh();
       },
       onMouseUp: () => this.applyInfoToElement(),
@@ -180,6 +188,7 @@ export default class ReportItemSelector {
       container: this.mouseMoveContainer.element,
       onMouseMove: (e) => {
         this.newSize.height = this.originalSize.height + e.offsetY;
+        this.normalize({ bottom: true });
         this.refresh();
       },
       onMouseUp: () => this.applyInfoToElement(),
@@ -192,6 +201,7 @@ export default class ReportItemSelector {
       onMouseMove: (e) => {
         this.newSize.width = this.originalSize.width + e.offsetX;
         this.newSize.height = this.originalSize.height + e.offsetY;
+        this.normalize({ bottom: true, right: true });
         this.refresh();
       },
       onMouseUp: () => this.applyInfoToElement(),
@@ -219,6 +229,19 @@ export default class ReportItemSelector {
         this.applyInfoToElement();
         break;
     }
+  }
+
+  normalize(edges: NormalizeEdges) {
+    const normalizedPoints = normalizePoints(
+      edges,
+      this,
+      this.mouseMoveContainer.items,
+    );
+
+    this.newLocation.x = normalizedPoints.left;
+    this.newLocation.y = normalizedPoints.top;
+    this.newSize.width = normalizedPoints.right - normalizedPoints.left;
+    this.newSize.height = normalizedPoints.bottom - normalizedPoints.top;
   }
 
   refresh() {
