@@ -1,3 +1,7 @@
+import { createFontFamilyDropdownEditor } from "../components/propertyGrid/editors/dropdownList.fontFamily";
+import { createFontSizeDropdownEditor } from "../components/propertyGrid/editors/dropdownList.fontSize";
+import { createFontWeightDropdownEditor } from "../components/propertyGrid/editors/dropdownList.fontWeight";
+import { createTextAlignDropdownEditor } from "../components/propertyGrid/editors/dropdownList.textAlign";
 import { Property } from "../components/propertyGrid/property";
 import { IStyle } from "./layout";
 import Properties from "./properties";
@@ -92,11 +96,31 @@ export default class StyleProperties extends Properties {
       { field: "color", label: "Color", type: "string" },
       { field: "backgroundColor", label: "Background Color", type: "string" },
       { field: "padding", label: "Padding", type: "string" },
-      { field: "textAlign", label: "Text Align", type: "string" },
+      {
+        field: "textAlign",
+        label: "Text Align",
+        type: "string",
+        editor: createTextAlignDropdownEditor(),
+      },
       { field: "border", label: "Border", type: "string" },
-      { field: "fontFamily", label: "Font Family", type: "string" },
-      { field: "fontSize", label: "Font Size", type: "string" },
-      { field: "fontWeight", label: "Font Weight", type: "string" },
+      {
+        field: "fontFamily",
+        label: "Font Family",
+        type: "string",
+        editor: createFontFamilyDropdownEditor(),
+      },
+      {
+        field: "fontSize",
+        label: "Font Size",
+        type: "string",
+        editor: createFontSizeDropdownEditor(),
+      },
+      {
+        field: "fontWeight",
+        label: "Font Weight",
+        type: "string",
+        editor: createFontWeightDropdownEditor(),
+      },
     ];
   }
 }

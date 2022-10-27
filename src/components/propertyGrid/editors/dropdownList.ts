@@ -48,7 +48,7 @@ export default class DropdownList implements PropertyEditor {
       option.innerText = item.label;
       option.value = item.value;
 
-      if (this.options.defaultValue === item.value) {
+      if (this._value == item.value) {
         option.selected = true;
       }
 
