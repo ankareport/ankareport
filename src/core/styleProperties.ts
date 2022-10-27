@@ -91,11 +91,11 @@ export default class StyleProperties extends Properties {
     return [
       { field: "color", label: "Color", type: "string" },
       { field: "backgroundColor", label: "Background Color", type: "string" },
-      { field: "padding", label: "Padding", type: "number" },
+      { field: "padding", label: "Padding", type: "string" },
       { field: "textAlign", label: "Text Align", type: "string" },
       { field: "border", label: "Border", type: "string" },
       { field: "fontFamily", label: "Font Family", type: "string" },
-      { field: "fontSize", label: "Font Size", type: "number" },
+      { field: "fontSize", label: "Font Size", type: "string" },
       { field: "fontWeight", label: "Font Weight", type: "string" },
     ];
   }
