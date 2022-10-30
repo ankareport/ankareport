@@ -39,6 +39,8 @@ export default class DragDrop {
     this.offset.x = e.x;
     this.offset.y = e.y;
 
+    this.onMouseMove(e);
+
     this.options.container.addEventListener("mousemove", this.onMouseMove);
     document.addEventListener("mouseup", this.onMouseUp, {
       once: true,
