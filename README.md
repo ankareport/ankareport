@@ -45,6 +45,14 @@ graph TD;
 
 Free & Open Source Web Reporting Tool
 
+## Contributing
+
+```sh
+yarn install
+yarn dev
+# open localhost:8080
+```
+
 ## Setup
 
 ```html
