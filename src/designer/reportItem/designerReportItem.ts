@@ -10,6 +10,10 @@ export default class DesignerReportItem extends ReportItem {
   refresh() {
     super.refresh();
 
+    if (this.properties.binding) {
+      this.element.innerText = `[${this.properties.binding}]`;
+    }
+
     this.element.style.border =
       this.element.style.border || "1px solid #cccccc";
   }
