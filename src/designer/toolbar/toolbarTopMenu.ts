@@ -1,3 +1,4 @@
+import { Save } from "../../images";
 import Toolbar, { ToolbarOrientation } from "./toolbar";
 import ToolbarButton from "./toolbarButton";
 
@@ -9,7 +10,7 @@ export default class ToolbarTopMenu extends Toolbar {
   constructor() {
     super(ToolbarOrientation.Horizontal);
 
-    this.saveButton = this.addButton({ text: "▒", title: "Save" });
+    this.saveButton = this.addButton({ icon: Save, text: "", title: "Save" });
     this.undoButton = this.addButton({ text: "↩", title: "Undo" });
     this.redoButton = this.addButton({ text: "↪", title: "Redo" });
   }

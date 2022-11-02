@@ -33,8 +33,8 @@ export default class Sidebar {
     this.element.style.width = this._width + "px";
   }
 
-  addPanel(title: string, content: HTMLElement) {
-    const panel = new Panel({ title });
+  addPanel(icon: string, title: string, content: HTMLElement) {
+    const panel = new Panel({ icon, title });
 
     panel.elementContent.appendChild(content);
 

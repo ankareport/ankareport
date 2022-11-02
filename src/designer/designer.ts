@@ -9,6 +9,7 @@ import Sidebar from "./sidebar/sidebar";
 import ToolbarLeftMenu from "./toolbar/toolbarLeftMenu";
 import ToolbarTopMenu from "./toolbar/toolbarTopMenu";
 import "./designer.css";
+import { Database, TreeStructure } from "../images";
 
 export interface DataSourceChangeEventArgs {
   dataSource: DataSourceTreeItemData[];
@@ -57,8 +58,16 @@ export default class Designer {
     this.elementContent.appendChild(this.reportContainer.element);
     this.elementContent.appendChild(this.sidebar.element);
 
-    this.sidebar.addPanel("Data Source", this.dataSourceTreeList.element);
-    this.sidebar.addPanel("Properties", this.propertyGrid.element);
+    this.sidebar.addPanel(
+      Database,
+      "Data Source",
+      this.dataSourceTreeList.element,
+    );
+    this.sidebar.addPanel(
+      TreeStructure,
+      "Properties",
+      this.propertyGrid.element,
+    );
 
     if (options.dataSource) this.setDataSource(options.dataSource);
 

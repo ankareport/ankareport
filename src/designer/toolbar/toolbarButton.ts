@@ -1,6 +1,7 @@
 import "./toolbarButton.css";
 
 export interface ToolbarButtonOptions {
+  icon?: string;
   text: string;
   title: string;
   draggable?: boolean;
@@ -8,7 +9,10 @@ export interface ToolbarButtonOptions {
 
 export default class ToolbarButton {
   public readonly element = document.createElement("div");
+  public readonly elementIcon = document.createElement("img");
+  public readonly elementText = document.createElement("span");
 
+  private _icon?: string;
   private _text: string = "";
 
   get text() {
@@ -42,6 +46,10 @@ export default class ToolbarButton {
   constructor(options: ToolbarButtonOptions) {
     this.element.classList.add("anka-toolbar-button");
 
+    this.element.appendChild(this.elementIcon);
+    this.element.appendChild(this.elementText);
+
+    this._icon = options.icon;
     this._text = options.text;
     this._title = options.title;
     this.element.style.width = 25 + "px";
@@ -55,9 +63,12 @@ export default class ToolbarButton {
   }
 
   refresh() {
-    this.element.innerText = this._text;
     this.element.title = this._title;
     this.element.draggable = this._draggable;
+    this.elementIcon.src = this._icon || "";
+    this.elementText.innerText = this._text;
+
+    this.elementIcon.style.display = this._icon ? "" : "none";
   }
 
   addEventListener(event: "click", callback: () => void) {

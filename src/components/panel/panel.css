@@ -7,6 +7,8 @@
 .anka-panel__header {
   padding: 3px;
   border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
 }
 
 .anka-panel__content-container {
