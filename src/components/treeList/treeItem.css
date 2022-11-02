@@ -2,6 +2,19 @@
   padding: 3px;
 }
 
+.anka-tree-list .header {
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  background-color: var(--tree-item-color-background);
+  border: 1px solid var(--tree-item-color-border);
+  border-radius: 3px;
+}
+
+.anka-tree-list .header:hover {
+  filter: brightness(95%);
+}
+
 .anka-tree-list .icon {
   width: 15px;
   border-radius: 3px;
@@ -9,11 +22,6 @@
   cursor: pointer;
   user-select: none;
   text-align: center;
-  background-color: var(--panel-content-color-background);
-}
-
-.anka-tree-list .icon:hover {
-  filter: brightness(95%);
 }
 
 .anka-tree-list .label {
@@ -22,11 +30,8 @@
   display: inline-block;
   cursor: pointer;
   user-select: none;
-  background-color: var(--panel-content-color-background);
-}
 
-.anka-tree-list .label:hover {
-  filter: brightness(95%);
+  flex: 1;
 }
 
 .anka-tree-list .children {

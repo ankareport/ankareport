@@ -19,6 +19,7 @@ export interface TreeItemOptions<TData> {
 
 export default class TreeItem<TData> {
   public readonly element = document.createElement("div");
+  private readonly elementHeader = document.createElement("div");
   private readonly elementIcon = document.createElement("div");
   private readonly elementLabel = document.createElement("div");
   private readonly elementChildren = document.createElement("div");
@@ -40,12 +41,14 @@ export default class TreeItem<TData> {
 
   private init() {
     this.element.classList.add("anka-tree-item");
+    this.elementHeader.classList.add("header");
     this.elementIcon.classList.add("icon");
     this.elementLabel.classList.add("label");
     this.elementChildren.classList.add("children");
 
-    this.element.appendChild(this.elementIcon);
-    this.element.appendChild(this.elementLabel);
+    this.element.appendChild(this.elementHeader);
+    this.elementHeader.appendChild(this.elementIcon);
+    this.elementHeader.appendChild(this.elementLabel);
 
     if (this.options.renderer) {
       this.options.renderer(this, this.options.data);

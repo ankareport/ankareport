@@ -43,6 +43,10 @@
   --property-grid-row-color-border: var(--property-grid-color-border);
   --property-grid-row-hover-color-background: var(--color-background);
 
+  /* TREE */
+  --tree-item-color-border: var(--color-gray-9);
+  --tree-item-color-background: var(--color-gray-7);
+
   /* REPORT DESIGNER */
   --report-container-color-background: var(--color-gray-4);
   --paper-color-background: var(--color-gray-1);
