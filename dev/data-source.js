@@ -3,9 +3,18 @@ const dataSource = [
   { label: "Header 2", field: "header2" },
   {
     label: "Content",
+    field: "content",
     children: [
       { label: "Name", field: "name" },
-      { label: "Surname", field: "surname" },
+      {
+        label: "Invoices",
+        field: "invoices",
+        children: [
+          { label: "Invoice No", field: "invoice_no" },
+          { label: "Invoice Date", field: "invoice_date" },
+          { label: "Invoice Total", field: "invoice_total" },
+        ],
+      },
     ],
   },
   { label: "Footer 1", field: "footer1" },

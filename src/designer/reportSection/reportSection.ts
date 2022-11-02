@@ -10,6 +10,7 @@ import ReportItemSelector from "../reportItem/reportItemSelector";
 import ReportSectionProperties from "./reportSectionProperties";
 import "./reportSection.css";
 import { JoinStyles } from "../../core/utils/style.utils";
+import { MenuButton } from "../../components/menu/menu";
 
 export interface ReportSectionOptions {
   title: string;
@@ -103,23 +104,34 @@ export default class ReportSection {
         this.subsections,
       );
 
-      if (subsectionDataList.length === 0) return;
+      const buttons: MenuButton[] = subsectionDataList.map((x) => ({
+        key: "add-section",
+        label: `Add Section (${x.label})`,
+        data: x,
+      }));
+
+      if (this.parent) {
+        buttons.push({
+          key: "remove-section",
+          label: "Remove Section",
+          data: this,
+        });
+      }
+
+      if (buttons.length === 0) return;
 
       e.preventDefault();
 
       new ContextMenu({
         width: "150px",
-        buttons: [
-          ...subsectionDataList.map((x) => ({
-            key: "add-section",
-            label: `Add Section (${x.label})`,
-            data: x,
-          })),
-        ],
+        buttons,
         top: e.clientY,
         left: e.clientX,
         onClick: (e) => {
           switch (e.key) {
+            case "remove-section":
+              this.parent!.removeSection(this);
+              break;
             case "add-section":
               const data = e.data as DataSourceTreeItemData;
 
@@ -220,6 +232,16 @@ export default class ReportSection {
     return section;
   }
 
+  removeSection(section: ReportSection) {
+    const index = this.subsections.findIndex((x) => x === section);
+
+    if (index < 0) return;
+
+    this.subsections.splice(index, 1);
+
+    section.dispose();
+  }
+
   selectItem(item: DesignerReportItem) {
     this.deselectAll();
 
@@ -295,6 +317,10 @@ export default class ReportSection {
       fontSize: this.properties.fontSize,
       fontWeight: this.properties.fontWeight,
     };
+  }
+
+  private dispose() {
+    this.element.remove();
   }
 }
 

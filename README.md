@@ -35,7 +35,7 @@ Free & Open Source Web Reporting Tool
 - [x] Move & Size
 - [ ] Bulk Move & Resize
 - [x] Add Sub Group
-- [ ] Remove Sub Group
+- [x] Remove Sub Group
 - [x] Style By Group
 - [ ] Undo/Redo
 - [ ] Ruler
