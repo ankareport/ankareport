@@ -10,19 +10,31 @@ export interface ColorPickerEventsMap {
   change: ColorPickerEventArgs;
 }
 
+export interface ColorPickerOptions {
+  defaultValue: string;
+}
+
 export default class ColorPicker implements PropertyEditor {
   public readonly element = document.createElement("input");
 
-  constructor() {
+  constructor(private readonly options: ColorPickerOptions) {
     this.element.type = "color";
   }
 
   get value() {
+    if (this.element.value === this.options.defaultValue) {
+      return "";
+    }
+
     return this.element.value;
   }
 
   set value(value: string) {
-    this.element.value = value;
+    if (!value) {
+      this.element.value = this.options.defaultValue;
+    } else {
+      this.element.value = value;
+    }
   }
 
   addEventListener<K extends keyof ColorPickerEventsMap>(

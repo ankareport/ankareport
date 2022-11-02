@@ -98,13 +98,13 @@ export default class StyleProperties extends Properties {
         field: "color",
         label: "Color",
         type: "string",
-        editor: new ColorPicker(),
+        editor: new ColorPicker({ defaultValue: "#000000" }),
       },
       {
         field: "backgroundColor",
         label: "Background Color",
         type: "string",
-        editor: new ColorPicker(),
+        editor: new ColorPicker({ defaultValue: "#ffffff" }),
       },
       { field: "padding", label: "Padding", type: "string" },
       {
