@@ -18,28 +18,9 @@
   <img src="https://cdn.jsdelivr.net/gh/ankareport/assets/designer/designer.png" alt="designer">
 </p>
 
-```mermaid
-graph TD;
-  layout(Layout);
-  data(Data);
-  data-source(Data Source);
-  designer(Designer);
-  report(Report Generator);
-  pdf-button(Export To PDF);
-
-  data-source --> designer;
-  data-source -.-> data;
-  designer --> layout;
-
-  layout --> report;
-  data --> report;
-
-  report --> pdf-button;
-
-  style designer fill:#fff,color:#000,stroke:red
-  style report fill:#fff,color:#000,stroke:red
-  style pdf-button fill:#345678,color:red
-```
+<p align="center">
+  <img src="https://cdn.jsdelivr.net/gh/ankareport/assets/AnkaReportFlowChart.png" alt="Anka Report">
+</p>
 
 ## Purpose
 
