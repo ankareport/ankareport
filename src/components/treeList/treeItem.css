@@ -9,7 +9,7 @@
   cursor: pointer;
   user-select: none;
   text-align: center;
-  background-color: var(--color-background);
+  background-color: var(--panel-content-color-background);
 }
 
 .anka-tree-list .icon:hover {
@@ -22,7 +22,7 @@
   display: inline-block;
   cursor: pointer;
   user-select: none;
-  background-color: var(--color-background);
+  background-color: var(--panel-content-color-background);
 }
 
 .anka-tree-list .label:hover {

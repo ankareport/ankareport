@@ -1,5 +1,5 @@
 .anka-report-container {
-  background-color: var(--color-background);
+  background-color: var(--report-container-color-background);
   flex: 1;
   overflow: auto;
   position: relative;

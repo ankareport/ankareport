@@ -7,11 +7,13 @@
 .anka-panel__header {
   padding: 3px;
   border-bottom: 1px solid var(--color-border);
+  background-color: var(--panel-header-color-background);
   display: flex;
   align-items: center;
 }
 
 .anka-panel__content-container {
+  background-color: var(--panel-content-color-background);
   flex: 1;
   position: relative;
   overflow-y: auto;

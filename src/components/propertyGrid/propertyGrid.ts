@@ -54,6 +54,9 @@ export default class PropertyGrid {
 
     if (!this._dataSource || this._properties.length === 0) {
       this.element.innerText = "No property!";
+      this.element.style.padding = "3px";
+    } else {
+      this.element.style.padding = "";
     }
 
     if (!this._dataSource) return;

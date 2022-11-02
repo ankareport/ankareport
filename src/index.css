@@ -1,13 +1,51 @@
 :root {
-  --color-border: #999999;
-  --color-border-button: #aaaaaa;
-  --color-border-selector: red;
-  --color-border-resizer: blue;
-  --color-background: #e1e1e1;
-  --color-paper-background: #eeeeee;
-  --color-paper-line-small: #dddddd;
-  --color-paper-line-large: #cccccc;
-  --color-property-grid-border: #cccccc;
-  --font: sans-serif;
+  --font-family: sans-serif;
   --font-size: 13px;
+
+  --color-gray-1: #ffffff;
+  --color-gray-2: #fdfdfd;
+  --color-gray-3: #fbfbfb;
+  --color-gray-4: #f9f9f9;
+  --color-gray-5: #f7f7f7;
+  --color-gray-6: #f5f5f5;
+  --color-gray-7: #f3f3f3;
+  --color-gray-8: #f1f1f1;
+  --color-gray-9: #eeeeee;
+  --color-gray-10: #dedede;
+  --color-gray-11: #dddddd;
+  --color-gray-12: #cccccc;
+  --color-blue: blue;
+  --color-blue-light: #3a91ee;
+
+  --color-border: var(--color-gray-12);
+  --color-border-light: var(--color-gray-9);
+  --color-background: var(--color-gray-9);
+  --color-background-light: var(--color-gray-5);
+
+  /* BUTTON */
+  --button-color-border: var(--color-border);
+  --button-color-background: var(--color-background-light);
+
+  /* SELECTOR */
+  --selector-color-border: var(--color-blue-light);
+
+  /* RESIZER */
+  --resizer-color-border: var(--color-blue);
+
+  /* PANEL */
+  --panel-header-color-background: var(--color-background);
+  --panel-content-color-background: var(--color-background-light);
+
+  /* PROPERTY GRID */
+  --property-grid-font-size: 12px;
+  --property-grid-color-border: var(--color-border-light);
+  --property-grid-color-background: var(--color-background-light);
+  --property-grid-row-color-border: var(--property-grid-color-border);
+  --property-grid-row-hover-color-background: var(--color-background);
+
+  /* REPORT DESIGNER */
+  --report-container-color-background: var(--color-gray-4);
+  --paper-color-background: var(--color-gray-1);
+  --paper-color-line-small: var(--color-background-light);
+  --paper-color-line-large: var(--color-background);
 }
