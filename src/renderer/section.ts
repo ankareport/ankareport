@@ -34,7 +34,6 @@ export default class Section {
       item.properties.fontFamily = layout.fontFamily;
       item.properties.fontSize = layout.fontSize;
       item.properties.fontWeight = layout.fontWeight;
-      item.properties.padding = layout.padding;
       item.properties.textAlign = layout.textAlign as TextAlign;
 
       if (layout.binding) {

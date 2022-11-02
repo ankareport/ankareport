@@ -268,7 +268,6 @@ export default class ReportSection {
 
     this.properties.color = layout.color;
     this.properties.backgroundColor = layout.backgroundColor;
-    this.properties.padding = layout.padding;
     this.properties.textAlign = layout.textAlign as TextAlign;
     this.properties.border = layout.border;
     this.properties.fontFamily = layout.fontFamily;
@@ -286,7 +285,6 @@ export default class ReportSection {
       sections: this.subsections.map((x) => x.toJSON()),
       color: this.properties.color,
       backgroundColor: this.properties.backgroundColor,
-      padding: this.properties.padding,
       textAlign: this.properties.textAlign,
       border: this.properties.border,
       fontFamily: this.properties.fontFamily,

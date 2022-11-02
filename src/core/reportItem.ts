@@ -58,7 +58,6 @@ export default class ReportItem implements IDisposable {
 
     this.element.style.color = this.joinStyles.getStyle("color", "")!;
     this.element.style.backgroundColor = this.joinStyles.getStyle("backgroundColor", "")!;
-    this.element.style.padding = this.joinStyles.getStyle("padding", "")!;
     this.element.style.textAlign = this.joinStyles.getStyle("textAlign", "")!;
     this.element.style.border = this.joinStyles.getStyle("border", "")!;
     this.element.style.fontFamily = this.joinStyles.getStyle("fontFamily", "Tahoma")!;
@@ -91,7 +90,6 @@ export default class ReportItem implements IDisposable {
     this.properties.binding = layout.binding || "";
     this.properties.color = layout.color;
     this.properties.backgroundColor = layout.backgroundColor;
-    this.properties.padding = layout.padding;
     this.properties.textAlign = layout.textAlign as TextAlign;
     this.properties.border = layout.border;
     this.properties.fontFamily = layout.fontFamily;
@@ -112,7 +110,6 @@ export default class ReportItem implements IDisposable {
       binding: this.properties.binding,
       color: this.properties.color,
       backgroundColor: this.properties.backgroundColor,
-      padding: this.properties.padding,
       textAlign: this.properties.textAlign,
       border: this.properties.border,
       fontFamily: this.properties.fontFamily,

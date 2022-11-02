@@ -27,7 +27,6 @@ export interface IReportItem extends IStyle {
 export interface IStyle {
   color?: string;
   backgroundColor?: string;
-  padding?: string;
   textAlign?: TextAlign;
   border?: string;
   fontFamily?: string;

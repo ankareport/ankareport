@@ -12,7 +12,6 @@ export type TextAlign = "left" | "center" | "right";
 export default class StyleProperties extends Properties {
   private _color?: string;
   private _backgroundColor?: string;
-  private _padding?: string;
   private _textAlign?: TextAlign;
   private _border?: string;
   private _fontFamily?: string;
@@ -26,7 +25,6 @@ export default class StyleProperties extends Properties {
 
     this._color = defaultValues.color;
     this._backgroundColor = defaultValues.backgroundColor;
-    this._padding = defaultValues.padding;
     this._textAlign = defaultValues.textAlign;
     this._border = defaultValues.border;
     this._fontFamily = defaultValues.fontFamily;
@@ -39,9 +37,6 @@ export default class StyleProperties extends Properties {
   }
   get backgroundColor() {
     return this._backgroundColor;
-  }
-  get padding() {
-    return this._padding;
   }
   get textAlign() {
     return this._textAlign;
@@ -66,10 +61,6 @@ export default class StyleProperties extends Properties {
   set backgroundColor(value: string | undefined) {
     this._backgroundColor = value;
     this.emitOnChange("backgroundColor");
-  }
-  set padding(value: string | undefined) {
-    this._padding = value;
-    this.emitOnChange("padding");
   }
   set textAlign(value: TextAlign | undefined) {
     this._textAlign = value;
@@ -106,7 +97,6 @@ export default class StyleProperties extends Properties {
         type: "string",
         editor: new ColorPicker({ defaultValue: "#ffffff" }),
       },
-      { field: "padding", label: "Padding", type: "string" },
       {
         field: "textAlign",
         label: "Text Align",
