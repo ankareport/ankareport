@@ -18,10 +18,12 @@ export default class Renderer {
     this.headerSection = new Section(
       this.options.layout.headerSection,
       this.options.data,
+      [this.options.layout],
     );
     this.footerSection = new Section(
       this.options.layout.footerSection,
       this.options.data,
+      [this.options.layout],
     );
 
     this.options.element.style.width = this.options.layout.width + "px";
@@ -35,6 +37,7 @@ export default class Renderer {
       const contentSection = new Section(
         this.options.layout.contentSection,
         data,
+        [this.options.layout],
       );
       this.options.element.appendChild(contentSection.element);
       this.options.element.appendChild(contentSection.elementSections);

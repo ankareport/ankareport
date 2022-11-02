@@ -1,4 +1,4 @@
-import { ISection } from "../core/layout";
+import { ISection, IStyle } from "../core/layout";
 import ReportItem from "../core/reportItem";
 import StyleProperties, { TextAlign } from "../core/styleProperties";
 
@@ -10,6 +10,7 @@ export default class Section {
   constructor(
     private readonly layout: ISection,
     private readonly data: any,
+    private readonly defaultStyles: IStyle[],
   ) {
     this._init();
   }
@@ -20,10 +21,12 @@ export default class Section {
     this.element.style.height = this.layout.height + "px";
     this.element.style.position = "relative";
 
+    const defaultStylesList: StyleProperties[] = []
+    this.defaultStyles.forEach(x => defaultStylesList.push(new StyleProperties(x)));
+    defaultStylesList.push(new StyleProperties(this.layout));
+
     this.layout.items?.forEach((layout) => {
-      const item = new ReportItem({
-        defaultStylesList: [new StyleProperties(this.layout)],
-      });
+      const item = new ReportItem({ defaultStylesList });
       item.properties.x = layout.x;
       item.properties.y = layout.y;
       item.properties.width = layout.width;
@@ -54,7 +57,11 @@ export default class Section {
       const subDataSource = this.data ? this.data[sectionLayout.binding] : {};
 
       subDataSource?.forEach((sectionDataSource: any) => {
-        const section = new Section(sectionLayout, sectionDataSource);
+        const section = new Section(
+          sectionLayout,
+          sectionDataSource,
+          [...this.defaultStyles, this.layout],
+        );
 
         this.elementSections.appendChild(section.element);
         this.elementSections.appendChild(section.elementSections);
