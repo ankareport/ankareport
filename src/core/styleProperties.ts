@@ -1,3 +1,4 @@
+import ColorPicker from "../components/propertyGrid/editors/colorPicker";
 import { createFontFamilyDropdownEditor } from "../components/propertyGrid/editors/dropdownList.fontFamily";
 import { createFontSizeDropdownEditor } from "../components/propertyGrid/editors/dropdownList.fontSize";
 import { createFontWeightDropdownEditor } from "../components/propertyGrid/editors/dropdownList.fontWeight";
@@ -93,8 +94,18 @@ export default class StyleProperties extends Properties {
 
   getPropertyDefinitions(): Property[] {
     return [
-      { field: "color", label: "Color", type: "string" },
-      { field: "backgroundColor", label: "Background Color", type: "string" },
+      {
+        field: "color",
+        label: "Color",
+        type: "string",
+        editor: new ColorPicker(),
+      },
+      {
+        field: "backgroundColor",
+        label: "Background Color",
+        type: "string",
+        editor: new ColorPicker(),
+      },
       { field: "padding", label: "Padding", type: "string" },
       {
         field: "textAlign",

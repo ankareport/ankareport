@@ -50,7 +50,7 @@ Free & Open Source Web Reporting Tool
 - [x] Add/Remove Item
 - [x] Bindings
 - [x] Styles
-- [ ] Color Picker
+- [x] Color Picker
 - [x] Move & Size
 - [ ] Bulk Move & Resize
 - [x] Add Sub Group
