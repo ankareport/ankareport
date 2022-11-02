@@ -28,7 +28,9 @@ export interface IStyle {
   color?: string;
   backgroundColor?: string;
   textAlign?: TextAlign;
-  border?: string;
+  borderWidth?: number;
+  borderStyle?: string;
+  borderColor?: string;
   fontFamily?: string;
   fontSize?: string;
   fontWeight?: string;

@@ -1,4 +1,5 @@
 import ColorPicker from "../components/propertyGrid/editors/colorPicker";
+import { createBorderStyleDropdownEditor } from "../components/propertyGrid/editors/dropdownList.borderStyle";
 import { createFontFamilyDropdownEditor } from "../components/propertyGrid/editors/dropdownList.fontFamily";
 import { createFontSizeDropdownEditor } from "../components/propertyGrid/editors/dropdownList.fontSize";
 import { createFontWeightDropdownEditor } from "../components/propertyGrid/editors/dropdownList.fontWeight";
@@ -13,7 +14,9 @@ export default class StyleProperties extends Properties {
   private _color?: string;
   private _backgroundColor?: string;
   private _textAlign?: TextAlign;
-  private _border?: string;
+  private _borderWidth?: number;
+  private _borderStyle?: string;
+  private _borderColor?: string;
   private _fontFamily?: string;
   private _fontSize?: string;
   private _fontWeight?: string;
@@ -26,7 +29,9 @@ export default class StyleProperties extends Properties {
     this._color = defaultValues.color;
     this._backgroundColor = defaultValues.backgroundColor;
     this._textAlign = defaultValues.textAlign;
-    this._border = defaultValues.border;
+    this._borderWidth = defaultValues.borderWidth;
+    this._borderStyle = defaultValues.borderStyle;
+    this._borderColor = defaultValues.borderColor;
     this._fontFamily = defaultValues.fontFamily;
     this._fontSize = defaultValues.fontSize;
     this._fontWeight = defaultValues.fontWeight;
@@ -41,8 +46,14 @@ export default class StyleProperties extends Properties {
   get textAlign() {
     return this._textAlign;
   }
-  get border() {
-    return this._border;
+  get borderWidth() {
+    return this._borderWidth;
+  }
+  get borderStyle() {
+    return this._borderStyle;
+  }
+  get borderColor() {
+    return this._borderColor;
   }
   get fontFamily() {
     return this._fontFamily;
@@ -66,9 +77,17 @@ export default class StyleProperties extends Properties {
     this._textAlign = value;
     this.emitOnChange("textAlign");
   }
-  set border(value: string | undefined) {
-    this._border = value;
-    this.emitOnChange("border");
+  set borderWidth(value: number | undefined) {
+    this._borderWidth = value;
+    this.emitOnChange("borderWidth");
+  }
+  set borderStyle(value: string | undefined) {
+    this._borderStyle = value;
+    this.emitOnChange("borderStyle");
+  }
+  set borderColor(value: string | undefined) {
+    this._borderColor = value;
+    this.emitOnChange("borderColor");
   }
   set fontFamily(value: string | undefined) {
     this._fontFamily = value;
@@ -103,7 +122,19 @@ export default class StyleProperties extends Properties {
         type: "string",
         editor: createTextAlignDropdownEditor(),
       },
-      { field: "border", label: "Border", type: "string" },
+      { field: "borderWidth", label: "Border Width", type: "number" },
+      {
+        field: "borderStyle",
+        label: "Border Style",
+        type: "string",
+        editor: createBorderStyleDropdownEditor(),
+      },
+      {
+        field: "borderColor",
+        label: "Border Color",
+        type: "string",
+        editor: new ColorPicker({ defaultValue: "#000000" }),
+      },
       {
         field: "fontFamily",
         label: "Font Family",

@@ -30,7 +30,9 @@ export default class Section {
       item.properties.height = layout.height;
       item.properties.color = layout.color;
       item.properties.backgroundColor = layout.backgroundColor;
-      item.properties.border = layout.border;
+      item.properties.borderWidth = layout.borderWidth;
+      item.properties.borderStyle = layout.borderStyle;
+      item.properties.borderColor = layout.borderColor;
       item.properties.fontFamily = layout.fontFamily;
       item.properties.fontSize = layout.fontSize;
       item.properties.fontWeight = layout.fontWeight;

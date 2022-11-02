@@ -140,7 +140,9 @@ export default class Report {
     this.properties.color = layout.color;
     this.properties.backgroundColor = layout.backgroundColor;
     this.properties.textAlign = layout.textAlign;
-    this.properties.border = layout.border;
+    this.properties.borderWidth = layout.borderWidth;
+    this.properties.borderStyle = layout.borderStyle;
+    this.properties.borderColor = layout.borderColor;
     this.properties.fontFamily = layout.fontFamily;
     this.properties.fontSize = layout.fontSize;
     this.properties.fontWeight = layout.fontWeight;
@@ -158,7 +160,9 @@ export default class Report {
       color: this.properties.color,
       backgroundColor: this.properties.backgroundColor,
       textAlign: this.properties.textAlign,
-      border: this.properties.border,
+      borderWidth: this.properties.borderWidth,
+      borderStyle: this.properties.borderStyle,
+      borderColor: this.properties.borderColor,
       fontFamily: this.properties.fontFamily,
       fontSize: this.properties.fontSize,
       fontWeight: this.properties.fontWeight,

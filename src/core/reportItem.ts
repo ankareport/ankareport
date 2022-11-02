@@ -59,7 +59,9 @@ export default class ReportItem implements IDisposable {
     this.element.style.color = this.joinStyles.getStyle("color", "")!;
     this.element.style.backgroundColor = this.joinStyles.getStyle("backgroundColor", "")!;
     this.element.style.textAlign = this.joinStyles.getStyle("textAlign", "")!;
-    this.element.style.border = this.joinStyles.getStyle("border", "")!;
+    this.element.style.borderWidth = this.joinStyles.getStyle("borderWidth", "0")! + "px";
+    this.element.style.borderStyle = this.joinStyles.getStyle("borderStyle", "")!;
+    this.element.style.borderColor = this.joinStyles.getStyle("borderColor", "#000000")!;
     this.element.style.fontFamily = this.joinStyles.getStyle("fontFamily", "Tahoma")!;
     this.element.style.fontSize = this.joinStyles.getStyle("fontSize", "12px")!;
     this.element.style.fontWeight = this.joinStyles.getStyle("fontWeight", "")!;
@@ -91,7 +93,9 @@ export default class ReportItem implements IDisposable {
     this.properties.color = layout.color;
     this.properties.backgroundColor = layout.backgroundColor;
     this.properties.textAlign = layout.textAlign as TextAlign;
-    this.properties.border = layout.border;
+    this.properties.borderWidth = layout.borderWidth;
+    this.properties.borderStyle = layout.borderStyle;
+    this.properties.borderColor = layout.borderColor;
     this.properties.fontFamily = layout.fontFamily;
     this.properties.fontSize = layout.fontSize;
     this.properties.fontWeight = layout.fontWeight;
@@ -111,7 +115,9 @@ export default class ReportItem implements IDisposable {
       color: this.properties.color,
       backgroundColor: this.properties.backgroundColor,
       textAlign: this.properties.textAlign,
-      border: this.properties.border,
+      borderWidth: this.properties.borderWidth,
+      borderStyle: this.properties.borderStyle,
+      borderColor: this.properties.borderColor,
       fontFamily: this.properties.fontFamily,
       fontSize: this.properties.fontSize,
       fontWeight: this.properties.fontWeight,
