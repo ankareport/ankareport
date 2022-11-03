@@ -48,16 +48,18 @@ export default class Menu {
     this.element.style.width = this.options.width || "";
     this.element.style.height = this.options.height || "";
 
-    this.options.buttons.filter(x => x).forEach((button) => {
-      const elementButton = document.createElement("div");
-      elementButton.classList.add("anka-menu-button");
-      elementButton.innerText = button.label;
-      elementButton.addEventListener("click", () => {
-        this.emitOnClick(button.key, button.data);
-      });
+    this.options.buttons
+      .filter((x) => x)
+      .forEach((button) => {
+        const elementButton = document.createElement("div");
+        elementButton.classList.add("anka-menu-button");
+        elementButton.innerText = button.label;
+        elementButton.addEventListener("click", () => {
+          this.emitOnClick(button.key, button.data);
+        });
 
-      this.element.appendChild(elementButton);
-    });
+        this.element.appendChild(elementButton);
+      });
   }
 
   addEventListener<K extends keyof MenuEventMap>(

@@ -1,3 +1,4 @@
-.anka-property-grid-row__editor-container input[type="color"]::-webkit-color-swatch-wrapper {
+.anka-property-grid-row__editor-container
+  input[type="color"]::-webkit-color-swatch-wrapper {
   padding: 0;
 }

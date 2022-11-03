@@ -7,7 +7,7 @@
 
     <title>AnkaReport Dev Server</title>
 
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <link rel="stylesheet" href="ankareport.css" />
     <link rel="stylesheet" href="style.css" />
 
@@ -23,8 +23,18 @@
       <div class="panel">
         <div class="panel-header">
           <span style="flex: 1">Layout</span>
-          <input id="load-layout-from-designer" type="button" value="Load From Designer" onclick="loadLayoutFromDesigner()" />
-          <input id="switch-layout" type="button" value="Show" onclick="switchLayout()" />
+          <input
+            id="load-layout-from-designer"
+            type="button"
+            value="Load From Designer"
+            onclick="loadLayoutFromDesigner()"
+          />
+          <input
+            id="switch-layout"
+            type="button"
+            value="Show"
+            onclick="switchLayout()"
+          />
         </div>
         <div class="panel-body">
           <div id="layout-editor"></div>
@@ -34,7 +44,12 @@
       <div class="content">
         <div id="designer"></div>
 
-        <input id="export-to-pdf-button" type="button" value="Export To Pdf" onclick="exportToPdf()" />
+        <input
+          id="export-to-pdf-button"
+          type="button"
+          value="Export To Pdf"
+          onclick="exportToPdf()"
+        />
         <div id="report"></div>
       </div>
 
@@ -63,7 +78,9 @@
       const designerDiv = document.getElementById("designer");
       const rendererDiv = document.getElementById("report");
 
-      const loadLayoutFromDesignerButton = document.getElementById("load-layout-from-designer");
+      const loadLayoutFromDesignerButton = document.getElementById(
+        "load-layout-from-designer",
+      );
       const switchLayoutButton = document.getElementById("switch-layout");
       const dataSourcePanel = document.getElementById("data-source-panel");
       const dataPanel = document.getElementById("data-panel");
@@ -96,8 +113,7 @@
               console.log(layout);
             },
           });
-        } catch {
-        }
+        } catch {}
       };
 
       const refreshReport = () => {
@@ -112,8 +128,7 @@
             layout,
             data,
           });
-        } catch {
-        }
+        } catch {}
       };
 
       layoutEditor.on("change", () => {

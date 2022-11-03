@@ -57,12 +57,25 @@ export default class ReportItem implements IDisposable {
     this.element.innerText = this.properties.text;
 
     this.element.style.color = this.joinStyles.getStyle("color", "")!;
-    this.element.style.backgroundColor = this.joinStyles.getStyle("backgroundColor", "")!;
+    this.element.style.backgroundColor = this.joinStyles.getStyle(
+      "backgroundColor",
+      "",
+    )!;
     this.element.style.textAlign = this.joinStyles.getStyle("textAlign", "")!;
-    this.element.style.borderWidth = this.joinStyles.getStyle("borderWidth", "0")! + "px";
-    this.element.style.borderStyle = this.joinStyles.getStyle("borderStyle", "")!;
-    this.element.style.borderColor = this.joinStyles.getStyle("borderColor", "#000000")!;
-    this.element.style.fontFamily = this.joinStyles.getStyle("fontFamily", "Tahoma")!;
+    this.element.style.borderWidth =
+      this.joinStyles.getStyle("borderWidth", "0")! + "px";
+    this.element.style.borderStyle = this.joinStyles.getStyle(
+      "borderStyle",
+      "",
+    )!;
+    this.element.style.borderColor = this.joinStyles.getStyle(
+      "borderColor",
+      "#000000",
+    )!;
+    this.element.style.fontFamily = this.joinStyles.getStyle(
+      "fontFamily",
+      "Tahoma",
+    )!;
     this.element.style.fontSize = this.joinStyles.getStyle("fontSize", "12px")!;
     this.element.style.fontWeight = this.joinStyles.getStyle("fontWeight", "")!;
   }

@@ -47,7 +47,10 @@ export default class ElementsTreeList extends TreeList<ElementsTreeItemData> {
     ];
   }
 
-  getSectionData(section: ReportSection, label?: string): TreeItemData<ElementsTreeItemData> {
+  getSectionData(
+    section: ReportSection,
+    label?: string,
+  ): TreeItemData<ElementsTreeItemData> {
     return {
       label: label || `Section [${section.properties.binding}]`,
       data: {

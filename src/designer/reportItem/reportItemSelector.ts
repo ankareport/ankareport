@@ -318,7 +318,7 @@ export default class ReportItemSelector {
             item: this.attachedTo,
             width: "150px",
             buttons: [],
-            onClick: () => { },
+            onClick: () => {},
           };
 
           listener(args);
