@@ -43,6 +43,16 @@ export default class ToolbarButton {
     this._draggable = value;
   }
 
+  private _disabled = false;
+
+  get disabled() {
+    return this._disabled;
+  }
+  set disabled(value: boolean) {
+    this._disabled = value;
+    this.refresh();
+  }
+
   constructor(options: ToolbarButtonOptions) {
     this.element.classList.add("anka-toolbar-button");
 
@@ -67,6 +77,14 @@ export default class ToolbarButton {
     this.element.draggable = this._draggable;
     this.elementIcon.src = this._icon || "";
     this.elementText.innerText = this._text;
+
+    if (this._disabled) {
+      this.element.style.backgroundColor = "transparent";
+      this.element.style.cursor = "not-allowed";
+    } else {
+      this.element.style.backgroundColor = "";
+      this.element.style.cursor = "";
+    }
 
     this.elementIcon.style.display = this._icon ? "" : "none";
   }

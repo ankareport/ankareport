@@ -37,7 +37,7 @@ Free & Open Source Web Reporting Tool
 - [x] Add Sub Group
 - [x] Remove Sub Group
 - [x] Style By Group
-- [ ] Undo/Redo
+- [x] Undo/Redo
 - [x] Elements List
 - [x] Report Viewer
 - [x] Export To PDF

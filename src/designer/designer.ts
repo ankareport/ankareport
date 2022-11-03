@@ -13,6 +13,7 @@ import ToolbarLeftMenu from "./toolbar/toolbarLeftMenu";
 import ToolbarTopMenu from "./toolbar/toolbarTopMenu";
 
 import "./designer.css";
+import { ChangeStack } from "./change-stack";
 
 export interface DataSourceChangeEventArgs {
   dataSource: DataSourceTreeItemData[];
@@ -42,6 +43,8 @@ export default class Designer {
   private readonly dataSourceTreeList = new DataSourceTreeList();
   private readonly elementsTreeList: ElementsTreeList;
   private readonly propertyGrid = new PropertyGrid();
+
+  private readonly changeStack = new ChangeStack();
 
   private readonly _dataSourceChangeEventEmitter =
     new EventEmitter<DataSourceChangeEventArgs>();
@@ -101,6 +104,10 @@ export default class Designer {
     });
 
     this.reportContainer.addEventListener("change", (e) => {
+      this.changeStack.add(e);
+      this.menu.redoButton.disabled = !this.changeStack.canRedo;
+      this.menu.undoButton.disabled = !this.changeStack.canUndo;
+
       switch (e.type) {
         case "add-section":
         case "remove-section":
@@ -121,6 +128,13 @@ export default class Designer {
         options.onSaveButtonClick!(layout);
       });
     }
+
+    this.menu.undoButton.addEventListener("click", () => {
+      this.changeStack.undo();
+    });
+    this.menu.redoButton.addEventListener("click", () => {
+      this.changeStack.redo();
+    });
   }
 
   addEventListener<K extends keyof DesignerEventsMap>(
@@ -153,8 +167,10 @@ export default class Designer {
   }
 
   loadLayout(layout: ILayout) {
+    this.changeStack.lock();
     this.reportContainer.loadLayout(layout);
     this.elementsTreeList.refresh();
+    this.changeStack.unlock();
   }
 
   toJSON(): ILayout {

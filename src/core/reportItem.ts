@@ -17,6 +17,7 @@ export interface ReportItemEventMap {
 
 export interface ReportItemOptions {
   parentStyles: StyleProperties[];
+  defaultProperties?: Partial<LayoutReportItem>;
 }
 
 export default class ReportItem implements IDisposable {
@@ -29,6 +30,10 @@ export default class ReportItem implements IDisposable {
 
   constructor(options: ReportItemOptions) {
     this._styles = new MultipleStyles(...options.parentStyles, this.properties);
+
+    if (options.defaultProperties) {
+      this.loadLayout(options.defaultProperties);
+    }
 
     this._init();
   }
@@ -106,14 +111,14 @@ export default class ReportItem implements IDisposable {
     this.element.remove();
   }
 
-  loadLayout(layout: LayoutReportItem) {
+  loadLayout(layout: Partial<LayoutReportItem>) {
     this.properties.beginUpdate();
-    this.properties.x = layout.x;
-    this.properties.y = layout.y;
-    this.properties.width = layout.width;
-    this.properties.height = layout.height;
-    this.properties.name = layout.name;
-    this.properties.text = layout.text;
+    this.properties.x = layout.x ?? 0;
+    this.properties.y = layout.y ?? 0;
+    this.properties.width = layout.width ?? 0;
+    this.properties.height = layout.height ?? 0;
+    this.properties.name = layout.name ?? "";
+    this.properties.text = layout.text ?? "";
     this.properties.binding = layout.binding || "";
     this.properties.color = layout.color;
     this.properties.backgroundColor = layout.backgroundColor;

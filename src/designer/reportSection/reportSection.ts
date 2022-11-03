@@ -1,7 +1,7 @@
 import ContextMenu from "../../components/contextMenu/contextMenu";
 import { MenuButton } from "../../components/menu/menu";
 import EventEmitter, { EventCallback } from "../../core/eventEmitter";
-import { ISection } from "../../core/layout";
+import { ISection, IReportItem } from "../../core/layout";
 import StyleProperties, { TextAlign } from "../../core/styleProperties";
 import { MultipleStyles } from "../../core/utils/style.utils";
 import { DataSourceTreeItemData } from "../components/dataSourceTreeList";
@@ -154,7 +154,7 @@ export default class ReportSection {
             case "add-section":
               const data = e.data as DataSourceTreeItemData;
 
-              const subsection = this.addSection();
+              const subsection = this.createSection();
               subsection.properties.binding = data.field;
 
               break;
@@ -199,9 +199,10 @@ export default class ReportSection {
     }
   }
 
-  addItem() {
+  createItem(defaultProperties: Partial<IReportItem>) {
     const item = new DesignerReportItem({
       parentStyles: this.styles.getList(),
+      defaultProperties,
     });
     item.addEventListener("change", (e) => {
       this._onChange({ type: "change-item", item, changes: e.changes });
@@ -250,7 +251,7 @@ export default class ReportSection {
     this.subsections.forEach((x) => x.deselectAll());
   }
 
-  addSection() {
+  createSection() {
     const section = new ReportSection({
       title: "Content",
       binding: "",
@@ -288,12 +289,11 @@ export default class ReportSection {
     this.properties.binding = layout.binding;
 
     layout.items?.forEach((data) => {
-      const item = this.addItem();
-      item.loadLayout(data);
+      this.createItem(data);
     });
 
     layout.sections?.forEach((data) => {
-      const section = this.addSection();
+      const section = this.createSection();
       section.loadLayout(data);
     });
 
@@ -353,16 +353,14 @@ export default class ReportSection {
 
     const text = e.dataTransfer?.getData("label");
 
-    const item = this.addItem();
-    // TODO: Add this properties as parameter and prevent trigger change event.
-    item.properties.beginUpdate();
-    item.properties.text = text || "Label";
-    item.properties.binding = e.dataTransfer?.getData("field") || "";
-    item.properties.x = e.offsetX;
-    item.properties.y = e.offsetY;
-    item.properties.width = 100;
-    item.properties.height = 20;
-    item.properties.endUpdate();
+    const item = this.createItem({
+      text: text || "Label",
+      binding: e.dataTransfer?.getData("field") || "",
+      x: e.offsetX,
+      y: e.offsetY,
+      width: 100,
+      height: 20,
+    });
 
     this.selectItem(item);
   }
