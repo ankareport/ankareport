@@ -1,11 +1,17 @@
 import IDisposable from "./disposable";
-import { EventCallback } from "./eventEmitter";
+import EventEmitter, { EventCallback } from "./eventEmitter";
 import { IReportItem as LayoutReportItem } from "./layout";
+import { PropertyChangeEventArgs } from "./properties";
 import ReportItemProperties from "./reportItemProperties";
 import StyleProperties, { TextAlign } from "./styleProperties";
 import { JoinStyles } from "./utils/style.utils";
 
+export interface ChangeEventArgs {
+  changes: PropertyChangeEventArgs[];
+}
+
 export interface ReportItemEventMap {
+  change: ChangeEventArgs;
   select: unknown;
 }
 
@@ -18,6 +24,8 @@ export default class ReportItem implements IDisposable {
 
   public readonly properties = new ReportItemProperties();
   public readonly joinStyles = new JoinStyles();
+
+  private readonly _changeEventEmitter = new EventEmitter<ChangeEventArgs>();
 
   constructor(private readonly options: ReportItemOptions) {
     this.init();
@@ -44,6 +52,9 @@ export default class ReportItem implements IDisposable {
     this.joinStyles.join(this.properties);
     this.properties.addEventListener("change", () => {
       this.refresh();
+    });
+    this.properties.addEventListener("change", (e) => {
+      this._onChange(e);
     });
 
     this.refresh();
@@ -85,10 +96,25 @@ export default class ReportItem implements IDisposable {
     listener: EventCallback<ReportItemEventMap[K]>,
   ) {
     switch (event) {
+      case "change":
+        const callbackOnChange = listener as EventCallback<
+          ReportItemEventMap["change"]
+        >;
+        this._changeEventEmitter.add(callbackOnChange);
+        break;
       case "select":
-        this.element.addEventListener("focus", () => listener(undefined));
+        const callbackOnFocus = listener as EventCallback<
+          ReportItemEventMap["select"]
+        >;
+        this.element.addEventListener("focus", () =>
+          callbackOnFocus(undefined),
+        );
         break;
     }
+  }
+
+  private _onChange(args: ChangeEventArgs) {
+    this._changeEventEmitter.emit(args);
   }
 
   dispose() {

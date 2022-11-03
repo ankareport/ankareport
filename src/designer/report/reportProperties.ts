@@ -12,8 +12,9 @@ export default class ReportProperties extends StyleProperties {
   }
 
   set width(value: number) {
+    const oldValue = this.width;
     this._width = Math.max(value, MIN_REPORT_WIDTH);
-    this.emitOnChange("width");
+    this.emitOnChange("width", value, oldValue);
   }
 
   getPropertyDefinitions(): Property[] {

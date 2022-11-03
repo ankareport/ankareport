@@ -33,32 +33,39 @@ export default class ReportItemProperties extends StyleProperties {
   }
 
   set x(value: number) {
+    const oldValue = this.x;
     this._x = value;
-    this.emitOnChange("x");
+    this.emitOnChange("x", value, oldValue);
   }
   set y(value: number) {
+    const oldValue = this._y;
     this._y = value;
-    this.emitOnChange("y");
+    this.emitOnChange("y", value, oldValue);
   }
   set width(value: number) {
+    const oldValue = this.width;
     this._width = value;
-    this.emitOnChange("width");
+    this.emitOnChange("width", value, oldValue);
   }
   set height(value: number) {
+    const oldValue = this.height;
     this._height = value;
-    this.emitOnChange("height");
+    this.emitOnChange("height", value, oldValue);
   }
   set name(value: string) {
+    const oldValue = this.name;
     this._name = value;
-    this.emitOnChange("name");
+    this.emitOnChange("name", value, oldValue);
   }
   set text(value: string) {
+    const oldValue = this.text;
     this._text = value;
-    this.emitOnChange("text");
+    this.emitOnChange("text", value, oldValue);
   }
   set binding(value: string) {
+    const oldValue = this.binding;
     this._binding = value;
-    this.emitOnChange("binding");
+    this.emitOnChange("binding", value, oldValue);
   }
 
   getPropertyDefinitions(): Property[] {

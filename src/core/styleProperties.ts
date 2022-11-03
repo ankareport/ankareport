@@ -26,6 +26,8 @@ export default class StyleProperties extends Properties {
 
     if (!defaultValues) return;
 
+    this.beginUpdate();
+
     this._color = defaultValues.color;
     this._backgroundColor = defaultValues.backgroundColor;
     this._textAlign = defaultValues.textAlign;
@@ -35,6 +37,8 @@ export default class StyleProperties extends Properties {
     this._fontFamily = defaultValues.fontFamily;
     this._fontSize = defaultValues.fontSize;
     this._fontWeight = defaultValues.fontWeight;
+
+    this.endUpdate();
   }
 
   get color() {
@@ -66,40 +70,49 @@ export default class StyleProperties extends Properties {
   }
 
   set color(value: string | undefined) {
+    const oldValue = this._color;
     this._color = value;
-    this.emitOnChange("color");
+    this.emitOnChange("color", value, oldValue);
   }
   set backgroundColor(value: string | undefined) {
+    const oldValue = this._backgroundColor;
     this._backgroundColor = value;
-    this.emitOnChange("backgroundColor");
+    this.emitOnChange("backgroundColor", value, oldValue);
   }
   set textAlign(value: TextAlign | undefined) {
+    const oldValue = this._textAlign;
     this._textAlign = value;
-    this.emitOnChange("textAlign");
+    this.emitOnChange("textAlign", value, oldValue);
   }
   set borderWidth(value: number | undefined) {
+    const oldValue = this._borderWidth;
     this._borderWidth = value;
-    this.emitOnChange("borderWidth");
+    this.emitOnChange("borderWidth", value, oldValue);
   }
   set borderStyle(value: string | undefined) {
+    const oldValue = this._borderStyle;
     this._borderStyle = value;
-    this.emitOnChange("borderStyle");
+    this.emitOnChange("borderStyle", value, oldValue);
   }
   set borderColor(value: string | undefined) {
+    const oldValue = this._borderColor;
     this._borderColor = value;
-    this.emitOnChange("borderColor");
+    this.emitOnChange("borderColor", value, oldValue);
   }
   set fontFamily(value: string | undefined) {
+    const oldValue = this._fontFamily;
     this._fontFamily = value;
-    this.emitOnChange("fontFamily");
+    this.emitOnChange("fontFamily", value, oldValue);
   }
   set fontSize(value: string | undefined) {
+    const oldValue = this._fontSize;
     this._fontSize = value;
-    this.emitOnChange("fontSize");
+    this.emitOnChange("fontSize", value, oldValue);
   }
   set fontWeight(value: string | undefined) {
+    const oldValue = this._fontWeight;
     this._fontWeight = value;
-    this.emitOnChange("fontWeight");
+    this.emitOnChange("fontWeight", value, oldValue);
   }
 
   getPropertyDefinitions(): Property[] {

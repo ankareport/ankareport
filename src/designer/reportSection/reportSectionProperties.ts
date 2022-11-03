@@ -20,16 +20,19 @@ export default class ReportSectionProperties extends StyleProperties {
   }
 
   set height(value: number) {
+    const oldValue = this.height;
     this._height = Math.max(MIN_SECTION_HEIGHT, value);
-    this.emitOnChange("height");
+    this.emitOnChange("height", value, oldValue);
   }
   set binding(value: string) {
+    const oldValue = this.binding;
     this._binding = value;
-    this.emitOnChange("binding");
+    this.emitOnChange("binding", value, oldValue);
   }
   set title(value: string) {
+    const oldValue = this.title;
     this._title = value;
-    this.emitOnChange("title");
+    this.emitOnChange("title", value, oldValue);
   }
 
   getPropertyDefinitions(): Property[] {

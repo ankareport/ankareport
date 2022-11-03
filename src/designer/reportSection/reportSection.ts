@@ -38,6 +38,8 @@ export default class ReportSection {
   public readonly joinStyls = new JoinStyles();
 
   private readonly _selectEventEmitter = new EventEmitter<SelectEventArgs>();
+  private readonly _changeEventEmitter = new EventEmitter<ChangeEventArgs>();
+
   private readonly _designer: Designer;
   public readonly parent: ReportSection | undefined;
 
@@ -49,6 +51,10 @@ export default class ReportSection {
 
     options.defaultStylesList.forEach((x) => this.joinStyls.join(x));
     this.joinStyls.join(this.properties);
+
+    this.properties.addEventListener("change", () => {
+      this._onChange({ type: "section-change", section: this });
+    });
 
     this._init();
   }
@@ -176,12 +182,14 @@ export default class ReportSection {
     const text = e.dataTransfer?.getData("label");
 
     const item = this.addItem();
+    item.properties.beginUpdate();
     item.properties.text = text || "Label";
     item.properties.binding = e.dataTransfer?.getData("field") || "";
     item.properties.x = e.offsetX;
     item.properties.y = e.offsetY;
     item.properties.width = 100;
     item.properties.height = 20;
+    item.properties.endUpdate();
 
     this.selectItem(item);
   }
@@ -192,7 +200,16 @@ export default class ReportSection {
   ) {
     switch (event) {
       case "select":
-        this._selectEventEmitter.add(listener);
+        const callbackSelect = listener as EventCallback<
+          ReportSectionEventMap["select"]
+        >;
+        this._selectEventEmitter.add(callbackSelect);
+        break;
+      case "change":
+        const callbackOnChange = listener as EventCallback<
+          ReportSectionEventMap["change"]
+        >;
+        this._changeEventEmitter.add(callbackOnChange);
         break;
     }
   }
@@ -202,12 +219,23 @@ export default class ReportSection {
       defaultStylesList: this.joinStyls.getList(),
     });
     item.addEventListener("select", () => this.selectItem(item));
+    item.addEventListener("change", () =>
+      this._onChange({
+        type: "item-change",
+        item,
+      }),
+    );
     this.items.push(item);
 
     this.elementContent.insertBefore(
       item.element,
       this.reportItemSelector.element,
     );
+
+    this._onChange({
+      type: "add-item",
+      item,
+    });
 
     return item;
   }
@@ -224,10 +252,18 @@ export default class ReportSection {
     section.addEventListener("select", (e) => {
       this._selectEventEmitter.emit(e);
     });
+    section.addEventListener("change", (args) => {
+      this._onChange(args);
+    });
 
     this.subsections.push(section);
 
     this.element.appendChild(section.element);
+
+    this._onChange({
+      type: "add-section",
+      section,
+    });
 
     return section;
   }
@@ -238,6 +274,8 @@ export default class ReportSection {
     if (index < 0) return;
 
     this.subsections.splice(index, 1);
+
+    this._onChange({ type: "remove-section", section });
 
     section.dispose();
   }
@@ -265,6 +303,11 @@ export default class ReportSection {
     if (item) {
       this.reportItemSelector.hide();
       this.removeItem(item);
+
+      this._onChange({
+        type: "remove-item",
+        item,
+      });
     }
   }
 
@@ -322,6 +365,10 @@ export default class ReportSection {
   private dispose() {
     this.element.remove();
   }
+
+  private _onChange(args: ChangeEventArgs) {
+    this._changeEventEmitter.emit(args);
+  }
 }
 
 export type SelectEventArgs =
@@ -338,8 +385,21 @@ export interface SelectReportItemEventArgs {
   element: DesignerReportItem;
 }
 
+export type ChangeEventArgs = SectionChangeEventArgs | ItemChangeEventArgs;
+
+export interface SectionChangeEventArgs {
+  type: "add-section" | "remove-section" | "section-change";
+  section: ReportSection;
+}
+
+export interface ItemChangeEventArgs {
+  type: "add-item" | "remove-item" | "item-change";
+  item: DesignerReportItem;
+}
+
 export interface ReportSectionEventMap {
   select: SelectEventArgs;
+  change: ChangeEventArgs;
 }
 
 function getSubsectionDataList(

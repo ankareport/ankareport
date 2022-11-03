@@ -11,6 +11,7 @@ import ToolbarTopMenu from "./toolbar/toolbarTopMenu";
 import "./designer.css";
 import { Database, TreeStructure } from "../images";
 import ElementsTreeList from "./components/elementsTreeList";
+import { ChangeEventArgs as ReportChangeEventArgs } from "./report/report";
 
 export interface DataSourceChangeEventArgs {
   dataSource: DataSourceTreeItemData[];
@@ -18,6 +19,7 @@ export interface DataSourceChangeEventArgs {
 
 export interface DesignerEventsMap {
   dataSourceChange: DataSourceChangeEventArgs;
+  change: ReportChangeEventArgs;
 }
 
 export interface DesignerOptions {
@@ -85,8 +87,6 @@ export default class Designer {
     if (options.dataSource) this.setDataSource(options.dataSource);
 
     this.reportContainer.addEventListener("select", (e) => {
-      this.elementsTreeList.refresh();
-
       switch (e.type) {
         case "Report":
         case "ReportSection":
@@ -95,6 +95,17 @@ export default class Designer {
           break;
         default:
           this.propertyGrid.setDataSource(null);
+          break;
+      }
+    });
+
+    this.reportContainer.addEventListener("change", (e) => {
+      switch (e.type) {
+        case "add-section":
+        case "remove-section":
+        case "add-item":
+        case "remove-item":
+          this.elementsTreeList.refresh();
           break;
       }
     });
@@ -113,11 +124,20 @@ export default class Designer {
 
   addEventListener<K extends keyof DesignerEventsMap>(
     event: K,
-    listener: EventCallback<DesignerEventsMap[K]>,
+    callback: EventCallback<DesignerEventsMap[K]>,
   ) {
     switch (event) {
       case "dataSourceChange":
-        this._dataSourceChangeEventEmitter.add(listener);
+        const callbackDataSourceChange = callback as EventCallback<
+          DesignerEventsMap["dataSourceChange"]
+        >;
+        this._dataSourceChangeEventEmitter.add(callbackDataSourceChange);
+        break;
+      case "change":
+        const callbackOnChange = callback as EventCallback<
+          DesignerEventsMap["change"]
+        >;
+        this.reportContainer.addEventListener("change", callbackOnChange);
         break;
     }
   }

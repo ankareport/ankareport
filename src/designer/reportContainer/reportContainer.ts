@@ -1,13 +1,16 @@
-import { EventCallback } from "../../core/eventEmitter";
+import EventEmitter, { EventCallback } from "../../core/eventEmitter";
 import { ILayout } from "../../core/layout";
 import Designer from "../designer";
-import Report from "../report/report";
+import Report, {
+  ChangeEventArgs as ReportChangeEventArgs,
+} from "../report/report";
 import DesignerReportItem from "../reportItem/designerReportItem";
 import ReportSection from "../reportSection/reportSection";
 import "./reportContainer.css";
 
 export interface ReportContainerEventMap {
   select: SelectEventArgs;
+  change: ReportChangeEventArgs;
 }
 
 export interface ReportContainerOptions {
@@ -18,10 +21,15 @@ export default class ReportContainer {
   public readonly element = document.createElement("div");
   public readonly report: Report;
 
+  private readonly _changeEventEmitter =
+    new EventEmitter<ReportChangeEventArgs>();
+
   constructor(options: ReportContainerOptions) {
     this.report = new Report({
       designer: options.designer,
     });
+
+    this.report.addEventListener("change", (e) => this._onChange(e));
 
     this.init();
   }
@@ -34,24 +42,38 @@ export default class ReportContainer {
 
   addEventListener<K extends keyof ReportContainerEventMap>(
     event: K,
-    listener: EventCallback<SelectEventArgs>,
+    listener: EventCallback<ReportContainerEventMap[K]>,
   ) {
     switch (event) {
       case "select":
-        this.report.addEventListener(event, listener);
+        const callbackOnSelect = listener as EventCallback<
+          ReportContainerEventMap["select"]
+        >;
+
+        this.report.addEventListener("select", callbackOnSelect);
 
         this.element.addEventListener("click", (e) => {
           if (e.target === this.element) {
             e.preventDefault();
 
-            listener({
+            callbackOnSelect({
               type: "Report",
               element: this.report,
             });
           }
         });
         break;
+      case "change":
+        const callbackOnChange = listener as EventCallback<
+          ReportContainerEventMap["change"]
+        >;
+        this._changeEventEmitter.add(callbackOnChange);
+        break;
     }
+  }
+
+  private _onChange(args: ReportChangeEventArgs) {
+    this._changeEventEmitter.emit(args);
   }
 
   loadLayout(layout: ILayout) {

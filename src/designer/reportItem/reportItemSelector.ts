@@ -279,7 +279,12 @@ export default class ReportItemSelector {
   }
 
   onItemPropertyChange(e: ChangeEventArgs) {
-    if (["width", "height", "x", "y", "endUpdate"].includes(e.property)) {
+    const properties = ["width", "height", "x", "y"];
+    const changedProperties = e.changes.filter((x) =>
+      properties.includes(x.property),
+    );
+
+    if (changedProperties.length > 0) {
       this.show(this.attachedTo!);
     }
   }

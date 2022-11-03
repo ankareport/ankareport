@@ -1,13 +1,26 @@
-import { EventCallback } from "../../core/eventEmitter";
+import EventEmitter, { EventCallback } from "../../core/eventEmitter";
 import { ILayout } from "../../core/layout";
 import Resizer, { ResizerOrientation } from "../components/resizer";
 import Designer from "../designer";
-import ReportSection, { SelectEventArgs } from "../reportSection/reportSection";
+import ReportSection, {
+  SelectEventArgs,
+  ChangeEventArgs as ReportSectionChangeEventArgs,
+} from "../reportSection/reportSection";
 import "./report.css";
 import ReportProperties from "./reportProperties";
 
+export type ChangeEventArgs =
+  | ReportChangeEventArgs
+  | ReportSectionChangeEventArgs;
+
+export interface ReportChangeEventArgs {
+  type: "report-change";
+  report: Report;
+}
+
 export interface ReportEventMap {
   select: SelectEventArgs;
+  change: ChangeEventArgs;
 }
 
 export interface ReportOptions {
@@ -30,6 +43,8 @@ export default class Report {
 
   public readonly properties = new ReportProperties();
 
+  private readonly _changeEventEmitter = new EventEmitter<ChangeEventArgs>();
+
   constructor(options: ReportOptions) {
     this.reportSectionHeader = new ReportSection({
       title: "Header",
@@ -47,7 +62,10 @@ export default class Report {
       defaultStylesList: [this.properties],
     });
 
-    this.properties.addEventListener("change", () => this.refresh());
+    this.properties.addEventListener("change", () => {
+      this.refresh();
+      this._onChange({ type: "report-change", report: this });
+    });
 
     this._init();
   }
@@ -63,6 +81,7 @@ export default class Report {
     this.element.appendChild(this.resizer.element);
 
     this.initSelectEvents();
+    this.initChangeEvents();
     this.initKeyDownEvent();
 
     this.refresh();
@@ -79,6 +98,20 @@ export default class Report {
 
     this.reportSectionFooter.addEventListener("select", (e) => {
       this.deselectExcept(e, this.reportSectionFooter);
+    });
+  }
+
+  private initChangeEvents() {
+    this.reportSectionHeader.addEventListener("change", (e) => {
+      this._onChange(e);
+    });
+
+    this.reportSectionContent.addEventListener("change", (e) => {
+      this._onChange(e);
+    });
+
+    this.reportSectionFooter.addEventListener("change", (e) => {
+      this._onChange(e);
     });
   }
 
@@ -132,7 +165,17 @@ export default class Report {
         this.reportSectionContent.addEventListener(event, listener);
         this.reportSectionFooter.addEventListener(event, listener);
         break;
+      case "change":
+        const callbackOnChange = listener as EventCallback<
+          ReportEventMap["change"]
+        >;
+        this._changeEventEmitter.add(callbackOnChange);
+        break;
     }
+  }
+
+  private _onChange(args: ChangeEventArgs) {
+    this._changeEventEmitter.emit(args);
   }
 
   loadLayout(layout: ILayout) {

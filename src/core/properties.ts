@@ -1,8 +1,14 @@
 import { Property } from "../components/propertyGrid/property";
 import EventEmitter, { EventCallback } from "./eventEmitter";
 
-export interface ChangeEventArgs {
+export interface PropertyChangeEventArgs {
   property: string;
+  newValue: any;
+  oldValue: any;
+}
+
+export interface ChangeEventArgs {
+  changes: PropertyChangeEventArgs[];
 }
 
 export interface PropertiesEventMap {
@@ -10,14 +16,31 @@ export interface PropertiesEventMap {
 }
 
 export default abstract class Properties {
+  private _cache: PropertyChangeEventArgs[] = [];
   private _updating = false;
 
   private readonly _changeEventEmitter = new EventEmitter<ChangeEventArgs>();
 
-  protected emitOnChange(property: string) {
+  protected emitOnChange(property: string, newValue: any, oldValue: any) {
+    if (oldValue === newValue) return;
+
+    this._cache.push({
+      property,
+      newValue,
+      oldValue,
+    });
+
     if (this._updating) return;
 
-    this._changeEventEmitter.emit({ property });
+    this._emitOnChange();
+  }
+
+  private _emitOnChange() {
+    if (this._cache.length === 0) return;
+
+    this._changeEventEmitter.emit({ changes: [...this._cache] });
+
+    this._cache.length = 0;
   }
 
   addEventListener<K extends keyof PropertiesEventMap>(
@@ -49,7 +72,7 @@ export default abstract class Properties {
   endUpdate() {
     this._updating = false;
 
-    this.emitOnChange("endUpdate");
+    this._emitOnChange();
   }
 
   abstract getPropertyDefinitions(): Property[];
