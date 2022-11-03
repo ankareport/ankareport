@@ -61,9 +61,13 @@ export default class Report {
     this.element.appendChild(this.reportSectionFooter.element);
     this.element.appendChild(this.resizer.element);
 
-    this.properties.addEventListener("change", () => {
+    this.properties.addEventListener("change", (e) => {
       this.refresh();
-      this._onChange({ type: "change-report", report: this });
+      this._onChange({
+        type: "change-report",
+        report: this,
+        changes: e.changes,
+      });
     });
 
     this._initChangeEvents();

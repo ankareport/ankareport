@@ -1,6 +1,7 @@
+import { PropertyChangeEventArgs } from "../../core/properties";
 import {
   ChangeEventArgs as ReportSectionChangeEventArgs,
-  SelectEventArgs,
+  SelectEventArgs
 } from "../reportSection/report-section.events";
 import Report from "./report";
 
@@ -11,6 +12,7 @@ export type ChangeEventArgs =
 export interface ReportChangeEventArgs {
   type: "change-report";
   report: Report;
+  changes: PropertyChangeEventArgs[];
 }
 
 export interface ReportEventMap {

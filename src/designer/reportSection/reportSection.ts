@@ -86,9 +86,13 @@ export default class ReportSection {
         element: this,
       });
     });
-    this.properties.addEventListener("change", () => {
+    this.properties.addEventListener("change", (e) => {
       this.refresh();
-      this._onChange({ type: "change-section", section: this });
+      this._onChange({
+        type: "change-section",
+        section: this,
+        changes: e.changes,
+      });
     });
     this.elementContent.ondragover = (e) => e.preventDefault();
     this.elementContent.ondrop = (e) => this._onContentDrop(e);
@@ -199,8 +203,8 @@ export default class ReportSection {
     const item = new DesignerReportItem({
       parentStyles: this.styles.getList(),
     });
-    item.addEventListener("change", () => {
-      this._onChange({ type: "change-item", item });
+    item.addEventListener("change", (e) => {
+      this._onChange({ type: "change-item", item, changes: e.changes });
     });
     item.addEventListener("focus", () => this.selectItem(item));
     this.items.push(item);
