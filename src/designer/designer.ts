@@ -10,6 +10,7 @@ import ToolbarLeftMenu from "./toolbar/toolbarLeftMenu";
 import ToolbarTopMenu from "./toolbar/toolbarTopMenu";
 import "./designer.css";
 import { Database, TreeStructure } from "../images";
+import ElementsTreeList from "./components/elementsTreeList";
 
 export interface DataSourceChangeEventArgs {
   dataSource: DataSourceTreeItemData[];
@@ -36,6 +37,7 @@ export default class Designer {
 
   public readonly sidebar = new Sidebar();
   private readonly dataSourceTreeList = new DataSourceTreeList();
+  private readonly elementsTreeList: ElementsTreeList;
   private readonly propertyGrid = new PropertyGrid();
 
   private readonly _dataSourceChangeEventEmitter =
@@ -48,6 +50,10 @@ export default class Designer {
       designer: this,
     });
 
+    this.elementsTreeList = new ElementsTreeList({
+      reportContainer: this.reportContainer,
+    });
+
     element.classList.add("anka-designer");
     this.elementContent.classList.add("anka-designer__content");
 
@@ -58,11 +64,18 @@ export default class Designer {
     this.elementContent.appendChild(this.reportContainer.element);
     this.elementContent.appendChild(this.sidebar.element);
 
-    this.sidebar.addPanel(
-      Database,
-      "Data Source",
-      this.dataSourceTreeList.element,
-    );
+    this.sidebar.addTabs([
+      {
+        icon: Database,
+        title: "Data Source",
+        content: this.dataSourceTreeList.element,
+      },
+      {
+        title: "Elements",
+        content: this.elementsTreeList.element,
+      },
+    ]);
+
     this.sidebar.addPanel(
       TreeStructure,
       "Properties",
@@ -72,6 +85,8 @@ export default class Designer {
     if (options.dataSource) this.setDataSource(options.dataSource);
 
     this.reportContainer.addEventListener("select", (e) => {
+      this.elementsTreeList.refresh();
+
       switch (e.type) {
         case "Report":
         case "ReportSection":
@@ -117,7 +132,8 @@ export default class Designer {
   }
 
   loadLayout(layout: ILayout) {
-    return this.reportContainer.loadLayout(layout);
+    this.reportContainer.loadLayout(layout);
+    this.elementsTreeList.refresh();
   }
 
   toJSON(): ILayout {

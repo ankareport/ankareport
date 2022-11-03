@@ -1,0 +1,14 @@
+.anka-tab {
+  padding: 5px 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.anka-tab.selected {
+  border-width: 1px 1px 0 1px;
+  border-style: solid;
+  border-color: var(--color-border);
+  border-bottom: 1px solid var(--color-background-light);
+  position: relative;
+  bottom: -1px;
+}

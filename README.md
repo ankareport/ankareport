@@ -38,8 +38,7 @@ Free & Open Source Web Reporting Tool
 - [x] Remove Sub Group
 - [x] Style By Group
 - [ ] Undo/Redo
-- [ ] Ruler
-- [ ] Item List
+- [x] Elements List
 - [x] Report Viewer
 - [x] Export To PDF
 - [ ] Custom PDF Converter

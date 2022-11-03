@@ -1,0 +1,15 @@
+.anka-tabs {
+  background-color: var(--color-background-light);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.anka-tabs__header {
+  display: flex;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.anka-tabs__content {
+  flex: 1;
+}

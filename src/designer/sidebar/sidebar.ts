@@ -1,4 +1,6 @@
 import Panel from "../../components/panel/panel";
+import { TabOptions } from "../../components/tabPanel/tab";
+import Tabs from "../../components/tabPanel/tabs";
 import "./sidebar.css";
 
 export default class Sidebar {
@@ -39,5 +41,11 @@ export default class Sidebar {
     panel.elementContent.appendChild(content);
 
     this.elementContent.appendChild(panel.element);
+  }
+
+  addTabs(tabOptions: TabOptions[]) {
+    const tabs = new Tabs({ tabs: tabOptions });
+
+    this.elementContent.appendChild(tabs.element);
   }
 }
