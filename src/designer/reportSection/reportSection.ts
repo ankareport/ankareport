@@ -1,29 +1,40 @@
 import ContextMenu from "../../components/contextMenu/contextMenu";
+import { MenuButton } from "../../components/menu/menu";
 import EventEmitter, { EventCallback } from "../../core/eventEmitter";
 import { ISection } from "../../core/layout";
 import StyleProperties, { TextAlign } from "../../core/styleProperties";
+import { MultipleStyles } from "../../core/utils/style.utils";
 import { DataSourceTreeItemData } from "../components/dataSourceTreeList";
 import Resizer, { ResizerOrientation } from "../components/resizer";
 import Designer from "../designer";
 import DesignerReportItem from "../reportItem/designerReportItem";
 import ReportItemSelector from "../reportItem/reportItemSelector";
+import {
+  ChangeEventArgs,
+  ReportSectionEventMap,
+  SelectEventArgs,
+} from "./report-section.events";
+import {
+  getReportSectionBindings,
+  getSubsectionDataList,
+} from "./report-section.utils";
 import ReportSectionProperties from "./reportSectionProperties";
+
 import "./reportSection.css";
-import { JoinStyles } from "../../core/utils/style.utils";
-import { MenuButton } from "../../components/menu/menu";
 
 export interface ReportSectionOptions {
   title: string;
   binding?: string;
   designer: Designer;
   parent?: ReportSection;
-  defaultStylesList: StyleProperties[];
+  parentStyles: StyleProperties[];
 }
 
 export default class ReportSection {
   public readonly element = document.createElement("div");
   public readonly elementHeader = document.createElement("div");
   public readonly elementContent = document.createElement("div");
+
   public readonly reportItemSelector = new ReportItemSelector(this);
   public readonly resizer = new Resizer({
     orientation: ResizerOrientation.Horizontal,
@@ -31,17 +42,18 @@ export default class ReportSection {
       this.properties.height = this.properties.height + e.offsetY;
     },
   });
-  public subsections: ReportSection[] = [];
+
   public items: DesignerReportItem[] = [];
+  public subsections: ReportSection[] = [];
 
   public readonly properties = new ReportSectionProperties();
-  public readonly joinStyls = new JoinStyles();
+  public readonly styles: MultipleStyles;
 
-  private readonly _selectEventEmitter = new EventEmitter<SelectEventArgs>();
   private readonly _changeEventEmitter = new EventEmitter<ChangeEventArgs>();
+  private readonly _selectEventEmitter = new EventEmitter<SelectEventArgs>();
 
   private readonly _designer: Designer;
-  public readonly parent: ReportSection | undefined;
+  public readonly parent?: ReportSection;
 
   constructor(options: ReportSectionOptions) {
     this.properties.binding = options.binding || "";
@@ -49,12 +61,7 @@ export default class ReportSection {
     this._designer = options.designer;
     this.parent = options.parent;
 
-    options.defaultStylesList.forEach((x) => this.joinStyls.join(x));
-    this.joinStyls.join(this.properties);
-
-    this.properties.addEventListener("change", () => {
-      this._onChange({ type: "section-change", section: this });
-    });
+    this.styles = new MultipleStyles(...options.parentStyles, this.properties);
 
     this._init();
   }
@@ -70,19 +77,21 @@ export default class ReportSection {
     this.element.appendChild(this.elementContent);
     this.elementContent.appendChild(this.reportItemSelector.element);
     this.elementContent.appendChild(this.resizer.element);
+
     this.refresh();
 
     this.element.addEventListener("focus", () => {
-      this._selectEventEmitter.emit({
+      this._onSelect({
         type: "ReportSection",
         element: this,
       });
     });
     this.properties.addEventListener("change", () => {
       this.refresh();
+      this._onChange({ type: "change-section", section: this });
     });
     this.elementContent.ondragover = (e) => e.preventDefault();
-    this.elementContent.ondrop = (e) => this.onContentDrop(e);
+    this.elementContent.ondrop = (e) => this._onContentDrop(e);
 
     this.element.addEventListener("contextmenu", (e) => {
       if (!this.properties.binding) return;
@@ -166,34 +175,6 @@ export default class ReportSection {
     this.elementContent.style.height = `${this.properties.height}px`;
   }
 
-  private _getHeaderText() {
-    let title = this.properties.title;
-
-    if (this.properties.binding) {
-      title += ` (${this.properties.binding})`;
-    }
-
-    return title;
-  }
-
-  private onContentDrop(e: DragEvent) {
-    e.preventDefault();
-
-    const text = e.dataTransfer?.getData("label");
-
-    const item = this.addItem();
-    item.properties.beginUpdate();
-    item.properties.text = text || "Label";
-    item.properties.binding = e.dataTransfer?.getData("field") || "";
-    item.properties.x = e.offsetX;
-    item.properties.y = e.offsetY;
-    item.properties.width = 100;
-    item.properties.height = 20;
-    item.properties.endUpdate();
-
-    this.selectItem(item);
-  }
-
   addEventListener<K extends keyof ReportSectionEventMap>(
     event: K,
     listener: EventCallback<ReportSectionEventMap[K]>,
@@ -216,15 +197,12 @@ export default class ReportSection {
 
   addItem() {
     const item = new DesignerReportItem({
-      defaultStylesList: this.joinStyls.getList(),
+      parentStyles: this.styles.getList(),
     });
-    item.addEventListener("select", () => this.selectItem(item));
-    item.addEventListener("change", () =>
-      this._onChange({
-        type: "item-change",
-        item,
-      }),
-    );
+    item.addEventListener("change", () => {
+      this._onChange({ type: "change-item", item });
+    });
+    item.addEventListener("focus", () => this.selectItem(item));
     this.items.push(item);
 
     this.elementContent.insertBefore(
@@ -232,12 +210,40 @@ export default class ReportSection {
       this.reportItemSelector.element,
     );
 
-    this._onChange({
-      type: "add-item",
-      item,
-    });
+    this._onChange({ type: "add-item", item });
 
     return item;
+  }
+
+  removeSelectedItem() {
+    const item = this.reportItemSelector.attachedTo;
+
+    if (item) {
+      this.reportItemSelector.hide();
+      this.removeItem(item);
+
+      this._onChange({ type: "remove-item", item });
+    }
+  }
+
+  removeItem(item: DesignerReportItem) {
+    const index = this.items.findIndex((x) => x === item);
+    this.items.splice(index, 1);
+    item.dispose();
+  }
+
+  selectItem(item: DesignerReportItem) {
+    this.deselectAll();
+
+    this.reportItemSelector.show(item);
+
+    this._onSelect({ type: "ReportItem", element: item });
+  }
+
+  deselectAll() {
+    this.reportItemSelector.hide();
+
+    this.subsections.forEach((x) => x.deselectAll());
   }
 
   addSection() {
@@ -246,24 +252,17 @@ export default class ReportSection {
       binding: "",
       designer: this._designer,
       parent: this,
-      defaultStylesList: this.joinStyls.getList(),
+      parentStyles: this.styles.getList(),
     });
 
-    section.addEventListener("select", (e) => {
-      this._selectEventEmitter.emit(e);
-    });
-    section.addEventListener("change", (args) => {
-      this._onChange(args);
-    });
+    section.addEventListener("change", (e) => this._onChange(e));
+    section.addEventListener("select", (e) => this._onSelect(e));
 
     this.subsections.push(section);
 
     this.element.appendChild(section.element);
 
-    this._onChange({
-      type: "add-section",
-      section,
-    });
+    this._onChange({ type: "add-section", section });
 
     return section;
   }
@@ -280,43 +279,6 @@ export default class ReportSection {
     section.dispose();
   }
 
-  selectItem(item: DesignerReportItem) {
-    this.deselectAll();
-
-    this.reportItemSelector.show(item);
-
-    this._selectEventEmitter.emit({
-      type: "ReportItem",
-      element: item,
-    });
-  }
-
-  removeItem(item: DesignerReportItem) {
-    const index = this.items.findIndex((x) => x === item);
-    this.items.splice(index, 1);
-    item.dispose();
-  }
-
-  removeSelectedItem() {
-    const item = this.reportItemSelector.attachedTo;
-
-    if (item) {
-      this.reportItemSelector.hide();
-      this.removeItem(item);
-
-      this._onChange({
-        type: "remove-item",
-        item,
-      });
-    }
-  }
-
-  deselectAll() {
-    this.reportItemSelector.hide();
-
-    this.subsections.forEach((x) => x.deselectAll());
-  }
-
   loadLayout(layout: ISection) {
     this.properties.height = layout.height;
     this.properties.binding = layout.binding;
@@ -331,6 +293,7 @@ export default class ReportSection {
       section.loadLayout(data);
     });
 
+    this.properties.beginUpdate();
     this.properties.color = layout.color;
     this.properties.backgroundColor = layout.backgroundColor;
     this.properties.textAlign = layout.textAlign as TextAlign;
@@ -340,6 +303,7 @@ export default class ReportSection {
     this.properties.fontFamily = layout.fontFamily;
     this.properties.fontSize = layout.fontSize;
     this.properties.fontWeight = layout.fontWeight;
+    this.properties.endUpdate();
 
     this.refresh();
   }
@@ -362,71 +326,44 @@ export default class ReportSection {
     };
   }
 
-  private dispose() {
+  dispose() {
     this.element.remove();
+  }
+
+  private _getHeaderText() {
+    let title = this.properties.title;
+
+    if (this.properties.binding) {
+      title += ` (${this.properties.binding})`;
+    }
+
+    return title;
   }
 
   private _onChange(args: ChangeEventArgs) {
     this._changeEventEmitter.emit(args);
   }
-}
 
-export type SelectEventArgs =
-  | SelectReportSectionEventArgs
-  | SelectReportItemEventArgs;
+  private _onContentDrop(e: DragEvent) {
+    e.preventDefault();
 
-export interface SelectReportSectionEventArgs {
-  type: "ReportSection";
-  element: ReportSection;
-}
+    const text = e.dataTransfer?.getData("label");
 
-export interface SelectReportItemEventArgs {
-  type: "ReportItem";
-  element: DesignerReportItem;
-}
+    const item = this.addItem();
+    // TODO: Add this properties as parameter and prevent trigger change event.
+    item.properties.beginUpdate();
+    item.properties.text = text || "Label";
+    item.properties.binding = e.dataTransfer?.getData("field") || "";
+    item.properties.x = e.offsetX;
+    item.properties.y = e.offsetY;
+    item.properties.width = 100;
+    item.properties.height = 20;
+    item.properties.endUpdate();
 
-export type ChangeEventArgs = SectionChangeEventArgs | ItemChangeEventArgs;
-
-export interface SectionChangeEventArgs {
-  type: "add-section" | "remove-section" | "section-change";
-  section: ReportSection;
-}
-
-export interface ItemChangeEventArgs {
-  type: "add-item" | "remove-item" | "item-change";
-  item: DesignerReportItem;
-}
-
-export interface ReportSectionEventMap {
-  select: SelectEventArgs;
-  change: ChangeEventArgs;
-}
-
-function getSubsectionDataList(
-  items: DataSourceTreeItemData[] | undefined,
-  sections: ReportSection[],
-) {
-  if (!items) return [];
-
-  const subsectionDataList = items.filter(
-    (x) => x.children && x.children.length > 0,
-  );
-
-  const existingFields = sections.map((x) => x.properties.binding);
-
-  return subsectionDataList.filter((x) => !existingFields.includes(x.field));
-}
-
-function getReportSectionBindings(section: ReportSection): string[] {
-  const result = [];
-
-  let iterator: ReportSection | undefined = section;
-
-  while (iterator) {
-    result.push(iterator.properties.binding);
-
-    iterator = iterator.parent;
+    this.selectItem(item);
   }
 
-  return result;
+  private _onSelect(args: SelectEventArgs) {
+    this._selectEventEmitter.emit(args);
+  }
 }

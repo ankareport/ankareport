@@ -2,26 +2,12 @@ import EventEmitter, { EventCallback } from "../../core/eventEmitter";
 import { ILayout } from "../../core/layout";
 import Resizer, { ResizerOrientation } from "../components/resizer";
 import Designer from "../designer";
-import ReportSection, {
-  SelectEventArgs,
-  ChangeEventArgs as ReportSectionChangeEventArgs,
-} from "../reportSection/reportSection";
-import "./report.css";
+import { SelectEventArgs } from "../reportSection/report-section.events";
+import ReportSection from "../reportSection/reportSection";
+import { ChangeEventArgs, ReportEventMap } from "./report.events";
 import ReportProperties from "./reportProperties";
 
-export type ChangeEventArgs =
-  | ReportChangeEventArgs
-  | ReportSectionChangeEventArgs;
-
-export interface ReportChangeEventArgs {
-  type: "report-change";
-  report: Report;
-}
-
-export interface ReportEventMap {
-  select: SelectEventArgs;
-  change: ChangeEventArgs;
-}
+import "./report.css";
 
 export interface ReportOptions {
   designer: Designer;
@@ -49,22 +35,17 @@ export default class Report {
     this.reportSectionHeader = new ReportSection({
       title: "Header",
       designer: options.designer,
-      defaultStylesList: [this.properties],
+      parentStyles: [this.properties],
     });
     this.reportSectionContent = new ReportSection({
       title: "Content",
       designer: options.designer,
-      defaultStylesList: [this.properties],
+      parentStyles: [this.properties],
     });
     this.reportSectionFooter = new ReportSection({
       title: "Footer",
       designer: options.designer,
-      defaultStylesList: [this.properties],
-    });
-
-    this.properties.addEventListener("change", () => {
-      this.refresh();
-      this._onChange({ type: "report-change", report: this });
+      parentStyles: [this.properties],
     });
 
     this._init();
@@ -80,28 +61,19 @@ export default class Report {
     this.element.appendChild(this.reportSectionFooter.element);
     this.element.appendChild(this.resizer.element);
 
-    this.initSelectEvents();
-    this.initChangeEvents();
-    this.initKeyDownEvent();
+    this.properties.addEventListener("change", () => {
+      this.refresh();
+      this._onChange({ type: "change-report", report: this });
+    });
+
+    this._initChangeEvents();
+    this._initKeyDownEvents();
+    this._initSelectEvents();
 
     this.refresh();
   }
 
-  private initSelectEvents() {
-    this.reportSectionHeader.addEventListener("select", (e) => {
-      this.deselectExcept(e, this.reportSectionHeader);
-    });
-
-    this.reportSectionContent.addEventListener("select", (e) => {
-      this.deselectExcept(e, this.reportSectionContent);
-    });
-
-    this.reportSectionFooter.addEventListener("select", (e) => {
-      this.deselectExcept(e, this.reportSectionFooter);
-    });
-  }
-
-  private initChangeEvents() {
+  private _initChangeEvents() {
     this.reportSectionHeader.addEventListener("change", (e) => {
       this._onChange(e);
     });
@@ -115,7 +87,31 @@ export default class Report {
     });
   }
 
-  private deselectExcept(
+  private _initKeyDownEvents() {
+    this.element.addEventListener("keydown", (e) => {
+      if (e.key === "Delete") {
+        this.reportSectionHeader.removeSelectedItem();
+        this.reportSectionContent.removeSelectedItem();
+        this.reportSectionFooter.removeSelectedItem();
+      }
+    });
+  }
+
+  private _initSelectEvents() {
+    this.reportSectionHeader.addEventListener("select", (e) => {
+      this._deselectExcept(e, this.reportSectionHeader);
+    });
+
+    this.reportSectionContent.addEventListener("select", (e) => {
+      this._deselectExcept(e, this.reportSectionContent);
+    });
+
+    this.reportSectionFooter.addEventListener("select", (e) => {
+      this._deselectExcept(e, this.reportSectionFooter);
+    });
+  }
+
+  private _deselectExcept(
     e: SelectEventArgs,
     exceptReportSection: ReportSection,
   ) {
@@ -141,16 +137,6 @@ export default class Report {
     }
   }
 
-  private initKeyDownEvent() {
-    this.element.addEventListener("keydown", (e) => {
-      if (e.key === "Delete") {
-        this.reportSectionHeader.removeSelectedItem();
-        this.reportSectionContent.removeSelectedItem();
-        this.reportSectionFooter.removeSelectedItem();
-      }
-    });
-  }
-
   refresh() {
     this.element.style.width = `${this.properties.width}px`;
   }
@@ -172,10 +158,6 @@ export default class Report {
         this._changeEventEmitter.add(callbackOnChange);
         break;
     }
-  }
-
-  private _onChange(args: ChangeEventArgs) {
-    this._changeEventEmitter.emit(args);
   }
 
   loadLayout(layout: ILayout) {
@@ -213,5 +195,9 @@ export default class Report {
       contentSection: this.reportSectionContent.toJSON(),
       footerSection: this.reportSectionFooter.toJSON(),
     };
+  }
+
+  private _onChange(args: ChangeEventArgs) {
+    this._changeEventEmitter.emit(args);
   }
 }

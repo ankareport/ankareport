@@ -4,7 +4,7 @@ import { IReportItem as LayoutReportItem } from "./layout";
 import { PropertyChangeEventArgs } from "./properties";
 import ReportItemProperties from "./reportItemProperties";
 import StyleProperties, { TextAlign } from "./styleProperties";
-import { JoinStyles } from "./utils/style.utils";
+import { MultipleStyles } from "./utils/style.utils";
 
 export interface ChangeEventArgs {
   changes: PropertyChangeEventArgs[];
@@ -12,27 +12,30 @@ export interface ChangeEventArgs {
 
 export interface ReportItemEventMap {
   change: ChangeEventArgs;
-  select: unknown;
+  focus: unknown;
 }
 
 export interface ReportItemOptions {
-  defaultStylesList: StyleProperties[];
+  parentStyles: StyleProperties[];
 }
 
 export default class ReportItem implements IDisposable {
   public readonly element = document.createElement("div");
 
   public readonly properties = new ReportItemProperties();
-  public readonly joinStyles = new JoinStyles();
+  private readonly _styles: MultipleStyles;
 
   private readonly _changeEventEmitter = new EventEmitter<ChangeEventArgs>();
 
-  constructor(private readonly options: ReportItemOptions) {
-    this.init();
+  constructor(options: ReportItemOptions) {
+    this._styles = new MultipleStyles(...options.parentStyles, this.properties);
+
+    this._init();
   }
 
-  private init() {
+  private _init() {
     this.element.tabIndex = 0;
+
     this.element.style.display = "inline-block";
     this.element.style.position = "absolute";
     this.element.style.userSelect = "none";
@@ -41,21 +44,10 @@ export default class ReportItem implements IDisposable {
     this.element.style.overflow = "hidden";
     this.element.style.textOverflow = "ellipsis";
 
-    this.options.defaultStylesList.forEach((styles) => {
-      this.joinStyles.join(styles);
-
-      styles.addEventListener("change", () => {
-        this.refresh();
-      });
+    this._styles.getList().forEach((styles) => {
+      styles.addEventListener("change", () => this.refresh());
     });
-
-    this.joinStyles.join(this.properties);
-    this.properties.addEventListener("change", () => {
-      this.refresh();
-    });
-    this.properties.addEventListener("change", (e) => {
-      this._onChange(e);
-    });
+    this.properties.addEventListener("change", (e) => this._onChange(e));
 
     this.refresh();
   }
@@ -67,28 +59,25 @@ export default class ReportItem implements IDisposable {
     this.element.style.height = `${this.properties.height}px`;
     this.element.innerText = this.properties.text;
 
-    this.element.style.color = this.joinStyles.getStyle("color", "")!;
-    this.element.style.backgroundColor = this.joinStyles.getStyle(
+    this.element.style.color = this._styles.getStyle("color", "")!;
+    this.element.style.backgroundColor = this._styles.getStyle(
       "backgroundColor",
       "",
     )!;
-    this.element.style.textAlign = this.joinStyles.getStyle("textAlign", "")!;
+    this.element.style.textAlign = this._styles.getStyle("textAlign", "")!;
     this.element.style.borderWidth =
-      this.joinStyles.getStyle("borderWidth", "0")! + "px";
-    this.element.style.borderStyle = this.joinStyles.getStyle(
-      "borderStyle",
-      "",
-    )!;
-    this.element.style.borderColor = this.joinStyles.getStyle(
+      this._styles.getStyle("borderWidth", "0")! + "px";
+    this.element.style.borderStyle = this._styles.getStyle("borderStyle", "")!;
+    this.element.style.borderColor = this._styles.getStyle(
       "borderColor",
       "#000000",
     )!;
-    this.element.style.fontFamily = this.joinStyles.getStyle(
+    this.element.style.fontFamily = this._styles.getStyle(
       "fontFamily",
       "Tahoma",
     )!;
-    this.element.style.fontSize = this.joinStyles.getStyle("fontSize", "12px")!;
-    this.element.style.fontWeight = this.joinStyles.getStyle("fontWeight", "")!;
+    this.element.style.fontSize = this._styles.getStyle("fontSize", "12px")!;
+    this.element.style.fontWeight = this._styles.getStyle("fontWeight", "")!;
   }
 
   addEventListener<K extends keyof ReportItemEventMap>(
@@ -102,9 +91,9 @@ export default class ReportItem implements IDisposable {
         >;
         this._changeEventEmitter.add(callbackOnChange);
         break;
-      case "select":
+      case "focus":
         const callbackOnFocus = listener as EventCallback<
-          ReportItemEventMap["select"]
+          ReportItemEventMap["focus"]
         >;
         this.element.addEventListener("focus", () =>
           callbackOnFocus(undefined),
@@ -113,15 +102,12 @@ export default class ReportItem implements IDisposable {
     }
   }
 
-  private _onChange(args: ChangeEventArgs) {
-    this._changeEventEmitter.emit(args);
-  }
-
   dispose() {
     this.element.remove();
   }
 
   loadLayout(layout: LayoutReportItem) {
+    this.properties.beginUpdate();
     this.properties.x = layout.x;
     this.properties.y = layout.y;
     this.properties.width = layout.width;
@@ -138,6 +124,7 @@ export default class ReportItem implements IDisposable {
     this.properties.fontFamily = layout.fontFamily;
     this.properties.fontSize = layout.fontSize;
     this.properties.fontWeight = layout.fontWeight;
+    this.properties.endUpdate();
 
     this.refresh();
   }
@@ -161,5 +148,9 @@ export default class ReportItem implements IDisposable {
       fontSize: this.properties.fontSize,
       fontWeight: this.properties.fontWeight,
     };
+  }
+
+  private _onChange(args: ChangeEventArgs) {
+    this._changeEventEmitter.emit(args);
   }
 }

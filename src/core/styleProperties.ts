@@ -10,7 +10,7 @@ import Properties from "./properties";
 
 export type TextAlign = "left" | "center" | "right";
 
-export default class StyleProperties extends Properties {
+export default class StyleProperties extends Properties implements IStyle {
   private _color?: string;
   private _backgroundColor?: string;
   private _textAlign?: TextAlign;

@@ -1,17 +1,18 @@
 import PropertyGrid from "../components/propertyGrid/propertyGrid";
 import EventEmitter, { EventCallback } from "../core/eventEmitter";
 import { ILayout } from "../core/layout";
+import { Database, TreeStructure } from "../images";
 import DataSourceTreeList, {
   DataSourceTreeItemData,
 } from "./components/dataSourceTreeList";
+import ElementsTreeList from "./components/elementsTreeList";
+import { ChangeEventArgs as ReportChangeEventArgs } from "./report/report.events";
 import ReportContainer from "./reportContainer/reportContainer";
 import Sidebar from "./sidebar/sidebar";
 import ToolbarLeftMenu from "./toolbar/toolbarLeftMenu";
 import ToolbarTopMenu from "./toolbar/toolbarTopMenu";
+
 import "./designer.css";
-import { Database, TreeStructure } from "../images";
-import ElementsTreeList from "./components/elementsTreeList";
-import { ChangeEventArgs as ReportChangeEventArgs } from "./report/report";
 
 export interface DataSourceChangeEventArgs {
   dataSource: DataSourceTreeItemData[];

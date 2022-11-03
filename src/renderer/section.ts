@@ -28,7 +28,7 @@ export default class Section {
     defaultStylesList.push(new StyleProperties(this.layout));
 
     this.layout.items?.forEach((layout) => {
-      const item = new ReportItem({ defaultStylesList });
+      const item = new ReportItem({ parentStyles: defaultStylesList });
       item.properties.x = layout.x;
       item.properties.y = layout.y;
       item.properties.width = layout.width;
