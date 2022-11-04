@@ -1,8 +1,8 @@
 .anka-tabs {
-  background-color: var(--color-background-light);
-  flex: 1;
   display: flex;
   flex-direction: column;
+  flex: 1;
+  background-color: var(--color-background-light);
 }
 
 .anka-tabs__header {
@@ -10,6 +10,13 @@
   border-bottom: 1px solid var(--color-border);
 }
 
-.anka-tabs__content {
+.anka-tabs__content-container {
   flex: 1;
+  position: relative;
+  overflow-y: auto;
+}
+
+.anka-tabs__content {
+  width: 100%;
+  box-sizing: border-box;
 }

@@ -14,12 +14,12 @@
   position: absolute;
 }
 
-.anka-sidebar__content > .anka-panel {
-  flex: 1;
+.anka-sidebar__content .anka-tabs__content-container > div {
+  position: absolute;
 }
 
-.anka-sidebar__content > .anka-panel:first-child {
-  margin-bottom: 1px;
+.anka-sidebar__content > .anka-panel {
+  flex: 1;
 }
 
 .anka-sidebar__content .anka-panel__content-container > div {

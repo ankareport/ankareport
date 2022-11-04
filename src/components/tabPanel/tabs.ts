@@ -8,6 +8,7 @@ export interface TabsOptions {
 export default class Tabs {
   public readonly element = document.createElement("div");
   public readonly elementHeader = document.createElement("div");
+  public readonly elementContentContainer = document.createElement("div");
   public readonly elementContent = document.createElement("div");
 
   private selectedTab?: Tab;
@@ -20,10 +21,12 @@ export default class Tabs {
   private _init() {
     this.element.classList.add("anka-tabs");
     this.elementHeader.classList.add("anka-tabs__header");
+    this.elementContentContainer.classList.add("anka-tabs__content-container");
     this.elementContent.classList.add("anka-tabs__content");
 
     this.element.appendChild(this.elementHeader);
-    this.element.appendChild(this.elementContent);
+    this.element.appendChild(this.elementContentContainer);
+    this.elementContentContainer.appendChild(this.elementContent);
 
     this.options.tabs.forEach((tabOptions) => {
       const tab = new Tab(tabOptions);
