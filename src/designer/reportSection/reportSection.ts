@@ -15,12 +15,14 @@ import {
   SelectEventArgs,
 } from "./report-section.events";
 import {
+  findItemsByRect,
   getReportSectionBindings,
   getSubsectionDataList,
 } from "./report-section.utils";
 import ReportSectionProperties from "./reportSectionProperties";
 
 import "./reportSection.css";
+import AreaSelector from "./area-selector";
 
 export interface ReportSectionOptions {
   title: string;
@@ -38,6 +40,9 @@ export default class ReportSection {
   public readonly elementContent = document.createElement("div");
 
   public readonly reportItemSelector = new ReportItemSelector(this);
+  public readonly areaSelector: AreaSelector = new AreaSelector({
+    area: this.elementContent,
+  });
   public readonly resizer = new Resizer({
     orientation: ResizerOrientation.Horizontal,
     onResize: (e) => {
@@ -106,6 +111,11 @@ export default class ReportSection {
     });
     this.elementContent.ondragover = (e) => e.preventDefault();
     this.elementContent.ondrop = (e) => this._onContentDrop(e);
+
+    this.areaSelector.addEventListener("select", (e) => {
+      const items = findItemsByRect(this.items, e);
+      this.selectItem(items);
+    });
 
     this.element.addEventListener("contextmenu", (e) => {
       if (!this.properties.binding) return;
@@ -217,7 +227,7 @@ export default class ReportSection {
     item.addEventListener("change", (e) => {
       this._onChange({ type: "change-item", item, changes: e.changes });
     });
-    item.addEventListener("focus", () => this.selectItem(item));
+    item.addEventListener("focus", () => this.selectItem([item]));
     this.items.push(item);
 
     this._onChange({ type: "add-item", item });
@@ -226,9 +236,9 @@ export default class ReportSection {
   }
 
   removeSelectedItem() {
-    const item = this.reportItemSelector.attachedTo;
+    const items = this.reportItemSelector.attachedTo;
 
-    if (item) {
+    for (const item of items) {
       this.reportItemSelector.hide();
       this.removeItem(item);
 
@@ -242,12 +252,14 @@ export default class ReportSection {
     item.dispose();
   }
 
-  selectItem(item: DesignerReportItem) {
+  selectItem(items: DesignerReportItem[]) {
     this.deselectAll();
 
-    this.reportItemSelector.show(item);
+    if (items.length === 0) return;
 
-    this._onSelect({ type: "ReportItem", element: item });
+    this.reportItemSelector.show(items);
+
+    this._onSelect({ type: "ReportItem", element: items[0] }); // Fix here
   }
 
   deselectAll() {
@@ -366,7 +378,7 @@ export default class ReportSection {
       height: 20,
     });
 
-    this.selectItem(item);
+    this.selectItem([item]);
   }
 
   private _onSelect(args: SelectEventArgs) {

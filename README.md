@@ -33,7 +33,7 @@ Free & Open Source Web Reporting Tool
 - [x] Styles
 - [x] Color Picker
 - [x] Move & Size
-- [ ] Bulk Move & Resize
+- [x] Bulk Move & Resize
 - [x] Add Sub Group
 - [x] Remove Sub Group
 - [x] Style By Group

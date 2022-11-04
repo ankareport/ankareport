@@ -7,15 +7,16 @@ import { ChangeEventArgs } from "../../core/properties";
 import Size from "../../core/size";
 import ReportSection from "../reportSection/reportSection";
 import DesignerReportItem from "./designerReportItem";
-import SelectorBound, { SelectorBoundOrientation } from "./selectorBound";
-import "./reportItemSelector.css";
 import { NormalizeEdges, normalizePoints } from "./normalizePoint";
+import SelectorBound, { SelectorBoundOrientation } from "./selectorBound";
+
+import "./reportItemSelector.css";
 
 const LONG_MOVE_DISTANCE = 10;
 const SHORT_MOVE_DISTANCE = 1;
 
 export interface ReportItemSelectorContextMenuArgs {
-  item: DesignerReportItem;
+  items: DesignerReportItem[];
   width: string;
   buttons: MenuButton[];
   onClick: (ev: ClickEventArgs) => void;
@@ -27,7 +28,7 @@ export interface ReportItemSelectorEventMap {
 
 export default class ReportItemSelector {
   public readonly element = document.createElement("div");
-  public attachedTo?: DesignerReportItem;
+  public attachedTo: DesignerReportItem[] = [];
 
   private readonly boundTL = new SelectorBound(
     SelectorBoundOrientation.TopLeft,
@@ -251,29 +252,38 @@ export default class ReportItemSelector {
     this.element.style.height = this.newSize.height + "px";
   }
 
-  show(item: DesignerReportItem) {
-    if (this.attachedTo) {
+  show(items: DesignerReportItem[]) {
+    if (this.attachedTo.length > 0) {
       this.hide();
     }
 
-    this.attachedTo = item;
+    this.attachedTo = [...items];
 
-    this.originalLocation.x = item.properties.x;
-    this.originalLocation.y = item.properties.y;
-    this.originalSize.width = item.properties.width;
-    this.originalSize.height = item.properties.height;
+    const maxX = Math.max(
+      ...items.map((i) => i.properties.x + i.properties.width),
+    );
+    const maxY = Math.max(
+      ...items.map((i) => i.properties.y + i.properties.height),
+    );
 
-    this.newLocation.x = item.properties.x;
-    this.newLocation.y = item.properties.y;
-    this.newSize.width = item.properties.width;
-    this.newSize.height = item.properties.height;
+    this.originalLocation.x = Math.min(...items.map((i) => i.properties.x));
+    this.originalLocation.y = Math.min(...items.map((i) => i.properties.y));
+    this.originalSize.width = maxX - this.originalLocation.x;
+    this.originalSize.height = maxY - this.originalLocation.y;
+
+    this.newLocation.x = this.originalLocation.x;
+    this.newLocation.y = this.originalLocation.y;
+    this.newSize.width = this.originalSize.width;
+    this.newSize.height = this.originalSize.height;
     this.element.style.display = "block";
 
     this.element.addEventListener("keydown", this.onKeyDown);
 
     this.refresh();
 
-    item.properties.addEventListener("change", this.onItemPropertyChange);
+    for (const item of items) {
+      item.properties.addEventListener("change", this.onItemPropertyChange);
+    }
 
     this.element.focus();
   }
@@ -291,23 +301,34 @@ export default class ReportItemSelector {
 
   hide() {
     this.element.removeEventListener("keydown", this.onKeyDown);
-    this.attachedTo?.properties.removeEventListener(
-      "change",
-      this.onItemPropertyChange,
-    );
-    this.attachedTo = undefined;
+    if (this.attachedTo.length > 0) {
+      for (const item of this.attachedTo) {
+        item.properties.removeEventListener(
+          "change",
+          this.onItemPropertyChange,
+        );
+      }
+    }
+    this.attachedTo = [];
     this.element.style.display = "none";
   }
 
   private applyInfoToElement() {
-    this.attachedTo!.properties.beginUpdate();
-    this.attachedTo!.properties.x = this.newLocation.x;
-    this.attachedTo!.properties.y = this.newLocation.y;
-    this.attachedTo!.properties.width = this.newSize.width;
-    this.attachedTo!.properties.height = this.newSize.height;
-    this.attachedTo!.properties.endUpdate();
+    const diffX = this.newLocation.x - this.originalLocation.x;
+    const diffY = this.newLocation.y - this.originalLocation.y;
+    const diffWidth = this.newSize.width - this.originalSize.width;
+    const diffHeight = this.newSize.height - this.originalSize.height;
 
-    this.show(this.attachedTo!);
+    for (const item of this.attachedTo) {
+      item.properties.beginUpdate();
+      item.properties.x = item.properties.x + diffX;
+      item.properties.y = item.properties.y + diffY;
+      item.properties.width = item.properties.width + diffWidth;
+      item.properties.height = item.properties.height + diffHeight;
+      item.properties.endUpdate();
+    }
+
+    this.show(this.attachedTo);
   }
 
   addEventListener<K extends keyof ReportItemSelectorEventMap>(
@@ -320,10 +341,10 @@ export default class ReportItemSelector {
           if (!this.attachedTo) return;
 
           const args: ReportItemSelectorContextMenuArgs = {
-            item: this.attachedTo,
+            items: this.attachedTo,
             width: "150px",
             buttons: [],
-            onClick: () => {},
+            onClick: () => { },
           };
 
           listener(args);
