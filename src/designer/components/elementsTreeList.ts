@@ -1,4 +1,4 @@
-import { TreeItemData } from "../../components/treeList/treeItem";
+import TreeItem, { TreeItemData } from "../../components/treeList/treeItem";
 import TreeList from "../../components/treeList/treeList";
 import ReportItem from "../../core/reportItem";
 import ReportContainer from "../reportContainer/reportContainer";
@@ -10,12 +10,12 @@ export type ElementsTreeItemData =
 
 export interface ElementsTreeItemDataSection {
   type: "section";
-  data: ReportSection;
+  component: ReportSection;
 }
 
 export interface ElementsTreeItemDataItem {
   type: "item";
-  data: ReportItem;
+  component: ReportItem;
 }
 
 export interface ElementsTreeListOptions {
@@ -24,7 +24,10 @@ export interface ElementsTreeListOptions {
 
 export default class ElementsTreeList extends TreeList<ElementsTreeItemData> {
   constructor(private readonly options: ElementsTreeListOptions) {
-    super();
+    super({
+      collapseByArrow: true,
+      itemRenderer: (treeItem, data) => this._itemRenderer(treeItem, data),
+    });
   }
 
   refresh() {
@@ -33,6 +36,24 @@ export default class ElementsTreeList extends TreeList<ElementsTreeItemData> {
     this.dataSource = this.getDataSource();
 
     super.refresh();
+  }
+
+  private _itemRenderer(
+    treeItem: TreeItem<ElementsTreeItemData>,
+    treeItemData: TreeItemData<ElementsTreeItemData>,
+  ) {
+    switch (treeItemData.data.type) {
+      case "section":
+        treeItem.addEventListener("click", () => {
+          treeItemData.data.component.element.focus();
+        });
+        break;
+      case "item":
+        treeItem.addEventListener("click", () => {
+          treeItemData.data.component.element.focus();
+        });
+        break;
+    }
   }
 
   getDataSource() {
@@ -55,7 +76,7 @@ export default class ElementsTreeList extends TreeList<ElementsTreeItemData> {
       label: label || `Section [${section.properties.binding}]`,
       data: {
         type: "section",
-        data: section,
+        component: section,
       },
       children: [
         ...section.items.map((x) => {
@@ -63,7 +84,7 @@ export default class ElementsTreeList extends TreeList<ElementsTreeItemData> {
             label: `Text [${x.properties.binding || x.properties.text || ""}]`,
             data: {
               type: "item",
-              data: x,
+              component: x,
             },
           };
           return item;

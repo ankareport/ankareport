@@ -1,3 +1,4 @@
+import { EventCallback } from "../../core/eventEmitter";
 import "./treeItem.css";
 
 export interface TreeItemData<TData> {
@@ -15,6 +16,7 @@ export type TreeItemRenderer<TData> = (
 export interface TreeItemOptions<TData> {
   data: TreeItemData<TData>;
   renderer?: TreeItemRenderer<TData>;
+  collapseByArrow?: boolean;
 }
 
 export default class TreeItem<TData> {
@@ -36,13 +38,16 @@ export default class TreeItem<TData> {
   }
 
   constructor(public readonly options: TreeItemOptions<TData>) {
-    this.init();
+    this._init();
   }
 
-  private init() {
+  private _init() {
     this.element.classList.add("anka-tree-item");
     this.elementHeader.classList.add("header");
     this.elementIcon.classList.add("icon");
+    if (this.options.collapseByArrow) {
+      this.elementIcon.classList.add("hover");
+    }
     this.elementLabel.classList.add("label");
     this.elementChildren.classList.add("children");
 
@@ -68,9 +73,12 @@ export default class TreeItem<TData> {
       this.elementIcon.addEventListener("click", () => {
         this.collapsed = !this.collapsed;
       });
-      this.elementLabel.addEventListener("click", () => {
-        this.collapsed = !this.collapsed;
-      });
+
+      if (!this.options.collapseByArrow) {
+        this.elementLabel.addEventListener("click", () => {
+          this.collapsed = !this.collapsed;
+        });
+      }
     }
 
     this.refresh();
@@ -92,7 +100,20 @@ export default class TreeItem<TData> {
     this.elementChildren.style.display = this.collapsed ? "none" : "block";
   }
 
+  addEventListener<T extends keyof TreeItemEventsMap>(
+    event: T,
+    listener: EventCallback<TreeItemEventsMap[T]>,
+  ) {
+    if (event === "click") {
+      this.elementLabel.addEventListener("click", () => listener(undefined));
+    }
+  }
+
   get hasChild() {
     return this.options.data.children && this.options.data.children.length > 0;
   }
+}
+
+export interface TreeItemEventsMap {
+  click: unknown;
 }

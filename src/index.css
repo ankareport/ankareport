@@ -21,6 +21,7 @@
   --color-border-light: var(--color-gray-9);
   --color-background: var(--color-gray-9);
   --color-background-light: var(--color-gray-5);
+  --color-background-dark: var(--color-gray-12);
 
   /* BUTTON */
   --button-color-border: var(--color-border);

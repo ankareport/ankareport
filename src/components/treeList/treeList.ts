@@ -3,6 +3,7 @@ import TreeItem, { TreeItemData, TreeItemRenderer } from "./treeItem";
 export interface TreeListOptions<TData> {
   dataSource?: TreeItemData<TData>[];
   itemRenderer?: TreeItemRenderer<TData>;
+  collapseByArrow?: boolean;
 }
 
 export default class TreeList<TData> {
@@ -11,9 +12,13 @@ export default class TreeList<TData> {
   public dataSource: TreeItemData<TData>[];
   public itemRenderer?: TreeItemRenderer<TData>;
 
+  private readonly collapseByArrow?: boolean;
+
   constructor(options?: TreeListOptions<TData>) {
     this.dataSource = options?.dataSource || [];
     this.itemRenderer = options?.itemRenderer;
+
+    this.collapseByArrow = options?.collapseByArrow;
 
     this.init();
   }
@@ -31,6 +36,7 @@ export default class TreeList<TData> {
       const item = new TreeItem({
         data,
         renderer: this.itemRenderer,
+        collapseByArrow: this.collapseByArrow,
       });
 
       this.element.appendChild(item.element);

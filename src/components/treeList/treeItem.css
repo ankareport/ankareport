@@ -24,6 +24,15 @@
   text-align: center;
 }
 
+.anka-tree-list .icon.hover {
+  margin-left: 3px;
+  padding: 0 2px;
+}
+
+.anka-tree-list .icon.hover:hover {
+  background-color: var(--color-background-dark);
+}
+
 .anka-tree-list .label {
   padding: 2px 6px;
   border-radius: 6px;
