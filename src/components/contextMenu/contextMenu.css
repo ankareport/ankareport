@@ -6,6 +6,7 @@
   height: 100%;
   font-family: var(--font-family);
   font-size: var(--font-size);
+  z-index: 140;
 }
 
 .anka-context-menu-container > .anka-menu {
