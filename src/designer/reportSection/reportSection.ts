@@ -29,6 +29,7 @@ export interface ReportSectionOptions {
   parent?: ReportSection;
   parentStyles: StyleProperties[];
   defaultProperties?: Partial<ISection>;
+  appendTo?: HTMLElement;
 }
 
 export default class ReportSection {
@@ -57,21 +58,21 @@ export default class ReportSection {
   public readonly parent?: ReportSection;
 
   constructor(options: ReportSectionOptions) {
+    if (options.appendTo) {
+      options.appendTo.appendChild(this.element);
+    }
+
     this.properties.binding = options.binding || "";
     this.properties.title = options.title;
     this._designer = options.designer;
     this.parent = options.parent;
 
-    if (options.defaultProperties) {
-      this.loadLayout(options.defaultProperties);
-    }
-
     this.styles = new MultipleStyles(...options.parentStyles, this.properties);
 
-    this._init();
+    this._init(options.defaultProperties);
   }
 
-  private _init() {
+  private _init(defaultProperties?: Partial<ISection>) {
     this.element.classList.add("anka-report-section");
     this.elementHeader.classList.add("anka-report-section__header");
     this.elementContent.classList.add("anka-report-section__content");
@@ -82,6 +83,10 @@ export default class ReportSection {
     this.element.appendChild(this.elementContent);
     this.elementContent.appendChild(this.reportItemSelector.element);
     this.elementContent.appendChild(this.resizer.element);
+
+    if (defaultProperties) {
+      this.loadLayout(defaultProperties);
+    }
 
     this.refresh();
 
@@ -207,17 +212,13 @@ export default class ReportSection {
     const item = new DesignerReportItem({
       parentStyles: this.styles.getList(),
       defaultProperties,
+      appendTo: this.elementContent,
     });
     item.addEventListener("change", (e) => {
       this._onChange({ type: "change-item", item, changes: e.changes });
     });
     item.addEventListener("focus", () => this.selectItem(item));
     this.items.push(item);
-
-    this.elementContent.insertBefore(
-      item.element,
-      this.reportItemSelector.element,
-    );
 
     this._onChange({ type: "add-item", item });
 
@@ -263,14 +264,13 @@ export default class ReportSection {
       parent: this,
       parentStyles: this.styles.getList(),
       defaultProperties,
+      appendTo: this.element,
     });
 
     section.addEventListener("change", (e) => this._onChange(e));
     section.addEventListener("select", (e) => this._onSelect(e));
 
     this.subsections.push(section);
-
-    this.element.appendChild(section.element);
 
     this._onChange({ type: "add-section", section });
 

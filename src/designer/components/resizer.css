@@ -2,6 +2,7 @@
   border: 1px solid transparent;
   position: absolute;
   user-select: none;
+  z-index: 10;
 }
 
 .anka-resizer:hover {

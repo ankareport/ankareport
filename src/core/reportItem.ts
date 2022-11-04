@@ -18,6 +18,7 @@ export interface ReportItemEventMap {
 export interface ReportItemOptions {
   parentStyles: StyleProperties[];
   defaultProperties?: Partial<LayoutReportItem>;
+  appendTo?: HTMLElement;
 }
 
 export default class ReportItem implements IDisposable {
@@ -29,6 +30,10 @@ export default class ReportItem implements IDisposable {
   private readonly _changeEventEmitter = new EventEmitter<ChangeEventArgs>();
 
   constructor(options: ReportItemOptions) {
+    if (options.appendTo) {
+      options.appendTo.appendChild(this.element);
+    }
+
     this._styles = new MultipleStyles(...options.parentStyles, this.properties);
 
     if (options.defaultProperties) {

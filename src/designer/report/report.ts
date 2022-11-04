@@ -36,16 +36,19 @@ export default class Report {
       title: "Header",
       designer: options.designer,
       parentStyles: [this.properties],
+      appendTo: this.element,
     });
     this.reportSectionContent = new ReportSection({
       title: "Content",
       designer: options.designer,
       parentStyles: [this.properties],
+      appendTo: this.element,
     });
     this.reportSectionFooter = new ReportSection({
       title: "Footer",
       designer: options.designer,
       parentStyles: [this.properties],
+      appendTo: this.element,
     });
 
     this._init();
@@ -56,9 +59,6 @@ export default class Report {
 
     this.element.tabIndex = 0;
 
-    this.element.appendChild(this.reportSectionHeader.element);
-    this.element.appendChild(this.reportSectionContent.element);
-    this.element.appendChild(this.reportSectionFooter.element);
     this.element.appendChild(this.resizer.element);
 
     this.properties.addEventListener("change", (e) => {
