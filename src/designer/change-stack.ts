@@ -24,8 +24,6 @@ export class ChangeStack {
     }
 
     this.stack.push(change);
-
-    console.log(this.stack);
   }
 
   undo() {

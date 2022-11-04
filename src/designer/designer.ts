@@ -131,9 +131,13 @@ export default class Designer {
 
     this.menu.undoButton.addEventListener("click", () => {
       this.changeStack.undo();
+      this.menu.undoButton.disabled = !this.changeStack.canUndo;
+      this.menu.redoButton.disabled = !this.changeStack.canRedo;
     });
     this.menu.redoButton.addEventListener("click", () => {
       this.changeStack.redo();
+      this.menu.undoButton.disabled = !this.changeStack.canUndo;
+      this.menu.redoButton.disabled = !this.changeStack.canRedo;
     });
   }
 

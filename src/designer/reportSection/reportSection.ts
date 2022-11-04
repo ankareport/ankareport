@@ -28,6 +28,7 @@ export interface ReportSectionOptions {
   designer: Designer;
   parent?: ReportSection;
   parentStyles: StyleProperties[];
+  defaultProperties?: Partial<ISection>;
 }
 
 export default class ReportSection {
@@ -60,6 +61,10 @@ export default class ReportSection {
     this.properties.title = options.title;
     this._designer = options.designer;
     this.parent = options.parent;
+
+    if (options.defaultProperties) {
+      this.loadLayout(options.defaultProperties);
+    }
 
     this.styles = new MultipleStyles(...options.parentStyles, this.properties);
 
@@ -154,8 +159,7 @@ export default class ReportSection {
             case "add-section":
               const data = e.data as DataSourceTreeItemData;
 
-              const subsection = this.createSection();
-              subsection.properties.binding = data.field;
+              this.createSection({ binding: data.field });
 
               break;
           }
@@ -251,13 +255,14 @@ export default class ReportSection {
     this.subsections.forEach((x) => x.deselectAll());
   }
 
-  createSection() {
+  createSection(defaultProperties: Partial<ISection>) {
     const section = new ReportSection({
       title: "Content",
       binding: "",
       designer: this._designer,
       parent: this,
       parentStyles: this.styles.getList(),
+      defaultProperties,
     });
 
     section.addEventListener("change", (e) => this._onChange(e));
@@ -284,17 +289,16 @@ export default class ReportSection {
     section.dispose();
   }
 
-  loadLayout(layout: ISection) {
-    this.properties.height = layout.height;
-    this.properties.binding = layout.binding;
+  loadLayout(layout: Partial<ISection>) {
+    if (layout.height) this.properties.height = layout.height;
+    if (layout.binding) this.properties.binding = layout.binding;
 
     layout.items?.forEach((data) => {
       this.createItem(data);
     });
 
     layout.sections?.forEach((data) => {
-      const section = this.createSection();
-      section.loadLayout(data);
+      this.createSection(data);
     });
 
     this.properties.beginUpdate();
