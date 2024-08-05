@@ -1,4 +1,4 @@
-import ReportItem from "../../core/reportItem";
+import { ReportItem } from "../../core/reportItems";
 import { DataSourceTreeItemData } from "../components/dataSourceTreeList";
 import { SelectEventArgs } from "./area-selector";
 import ReportSection from "./reportSection";

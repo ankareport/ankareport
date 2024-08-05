@@ -1,7 +1,7 @@
 import { PropertyChangeEventArgs } from "../../core/properties";
 import {
   ChangeEventArgs as ReportSectionChangeEventArgs,
-  SelectEventArgs
+  SelectEventArgs,
 } from "../reportSection/report-section.events";
 import Report from "./report";
 

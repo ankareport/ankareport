@@ -4,9 +4,9 @@ import DragDrop from "../../core/dragDrop";
 import { EventCallback } from "../../core/eventEmitter";
 import Point from "../../core/point";
 import { ChangeEventArgs } from "../../core/properties";
+import { ReportItem } from "../../core/reportItems";
 import Size from "../../core/size";
 import ReportSection from "../reportSection/reportSection";
-import DesignerReportItem from "./designerReportItem";
 import { NormalizeEdges, normalizePoints } from "./normalizePoint";
 import SelectorBound, { SelectorBoundOrientation } from "./selectorBound";
 
@@ -16,7 +16,7 @@ const LONG_MOVE_DISTANCE = 10;
 const SHORT_MOVE_DISTANCE = 1;
 
 export interface ReportItemSelectorContextMenuArgs {
-  items: DesignerReportItem[];
+  items: ReportItem[];
   width: string;
   buttons: MenuButton[];
   onClick: (ev: ClickEventArgs) => void;
@@ -28,7 +28,7 @@ export interface ReportItemSelectorEventMap {
 
 export default class ReportItemSelector {
   public readonly element = document.createElement("div");
-  public attachedTo: DesignerReportItem[] = [];
+  public attachedTo: ReportItem[] = [];
 
   private readonly boundTL = new SelectorBound(
     SelectorBoundOrientation.TopLeft,
@@ -252,7 +252,7 @@ export default class ReportItemSelector {
     this.element.style.height = this.newSize.height + "px";
   }
 
-  show(items: DesignerReportItem[]) {
+  show(items: ReportItem[]) {
     if (this.attachedTo.length > 0) {
       this.hide();
     }
@@ -344,7 +344,7 @@ export default class ReportItemSelector {
             items: this.attachedTo,
             width: "150px",
             buttons: [],
-            onClick: () => { },
+            onClick: () => {},
           };
 
           listener(args);

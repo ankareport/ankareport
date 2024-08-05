@@ -1,14 +1,12 @@
-import { Property } from "../components/propertyGrid/property";
-import StyleProperties from "./styleProperties";
+import { Property } from "../../components/propertyGrid/property";
+import StyleProperties from "../styleProperties";
 
-export default class ReportItemProperties extends StyleProperties {
+export default class BaseReportItemProperties extends StyleProperties {
   private _x = 0;
   private _y = 0;
   private _width = 0;
   private _height = 0;
   private _name = "";
-  private _text = "";
-  private _binding = "";
 
   get x() {
     return this._x;
@@ -25,13 +23,6 @@ export default class ReportItemProperties extends StyleProperties {
   get name() {
     return this._name;
   }
-  get text() {
-    return this._text;
-  }
-  get binding() {
-    return this._binding;
-  }
-
   set x(value: number) {
     const oldValue = this.x;
     this._x = value;
@@ -57,16 +48,6 @@ export default class ReportItemProperties extends StyleProperties {
     this._name = value;
     this.emitOnChange("name", value, oldValue);
   }
-  set text(value: string) {
-    const oldValue = this.text;
-    this._text = value;
-    this.emitOnChange("text", value, oldValue);
-  }
-  set binding(value: string) {
-    const oldValue = this.binding;
-    this._binding = value;
-    this.emitOnChange("binding", value, oldValue);
-  }
 
   getPropertyDefinitions(): Property[] {
     return [
@@ -76,7 +57,6 @@ export default class ReportItemProperties extends StyleProperties {
       { field: "height", label: "Height", type: "number" },
       { field: "name", label: "Name", type: "string" },
       { field: "text", label: "Text", type: "string" },
-      { field: "binding", label: "Binding", type: "string" },
       ...super.getPropertyDefinitions(),
     ];
   }

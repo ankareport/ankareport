@@ -5,6 +5,7 @@ export interface ToolbarButtonOptions {
   text: string;
   title: string;
   draggable?: boolean;
+  type: "button" | "text" | "image";
 }
 
 export default class ToolbarButton {
@@ -67,6 +68,10 @@ export default class ToolbarButton {
 
     if (options.draggable) {
       this._draggable = options.draggable;
+
+      this.element.addEventListener("dragstart", (e) => {
+        e.dataTransfer?.setData("type", options.type);
+      });
     }
 
     this.refresh();

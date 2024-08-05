@@ -10,8 +10,21 @@ export default class ToolbarTopMenu extends Toolbar {
   constructor() {
     super(ToolbarOrientation.Horizontal);
 
-    this.saveButton = this.addButton({ icon: Save, text: "", title: "Save" });
-    this.undoButton = this.addButton({ text: "↩", title: "Undo" });
-    this.redoButton = this.addButton({ text: "↪", title: "Redo" });
+    this.saveButton = this.addButton({
+      icon: Save,
+      text: "",
+      title: "Save",
+      type: "button",
+    });
+    this.undoButton = this.addButton({
+      text: "↩",
+      title: "Undo",
+      type: "button",
+    });
+    this.redoButton = this.addButton({
+      text: "↪",
+      title: "Redo",
+      type: "button",
+    });
   }
 }

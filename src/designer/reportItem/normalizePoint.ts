@@ -1,4 +1,4 @@
-import ReportItem from "../../core/reportItem";
+import { ReportItem } from "../../core/reportItems";
 import ReportItemSelector from "./reportItemSelector";
 
 const NORMALIZE_POINT_TOLERANCE_PX = 3;
