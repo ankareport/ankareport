@@ -1,14 +1,19 @@
 import ContextMenu from "../../components/contextMenu/contextMenu";
 import { MenuButton } from "../../components/menu/menu";
 import EventEmitter, { EventCallback } from "../../core/eventEmitter";
-import { ISection, IReportItem } from "../../core/layout";
+import { ISection, ITextReportItem, IImageReportItem } from "../../core/layout";
+import {
+  ImageReportItem,
+  ReportItem,
+  TextReportItem,
+} from "../../core/reportItems";
 import StyleProperties, { TextAlign } from "../../core/styleProperties";
 import { MultipleStyles } from "../../core/utils/style.utils";
 import { DataSourceTreeItemData } from "../components/dataSourceTreeList";
 import Resizer, { ResizerOrientation } from "../components/resizer";
 import Designer from "../designer";
-import DesignerReportItem from "../reportItem/designerReportItem";
 import ReportItemSelector from "../reportItem/reportItemSelector";
+import AreaSelector from "./area-selector";
 import {
   ChangeEventArgs,
   ReportSectionEventMap,
@@ -22,7 +27,6 @@ import {
 import ReportSectionProperties from "./reportSectionProperties";
 
 import "./reportSection.css";
-import AreaSelector from "./area-selector";
 
 export interface ReportSectionOptions {
   title: string;
@@ -50,7 +54,7 @@ export default class ReportSection {
     },
   });
 
-  public items: DesignerReportItem[] = [];
+  public items: ReportItem[] = [];
   public subsections: ReportSection[] = [];
 
   public readonly properties = new ReportSectionProperties();
@@ -218,12 +222,31 @@ export default class ReportSection {
     }
   }
 
-  createItem(defaultProperties: Partial<IReportItem>) {
-    const item = new DesignerReportItem({
+  createTextItem(defaultProperties: Partial<ITextReportItem>) {
+    let item = new TextReportItem({
       parentStyles: this.styles.getList(),
       defaultProperties,
       appendTo: this.elementContent,
     });
+
+    item.addEventListener("change", (e) => {
+      this._onChange({ type: "change-item", item, changes: e.changes });
+    });
+    item.addEventListener("focus", () => this.selectItem([item]));
+    this.items.push(item);
+
+    this._onChange({ type: "add-item", item });
+
+    return item;
+  }
+
+  createImageItem(defaultProperties: Partial<IImageReportItem>) {
+    const item = new ImageReportItem({
+      parentStyles: this.styles.getList(),
+      defaultProperties,
+      appendTo: this.elementContent,
+    });
+
     item.addEventListener("change", (e) => {
       this._onChange({ type: "change-item", item, changes: e.changes });
     });
@@ -246,13 +269,13 @@ export default class ReportSection {
     }
   }
 
-  removeItem(item: DesignerReportItem) {
+  removeItem(item: ReportItem) {
     const index = this.items.findIndex((x) => x === item);
     this.items.splice(index, 1);
     item.dispose();
   }
 
-  selectItem(items: DesignerReportItem[]) {
+  selectItem(items: ReportItem[]) {
     this.deselectAll();
 
     if (items.length === 0) return;
@@ -306,7 +329,11 @@ export default class ReportSection {
     if (layout.binding) this.properties.binding = layout.binding;
 
     layout.items?.forEach((data) => {
-      this.createItem(data);
+      if (!data.type || data.type === "text") {
+        this.createTextItem({ ...data, type: "text" });
+      } else if (data.type === "image") {
+        this.createImageItem({ ...data, type: "image" });
+      }
     });
 
     layout.sections?.forEach((data) => {
@@ -367,18 +394,33 @@ export default class ReportSection {
   private _onContentDrop(e: DragEvent) {
     e.preventDefault();
 
+    const type = e.dataTransfer?.getData("type");
     const text = e.dataTransfer?.getData("label");
+    const field = e.dataTransfer?.getData("field") || "";
 
-    const item = this.createItem({
-      text: text || "Label",
-      binding: e.dataTransfer?.getData("field") || "",
-      x: e.offsetX,
-      y: e.offsetY,
-      width: 100,
-      height: 20,
-    });
+    if (type === "text") {
+      const item = this.createTextItem({
+        text: text || "Label",
+        binding: field,
+        x: e.offsetX,
+        y: e.offsetY,
+        width: 100,
+        height: 20,
+      });
 
-    this.selectItem([item]);
+      this.selectItem([item]);
+    } else if (type === "image") {
+      const item = this.createImageItem({
+        source: "",
+        binding: field,
+        x: e.offsetX,
+        y: e.offsetY,
+        width: 50,
+        height: 50,
+      });
+
+      this.selectItem([item]);
+    }
   }
 
   private _onSelect(args: SelectEventArgs) {

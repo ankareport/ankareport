@@ -2,6 +2,7 @@ import TreeItem, { TreeItemData } from "../../components/treeList/treeItem";
 import TreeList from "../../components/treeList/treeList";
 
 export interface DataSourceTreeItemData {
+  type?: "text" | "image";
   label: string;
   field: string;
   children?: DataSourceTreeItemData[];
@@ -49,6 +50,7 @@ const dataSourceItemRenderer = (
 
   item.element.addEventListener("dragstart", (e) => {
     e.dataTransfer?.setData("label", itemData.label);
+    e.dataTransfer?.setData("type", itemData.data.type ?? "text");
     e.dataTransfer?.setData("field", itemData.data.field);
   });
 };

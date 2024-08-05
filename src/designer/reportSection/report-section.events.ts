@@ -1,5 +1,5 @@
 import { PropertyChangeEventArgs } from "../../core/properties";
-import DesignerReportItem from "../reportItem/designerReportItem";
+import { ReportItem } from "../../core/reportItems";
 import ReportSection from "./reportSection";
 
 export type SelectEventArgs =
@@ -13,7 +13,7 @@ export interface SelectReportSectionEventArgs {
 
 export interface SelectReportItemEventArgs {
   type: "ReportItem";
-  element: DesignerReportItem;
+  element: ReportItem;
 }
 
 export type ChangeEventArgs =
@@ -42,18 +42,18 @@ export interface SectionRemoveEventArgs {
 
 export interface ItemAddEventArgs {
   type: "add-item";
-  item: DesignerReportItem;
+  item: ReportItem;
 }
 
 export interface ItemChangeEventArgs {
   type: "change-item";
-  item: DesignerReportItem;
+  item: ReportItem;
   changes: PropertyChangeEventArgs[];
 }
 
 export interface ItemRemoveEventArgs {
   type: "remove-item";
-  item: DesignerReportItem;
+  item: ReportItem;
 }
 
 export interface ReportSectionEventMap {

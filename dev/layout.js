@@ -12,6 +12,7 @@ const layout = {
         height: 20,
       },
       {
+        type: "text",
         text: "Header 2",
         binding: "header2",
         x: 5,
@@ -26,6 +27,7 @@ const layout = {
     binding: "content",
     items: [
       {
+        type: "text",
         text: "Label1",
         binding: "name",
         x: 9,
@@ -34,6 +36,7 @@ const layout = {
         height: 20,
       },
       {
+        type: "text",
         text: "Label2",
         binding: "surname",
         x: 9,
@@ -48,6 +51,7 @@ const layout = {
     items: [
       { text: "Copyright", x: 150, y: 8, width: 100, height: 20 },
       {
+        type: "text",
         text: "Desc",
         binding: "footer2",
         x: 250,

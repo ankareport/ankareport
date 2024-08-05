@@ -1,6 +1,6 @@
 import TreeItem, { TreeItemData } from "../../components/treeList/treeItem";
 import TreeList from "../../components/treeList/treeList";
-import ReportItem from "../../core/reportItem";
+import { ReportItem, TextReportItem } from "../../core/reportItems";
 import ReportContainer from "../reportContainer/reportContainer";
 import ReportSection from "../reportSection/reportSection";
 
@@ -80,13 +80,31 @@ export default class ElementsTreeList extends TreeList<ElementsTreeItemData> {
       },
       children: [
         ...section.items.map((x) => {
+          if (x instanceof TextReportItem) {
+            const textReportItem: TextReportItem = x;
+
+            const item: TreeItemData<ElementsTreeItemData> = {
+              label: `Text [${
+                textReportItem.properties.binding ||
+                textReportItem.properties.text ||
+                ""
+              }]`,
+              data: {
+                type: "item",
+                component: x,
+              },
+            };
+            return item;
+          }
+
           const item: TreeItemData<ElementsTreeItemData> = {
-            label: `Text [${x.properties.binding || x.properties.text || ""}]`,
+            label: `Image`,
             data: {
               type: "item",
               component: x,
             },
           };
+
           return item;
         }),
         ...section.subsections.map((x) => this.getSectionData(x)),

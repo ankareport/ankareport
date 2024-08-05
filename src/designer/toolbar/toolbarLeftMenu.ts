@@ -9,8 +9,16 @@ export default class ToolbarLeftMenu extends Toolbar {
 
     this.labelButton = this.addButton({
       text: "Ͳ",
-      title: "Label",
+      title: "Text",
       draggable: true,
+      type: "text",
+    });
+
+    this.labelButton = this.addButton({
+      text: "I",
+      title: "Image",
+      draggable: true,
+      type: "image",
     });
   }
 }
