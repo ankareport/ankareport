@@ -56,7 +56,6 @@ export default class BaseReportItemProperties extends StyleProperties {
       { field: "width", label: "Width", type: "number" },
       { field: "height", label: "Height", type: "number" },
       { field: "name", label: "Name", type: "string" },
-      { field: "text", label: "Text", type: "string" },
       ...super.getPropertyDefinitions(),
     ];
   }

@@ -25,7 +25,7 @@ export default class ImageReportItemProperties extends BaseReportItemProperties 
 
   getPropertyDefinitions(): Property[] {
     return [
-      { field: "source", label: "Source", type: "string" }, // TODO: type: image
+      { field: "source", label: "Source", type: "string" },
       { field: "binding", label: "Binding", type: "string" },
       ...super.getPropertyDefinitions(),
     ];
