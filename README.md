@@ -29,6 +29,9 @@ Free & Open Source Web Reporting Tool
 ## Features
 
 - [x] Add/Remove Item
+  - [x] Text
+  - [x] Image
+  - [x] Barcode
 - [x] Bindings
 - [x] Styles
 - [x] Color Picker

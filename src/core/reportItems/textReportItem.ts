@@ -25,7 +25,9 @@ export default class TextReportItem extends BaseReportItem {
   refresh() {
     super.refresh();
 
-    this.element.innerText = this.properties.text;
+    const text = this.properties.text || (this.properties.binding ? `[${this.properties.binding}]` : "NULL");
+
+    this.element.innerText = text;
   }
 
   applyLayout(layout: Partial<ITextReportItem>) {

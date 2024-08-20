@@ -5,7 +5,7 @@ export interface ToolbarButtonOptions {
   text: string;
   title: string;
   draggable?: boolean;
-  type: "button" | "text" | "image";
+  type: "button" | "text" | "image" | "barcode";
 }
 
 export default class ToolbarButton {

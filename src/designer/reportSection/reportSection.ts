@@ -1,8 +1,9 @@
 import ContextMenu from "../../components/contextMenu/contextMenu";
 import { MenuButton } from "../../components/menu/menu";
 import EventEmitter, { EventCallback } from "../../core/eventEmitter";
-import { ISection, ITextReportItem, IImageReportItem } from "../../core/layout";
+import { IBarcodeReportItem, ISection, ITextReportItem, IImageReportItem } from "../../core/layout";
 import {
+  BarcodeReportItem,
   ImageReportItem,
   ReportItem,
   TextReportItem,
@@ -258,6 +259,24 @@ export default class ReportSection {
     return item;
   }
 
+  createBarcodeItem(defaultProperties: Partial<IBarcodeReportItem>) {
+    const item = new BarcodeReportItem({
+      parentStyles: this.styles.getList(),
+      defaultProperties,
+      appendTo: this.elementContent,
+    });
+
+    item.addEventListener("change", (e) => {
+      this._onChange({ type: "change-item", item, changes: e.changes });
+    });
+    item.addEventListener("focus", () => this.selectItem([item]));
+    this.items.push(item);
+
+    this._onChange({ type: "add-item", item });
+
+    return item;
+  }
+
   removeSelectedItem() {
     const items = this.reportItemSelector.attachedTo;
 
@@ -333,6 +352,8 @@ export default class ReportSection {
         this.createTextItem({ ...data, type: "text" });
       } else if (data.type === "image") {
         this.createImageItem({ ...data, type: "image" });
+      } else if (data.type === "barcode") {
+        this.createBarcodeItem({ ...data, type: "barcode" });
       }
     });
 
@@ -412,6 +433,17 @@ export default class ReportSection {
     } else if (type === "image") {
       const item = this.createImageItem({
         source: "",
+        binding: field,
+        x: e.offsetX,
+        y: e.offsetY,
+        width: 50,
+        height: 50,
+      });
+
+      this.selectItem([item]);
+    } else if (type === "barcode") {
+      const item = this.createBarcodeItem({
+        value: "",
         binding: field,
         x: e.offsetX,
         y: e.offsetY,

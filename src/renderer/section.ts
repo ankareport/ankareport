@@ -1,5 +1,6 @@
 import { ISection, IStyle } from "../core/layout";
 import {
+  BarcodeReportItem,
   ImageReportItem,
   ReportItem,
   TextReportItem,
@@ -45,6 +46,14 @@ export default class Section {
         item.loadLayout(layout);
         if (layout.binding) {
           item.properties.source = this.data ? this.data[layout.binding] : "";
+        }
+        this.element.appendChild(item.element);
+        this.reportItems.push(item);
+      } else if (layout.type === "barcode") {
+        const item = new BarcodeReportItem({ parentStyles: defaultStylesList });
+        item.loadLayout(layout);
+        if (layout.binding) {
+          item.properties.value = this.data ? this.data[layout.binding] : "";
         }
         this.element.appendChild(item.element);
         this.reportItems.push(item);

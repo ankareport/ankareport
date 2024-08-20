@@ -34,7 +34,15 @@ export interface IImageReportItem extends IBaseReportItem {
   binding?: string;
 }
 
-export type IReportItem = ITextReportItem | IImageReportItem;
+export interface IBarcodeReportItem extends IBaseReportItem {
+  type: "barcode";
+  value: string;
+  binding?: string;
+  format?: string;
+  barWidth: 1 | 2 | 3 | 4;
+}
+
+export type IReportItem = ITextReportItem | IImageReportItem | IBarcodeReportItem;
 
 export interface IStyle {
   color?: string;

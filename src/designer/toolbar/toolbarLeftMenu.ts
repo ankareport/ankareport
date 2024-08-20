@@ -20,5 +20,12 @@ export default class ToolbarLeftMenu extends Toolbar {
       draggable: true,
       type: "image",
     });
+
+    this.labelButton = this.addButton({
+      text: "B",
+      title: "Barcode",
+      draggable: true,
+      type: "barcode",
+    });
   }
 }
