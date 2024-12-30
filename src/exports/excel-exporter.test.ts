@@ -1,4 +1,4 @@
-import { getExcelMeta } from "../../src/exports/excel-exporter";
+import { getExcelMeta } from "./excel-exporter";
 
 describe("Export To Excel", () => {
   test("excel exporter tests", () => {

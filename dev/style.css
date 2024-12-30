@@ -42,7 +42,7 @@ body {
   flex: 1;
 }
 
-.content > div {
+.content > #designer, .content > #report {
   background-color: white;
   border: 1px solid #cccccc;
 }

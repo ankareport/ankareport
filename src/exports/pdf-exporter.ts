@@ -31,5 +31,5 @@ function addText(pdf: jsPDF, item: ITextReportItem) {
     pdf.setDrawColor(item.backgroundColor);
   }
 
-  pdf.text(text, item.x, lineHeight + item.y);
+  pdf.text(text.toString(), item.x, lineHeight + item.y); // TODO: do we need to use toString?
 }

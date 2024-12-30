@@ -44,7 +44,7 @@ Free & Open Source Web Reporting Tool
 - [x] Elements List
 - [x] Report Viewer
 - [x] Export To PDF
-- [x] Export To Elsx
+- [x] Export To Xlsx
 
 ## Contributing
 
