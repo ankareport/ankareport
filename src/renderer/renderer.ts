@@ -1,4 +1,7 @@
+import { saveAs } from "file-saver";
 import { ILayout } from "../core/layout";
+import { exportToXlsx } from "../exports/excel-exporter";
+import { exportToPdf } from "../exports/pdf-exporter";
 import Section from "./section";
 
 export interface RendererOptions {
@@ -44,5 +47,21 @@ export default class Renderer {
     });
 
     this.options.element.appendChild(this.footerSection.element);
+  }
+
+  public exportToPdf(filename: string) {
+    const pdf = exportToPdf(this.options.layout, this.options.data);
+
+    pdf.save(filename);
+  }
+
+  public async exportToXlsx(filename: string) {
+    const workbook = exportToXlsx(this.options.layout, this.options.data);
+
+    const data = await workbook.xlsx.writeBuffer();
+
+    const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8' });
+
+    saveAs(blob, filename);
   }
 }
