@@ -1,5 +1,6 @@
 import { ILayout } from "../core/layout";
 import Section from "./section";
+import { exportToPdf } from "../export/export-to-pdf";
 
 export interface RendererOptions {
   element: HTMLDivElement;
@@ -44,5 +45,14 @@ export default class Renderer {
     });
 
     this.options.element.appendChild(this.footerSection.element);
+  }
+
+  async exportToPdf(fileName: string) {
+    const bytes = await exportToPdf(this.options.layout, this.options.data);
+    const blob = new Blob([bytes], { type: "application/pdf" });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = fileName;
+    link.click();
   }
 }
