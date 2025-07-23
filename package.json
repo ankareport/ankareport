@@ -13,7 +13,7 @@
   "dependencies": {
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
-    "jspdf": "^2.5.2"
+    "pdf-lib": "^1.17.1"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^23.0.2",

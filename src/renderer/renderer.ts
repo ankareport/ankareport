@@ -1,8 +1,8 @@
 import { saveAs } from "file-saver";
 import { ILayout } from "../core/layout";
 import { exportToXlsx } from "../exports/excel-exporter";
-import { exportToPdf } from "../exports/pdf-exporter";
 import Section from "./section";
+import { exportToPdf } from "../export/export-to-pdf";
 
 export interface RendererOptions {
   element: HTMLDivElement;
@@ -49,12 +49,6 @@ export default class Renderer {
     this.options.element.appendChild(this.footerSection.element);
   }
 
-  public exportToPdf(filename: string) {
-    const pdf = exportToPdf(this.options.layout, this.options.data);
-
-    pdf.save(filename);
-  }
-
   public async exportToXlsx(filename: string) {
     const workbook = exportToXlsx(this.options.layout, this.options.data);
 
@@ -63,5 +57,14 @@ export default class Renderer {
     const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8' });
 
     saveAs(blob, filename);
+  }
+
+  async exportToPdf(fileName: string) {
+    const bytes = await exportToPdf(this.options.layout, this.options.data);
+    const blob = new Blob([bytes], { type: "application/pdf" });
+    const link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = fileName;
+    link.click();
   }
 }
