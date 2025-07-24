@@ -1,9 +1,9 @@
 import { Workbook } from "exceljs";
-import { ILayout, ITextReportItem } from "../core/layout";
-import { getItems } from "../renderer/utils";
+import { ILayout, IReportItem } from "../core/layout";
+import { generateItems } from "../core/utils/generate";
 
 export function exportToXlsx(layout: ILayout, data: any) {
-  const items = getItems(layout, data);
+  const items = generateItems(layout, data);
   const excelMeta = getExcelMeta(items);
 
   const workbook = new Workbook();
@@ -12,8 +12,10 @@ export function exportToXlsx(layout: ILayout, data: any) {
   worksheet.columns = excelMeta.columns.map(x => ({ key: x.key, width: x.width * 0.3 }));
 
   items.forEach((item) => {
-    const cellName = excelMeta.getCellName(item.x, item.y);
-    worksheet.getCell(cellName).value = item.text;
+    if (item.type === "text") {
+      const cellName = excelMeta.getCellName(item.x, item.y);
+      worksheet.getCell(cellName).value = item.text;
+    }
   });
 
   excelMeta.rows.forEach(x => worksheet.getRow(x.key).height = x.height);
@@ -21,7 +23,7 @@ export function exportToXlsx(layout: ILayout, data: any) {
   return workbook;
 }
 
-export function getExcelMeta(items: ITextReportItem[]) {
+export function getExcelMeta(items: IReportItem[]) {
   const column_breakpoints: number[] = [0];
   const row_breakpoints: number[] = [0];
 

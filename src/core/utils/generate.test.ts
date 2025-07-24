@@ -1,5 +1,5 @@
-import { ILayout } from "../core/layout";
-import { getItems } from "./utils";
+import { ILayout } from "../layout";
+import { generateItems } from "./generate";
 
 describe("getItems", () => {
   test("get correct items", () => {
@@ -27,15 +27,39 @@ describe("getItems", () => {
       ],
     };
 
-    const items = getItems(layout, data);
+    const items = generateItems(layout, data);
 
     expect(items.length).toBe(16);
 
-    const client2 = items.find(x => x.text === "Client2");
-    const footer2 = items.find(x => x.text === "Footer 2");
+    const client2 = items.find(x => x.type === "text" && x.text === "Client2");
+    const footer2 = items.find(x => x.type === "text" && x.text === "Footer 2");
 
-    expect(client2).toEqual({ type: "text", x: 25, y: 400, width: 80, height: 10, name: "TextReportItem", text: "Client2" });
-    expect(footer2).toEqual({ type: "text", x: 20, y: 670, width: 40, height: 10, name: "TextReportItem", text: "Footer 2" });
+    expect(client2).toEqual({
+      type: "text",
+      name: "",
+      binding: "client",
+      text: "Client2",
+      x: 25,
+      y: 400,
+      width: 80,
+      height: 10,
+      color: "#000000",
+      fontFamily: "Arial",
+      fontSize: "12px",
+    });
+
+    expect(footer2).toEqual({
+      type: "text",
+      name: "",
+      text: "Footer 2",
+      x: 20,
+      y: 670,
+      width: 40,
+      height: 10,
+      color: "#000000",
+      fontFamily: "Arial",
+      fontSize: "12px",
+    });
   });
 });
 

@@ -54,9 +54,17 @@ function getSectionItems(topMargin: number, section: ISection, data: any) {
   if (section.sections) {
     for (const subSection of section.sections) {
       const subData = subSection.binding && data ? data[subSection.binding] : null;
-      const subItems = getSectionItems(topMargin + height, subSection, subData);
-      height += subItems.height;
-      items.push(...subItems.items);
+      if (Array.isArray(subData)) {
+        for (const subDataObj of subData) {
+          const subItems = getSectionItems(topMargin + height, subSection, subDataObj);
+          height += subItems.height;
+          items.push(...subItems.items);
+        }
+      } else {
+        const subItems = getSectionItems(topMargin + height, subSection, subData);
+        height += subItems.height;
+        items.push(...subItems.items);
+      }
     }
   }
 
