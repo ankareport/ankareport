@@ -105,6 +105,8 @@ export default class ReportSection {
         type: "ReportSection",
         element: this,
       });
+      this.elementContent.scrollTop = 0;
+      this.elementContent.scrollLeft = 0;
     });
     this.properties.addEventListener("change", (e) => {
       this.refresh();
@@ -233,7 +235,11 @@ export default class ReportSection {
     item.addEventListener("change", (e) => {
       this._onChange({ type: "change-item", item, changes: e.changes });
     });
-    item.addEventListener("focus", () => this.selectItem([item]));
+    item.addEventListener("focus", () => {
+      this.selectItem([item]);
+      this.elementContent.scrollTop = 0;
+      this.elementContent.scrollLeft = 0;
+    });
     this.items.push(item);
 
     this._onChange({ type: "add-item", item });
@@ -251,7 +257,11 @@ export default class ReportSection {
     item.addEventListener("change", (e) => {
       this._onChange({ type: "change-item", item, changes: e.changes });
     });
-    item.addEventListener("focus", () => this.selectItem([item]));
+    item.addEventListener("focus", () => {
+      this.selectItem([item]);
+      this.elementContent.scrollTop = 0;
+      this.elementContent.scrollLeft = 0;
+    });
     this.items.push(item);
 
     this._onChange({ type: "add-item", item });
@@ -269,7 +279,11 @@ export default class ReportSection {
     item.addEventListener("change", (e) => {
       this._onChange({ type: "change-item", item, changes: e.changes });
     });
-    item.addEventListener("focus", () => this.selectItem([item]));
+    item.addEventListener("focus", () => {
+      this.selectItem([item]);
+      this.elementContent.scrollTop = 0;
+      this.elementContent.scrollLeft = 0;
+    });
     this.items.push(item);
 
     this._onChange({ type: "add-item", item });
