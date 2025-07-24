@@ -79,6 +79,8 @@ export default class AreaSelector {
   private _onMouseDown(e: MouseEvent) {
     if (e.target !== this.options.area) return;
 
+    document.body.style.userSelect = "none";
+
     this._x = e.offsetX;
     this._y = e.offsetY;
     this._startX = e.x;
@@ -86,8 +88,8 @@ export default class AreaSelector {
     this._endX = e.x;
     this._endY = e.y;
 
-    this.options.area.addEventListener("mousemove", this._onMouseMove);
-    document.body.addEventListener("mouseup", this._onMouseUp);
+    document.addEventListener("mousemove", this._onMouseMove);
+    document.addEventListener("mouseup", this._onMouseUp);
 
     this.element.style.display = "";
 
@@ -102,8 +104,10 @@ export default class AreaSelector {
   }
 
   private _onMouseUp() {
-    this.options.area.removeEventListener("mousemove", this._onMouseMove);
-    document.body.removeEventListener("mouseup", this._onMouseUp);
+    document.body.style.userSelect = "";
+
+    document.removeEventListener("mousemove", this._onMouseMove);
+    document.removeEventListener("mouseup", this._onMouseUp);
 
     this.element.style.display = "none";
 
