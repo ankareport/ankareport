@@ -16,7 +16,8 @@ body {
 }
 
 .panel {
-  width: 400px;
+  width: 25vw;
+  max-width: 400px;
   height: 100%;
   display: flex;
   flex-direction: column;

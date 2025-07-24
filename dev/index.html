@@ -94,6 +94,7 @@
       const dataSourcePanel = document.getElementById("data-source-panel");
       const dataPanel = document.getElementById("data-panel");
       const exportToPdfButton = document.getElementById("export-to-pdf-button");
+      const exportToXlsxButton = document.getElementById("export-to-xlsx-button");
 
       const layoutEditor = ace.edit("layout-editor");
       layoutEditor.session.setMode("ace/mode/json");
@@ -167,6 +168,7 @@
         rendererDiv.style.display = "none";
         loadLayoutFromDesignerButton.style.display = null;
         exportToPdfButton.style.display = "none";
+        exportToXlsxButton.style.display = "none";
         dataSourcePanel.style.display = null;
         dataPanel.style.display = "none";
       };
@@ -178,6 +180,7 @@
         rendererDiv.style.display = null;
         loadLayoutFromDesignerButton.style.display = "none";
         exportToPdfButton.style.display = null;
+        exportToXlsxButton.style.display = null;
         dataSourcePanel.style.display = "none";
         dataPanel.style.display = null;
       };
