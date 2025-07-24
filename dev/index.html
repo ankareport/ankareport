@@ -44,12 +44,21 @@
       <div class="content">
         <div id="designer"></div>
 
-        <input
-          id="export-to-pdf-button"
-          type="button"
-          value="Export To Pdf"
-          onclick="exportToPdf()"
-        />
+        <div>
+          <input
+            id="export-to-pdf-button"
+            type="button"
+            value="Export To Pdf"
+            onclick="exportToPdf()"
+          />
+          <input
+            id="export-to-xlsx-button"
+            type="button"
+            value="Export To Xlsx"
+            onclick="exportToXlsx()"
+          />
+        </div>
+
         <div id="report"></div>
       </div>
 
@@ -145,6 +154,10 @@
 
       const exportToPdf = () => {
         renderer.exportToPdf("report.pdf");
+      };
+
+      const exportToXlsx = () => {
+        renderer.exportToXlsx("report.xlsx");
       };
 
       const showDesigner = () => {

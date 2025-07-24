@@ -13,11 +13,12 @@ export default {
     name: "AnkaReport",
     format: "iife",
     exports: "named",
+    inlineDynamicImports: true,
   },
   plugins: [
     typescript(),
     commonjs(),
-    resolve(),
+    resolve({ browser: true }),
     json(),
     css(),
     image(),
