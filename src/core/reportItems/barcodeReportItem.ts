@@ -1,3 +1,4 @@
+import JsBarcode from "jsbarcode";
 import { IBarcodeReportItem } from "../layout";
 import { MultipleStyles } from "../utils/style.utils";
 import BarcodeReportItemProperties from "./barcodeReportItemProperties";
@@ -35,7 +36,7 @@ export default class BarcodeReportItem extends BaseReportItem {
 
     const barcode = this.properties.value || (this.properties.binding ? `[${this.properties.binding}]` : "1234567890");
 
-    (window as any).JsBarcode(this.elementSvg, barcode, {
+    JsBarcode(this.elementSvg, barcode, {
       width: this.properties.barWidth,
       height: this.properties.height - 42,
       format: this.properties.format,
