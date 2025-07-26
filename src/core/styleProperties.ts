@@ -4,6 +4,7 @@ import { createFontFamilyDropdownEditor } from "../components/propertyGrid/edito
 import { createFontSizeDropdownEditor } from "../components/propertyGrid/editors/dropdownList.fontSize";
 import { createFontWeightDropdownEditor } from "../components/propertyGrid/editors/dropdownList.fontWeight";
 import { createTextAlignDropdownEditor } from "../components/propertyGrid/editors/dropdownList.textAlign";
+import NumberInput from "../components/propertyGrid/editors/numberInput";
 import { Property } from "../components/propertyGrid/property";
 import { IStyle } from "./layout";
 import Properties from "./properties";
@@ -135,7 +136,12 @@ export default class StyleProperties extends Properties implements IStyle {
         type: "string",
         editor: createTextAlignDropdownEditor(),
       },
-      { field: "borderWidth", label: "Border Width", type: "number" },
+      {
+        field: "borderWidth",
+        label: "Border Width",
+        type: "number",
+        editor: new NumberInput({ minValue: 0 }),
+      },
       {
         field: "borderStyle",
         label: "Border Style",

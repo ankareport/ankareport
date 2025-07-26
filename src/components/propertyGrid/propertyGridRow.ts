@@ -48,7 +48,6 @@ export default class PropertyGridRow {
 
   refresh() {
     this.elementLabel.innerText = this.property.label;
-    // TODO: I think this is wrong. But working.
     this.editor.value = this.value;
   }
 

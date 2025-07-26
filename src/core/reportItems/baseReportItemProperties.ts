@@ -1,3 +1,4 @@
+import NumberInput from "../../components/propertyGrid/editors/numberInput";
 import { Property } from "../../components/propertyGrid/property";
 import StyleProperties from "../styleProperties";
 
@@ -51,11 +52,35 @@ export default class BaseReportItemProperties extends StyleProperties {
 
   getPropertyDefinitions(): Property[] {
     return [
-      { field: "x", label: "X", type: "number" },
-      { field: "y", label: "Y", type: "number" },
-      { field: "width", label: "Width", type: "number" },
-      { field: "height", label: "Height", type: "number" },
-      { field: "name", label: "Name", type: "string" },
+      {
+        field: "x",
+        label: "X",
+        type: "number",
+        editor: new NumberInput(),
+      },
+      {
+        field: "y",
+        label: "Y",
+        type: "number",
+        editor: new NumberInput(),
+      },
+      {
+        field: "width",
+        label: "Width",
+        type: "number",
+        editor: new NumberInput(),
+      },
+      {
+        field: "height",
+        label: "Height",
+        type: "number",
+        editor: new NumberInput(),
+      },
+      {
+        field: "name",
+        label: "Name",
+        type: "string",
+      },
       ...super.getPropertyDefinitions(),
     ];
   }

@@ -83,11 +83,22 @@ export default class PropertyGrid {
         (this._dataSource as any)[property.field] = args.value as any;
         break;
       case "number":
+        if (args.value === "") {
+          (this._dataSource as any)[property.field] = "";
+          return;
+        }
+
         const intValue = parseInt(args.value);
 
-        if (!isNaN(intValue)) {
+        if (isNaN(intValue)) {
+          if (property.editor) { // TODO: should always exists
+            property.editor.value = (this._dataSource as any)[property.field];
+          }
+        } else {
           (this._dataSource as any)[property.field] = intValue as any;
         }
+
+        break;
     }
   }
 
