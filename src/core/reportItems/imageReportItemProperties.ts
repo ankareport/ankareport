@@ -1,3 +1,4 @@
+import ImageSelector from "../../components/propertyGrid/editors/imageSelector";
 import { Property } from "../../components/propertyGrid/property";
 import BaseReportItemProperties from "./baseReportItemProperties";
 
@@ -25,8 +26,17 @@ export default class ImageReportItemProperties extends BaseReportItemProperties 
 
   getPropertyDefinitions(): Property[] {
     return [
-      { field: "source", label: "Source", type: "string" },
-      { field: "binding", label: "Binding", type: "string" },
+      {
+        field: "source",
+        label: "Source",
+        type: "string",
+        editor: new ImageSelector(),
+      },
+      {
+        field: "binding",
+        label: "Binding",
+        type: "string",
+      },
       ...super.getPropertyDefinitions(),
     ];
   }

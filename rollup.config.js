@@ -20,7 +20,9 @@ export default {
     commonjs(),
     resolve({ browser: true }),
     json(),
-    css(),
+    css({
+      output: "ankareport.css",
+    }),
     image(),
     dev({ dirs: ["dev", "dist"] }),
   ],
