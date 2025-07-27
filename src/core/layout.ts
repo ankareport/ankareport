@@ -26,6 +26,7 @@ export interface ITextReportItem extends IBaseReportItem {
   type: "text";
   text: string;
   binding?: string;
+  format?: string;
 }
 
 export interface IImageReportItem extends IBaseReportItem {

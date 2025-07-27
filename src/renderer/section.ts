@@ -6,6 +6,7 @@ import {
   TextReportItem,
 } from "../core/reportItems";
 import StyleProperties from "../core/styleProperties";
+import { formatDate, formatNumber } from "../core/utils/format";
 
 export default class Section {
   public readonly element = document.createElement("div");
@@ -37,7 +38,17 @@ export default class Section {
         const item = new TextReportItem({ parentStyles: defaultStylesList });
         item.loadLayout(layout);
         if (layout.binding) {
-          item.properties.text = this.data ? this.data[layout.binding] : "NULL";
+          let bindedData = this.data ? this.data[layout.binding] : "NULL";
+
+          if (layout.format) {
+            if (typeof bindedData === "number") {
+              bindedData = formatNumber(bindedData, layout.format);
+            } else if (new Date(bindedData).toString() !== "Invalid Date") {
+              bindedData = formatDate(bindedData, layout.format);
+            }
+          }
+
+          item.properties.text = bindedData;
         }
         this.element.appendChild(item.element);
         this.reportItems.push(item);

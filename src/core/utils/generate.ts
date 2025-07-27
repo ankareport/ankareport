@@ -1,4 +1,5 @@
 import { ILayout, IReportItem, ISection } from "../layout";
+import { formatDate, formatNumber } from "./format";
 
 export function generateItems(layout: ILayout, data: any): IReportItem[] {
   const items = [];
@@ -41,7 +42,17 @@ function getSectionItems(topMargin: number, section: ISection, data: any) {
     };
 
     if (result.type === "text" && result.binding) {
-      result.text = data ? data[result.binding] ?? "" : "";
+      let bindedData = data ? data[result.binding] : "NULL";
+
+      if (result.format) {
+        if (typeof bindedData === "number") {
+          bindedData = formatNumber(bindedData, result.format);
+        } else if (new Date(bindedData).toString() !== "Invalid Date") {
+          bindedData = formatDate(bindedData, result.format);
+        }
+      }
+
+      result.text = bindedData;
     }
 
     if (!result.color) result.color = "#000000";

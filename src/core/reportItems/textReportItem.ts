@@ -33,6 +33,7 @@ export default class TextReportItem extends BaseReportItem {
   applyLayout(layout: Partial<ITextReportItem>) {
     this.properties.text = layout.text ?? "";
     this.properties.binding = layout.binding || "";
+    this.properties.format = layout.format || "";
     super.applyLayout(layout);
   }
 
@@ -42,6 +43,7 @@ export default class TextReportItem extends BaseReportItem {
       type: "text",
       text: this.properties.text,
       binding: this.properties.binding,
+      format: this.properties.format,
     };
   }
 }
