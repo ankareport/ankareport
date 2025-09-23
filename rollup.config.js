@@ -7,16 +7,33 @@ import dev from "rollup-plugin-dev";
 import dts from "rollup-plugin-dts";
 import css from "rollup-plugin-import-css";
 
+import pkg from "./package.json" with { type: "json" };
+
 export default [
   {
     input: "src/index.ts",
-    output: {
-      file: "dist/ankareport.js",
-      name: "AnkaReport",
-      format: "iife",
-      exports: "named",
-      inlineDynamicImports: true,
-    },
+    output: [
+      {
+        file: "dist/ankareport.js",
+        name: "AnkaReport",
+        format: "iife",
+        exports: "named",
+        inlineDynamicImports: true,
+      },
+      {
+        file: pkg.main,
+        format: "cjs",
+      },
+      {
+        file: pkg.module,
+        format: "esm",
+      },
+      {
+        file: pkg.browser,
+        format: "umd",
+        name: "AnkaReport",
+      },
+    ],
     plugins: [
       typescript(),
       commonjs(),
