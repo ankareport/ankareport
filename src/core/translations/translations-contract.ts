@@ -35,6 +35,7 @@ export interface ITranslations {
     redo: string;
     image: string;
     barcode: string;
+    section: string;
 
     // Elements tree section labels
     header: string;
@@ -73,6 +74,7 @@ export const defaultTranslations: ITranslations = {
     redo: "Redo",
     image: "Image",
     barcode: "Barcode",
+    section: "Section",
     header: "Header",
     content: "Content",
     footer: "Footer",

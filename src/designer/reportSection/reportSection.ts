@@ -476,6 +476,8 @@ export default class ReportSection {
       });
 
       this.selectItem([item]);
+    } else if (type === "section") {
+      this.createSection({ binding: field });
     }
   }
 

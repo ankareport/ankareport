@@ -44,9 +44,16 @@ const dataSourceItemRenderer = (
   item: TreeItem<DataSourceTreeItemData>,
   itemData: TreeItemData<DataSourceTreeItemData>,
 ) => {
-  if (item.hasChild) return;
-
   item.element.draggable = true;
+
+  if (item.hasChild) {
+    item.element.addEventListener("dragstart", (e) => {
+      e.dataTransfer?.setData("label", itemData.label);
+      e.dataTransfer?.setData("type", "section");
+      e.dataTransfer?.setData("field", itemData.data.field);
+    });
+    return;
+  }
 
   item.element.addEventListener("dragstart", (e) => {
     e.dataTransfer?.setData("label", itemData.label);

@@ -42,6 +42,7 @@ export default class ReportSectionProperties extends StyleProperties {
   getPropertyDefinitions(): Property[] {
     return [
       { field: "height", label: this.translations?.height ?? "Height", type: "number" },
+      { field: "binding", label: this.translations?.binding ?? "Binding", type: "string" },
       ...super.getPropertyDefinitions(),
     ];
   }

@@ -28,5 +28,12 @@ export default class ToolbarLeftMenu extends Toolbar {
       draggable: true,
       type: "barcode",
     });
+
+    this.addButton({
+      text: "☰",
+      title: translations.section,
+      draggable: true,
+      type: "section",
+    });
   }
 }
